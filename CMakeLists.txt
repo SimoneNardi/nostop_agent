@@ -100,6 +100,29 @@ include_directories(
 #   src/${PROJECT_NAME}/nostop_agent.cpp
 # )
 
+set(guard_SOURCES
+        Agent/Guard.cpp
+        Agent/AgentAreaCreator.cpp
+        Agent/GuardInterface.cpp
+        Agent/GuardStateUpdater.cpp
+        Agent/GuardStatePublisher.cpp
+        Agent/AgentMotorControl.cpp
+)
+
+set(thief_SOURCES
+        Agent/Thief.cpp
+        Agent/AgentAreaCreator.cpp
+        #Agent/ThiefInterface.cpp
+)
+
+add_executable(Guard ${guard_SOURCES})
+target_link_libraries(Guard ${catkin_LIBRARIES} Learning IDSBaseMath lemon Utility)
+add_dependencies(Guard nostop_gencpp)
+
+add_executable(Thief ${thief_SOURCES})
+target_link_libraries(Thief ${catkin_LIBRARIES} Learning IDSBaseMath lemon Utility)
+add_dependencies(Thief nostop_gencpp)
+
 ## Declare a cpp executable
 # add_executable(nostop_agent_node src/nostop_agent_node.cpp)
 
@@ -127,11 +150,12 @@ include_directories(
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS nostop_agent nostop_agent_node
-#   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+install(TARGETS Guard Thief
+ EXPORT nostop_agent
+   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+ )
 
 ## Mark cpp header files for installation
 # install(DIRECTORY include/${PROJECT_NAME}/
