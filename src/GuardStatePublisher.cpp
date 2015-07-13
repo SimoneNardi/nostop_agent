@@ -1,6 +1,6 @@
 #include "GuardStatePublisher.h"
 
-#include "nostop/GuardStateData.h"
+#include "nostop_agent/GuardStateData.h"
 
 #include "ros/ros.h"
 
@@ -22,7 +22,7 @@ GuardStatePublisher::GuardStatePublisher(std::shared_ptr<Guard> agent_)
     l_guardname << "GuardState_";
     l_guardname << m_guard->getID();
     
-    m_statePub = m_node.advertise<nostop::GuardStateData>(l_guardname.str().c_str(), 10);
+    m_statePub = m_node.advertise<nostop_agent::GuardStateData>(l_guardname.str().c_str(), 10);
   }
 }
 
@@ -38,7 +38,7 @@ void GuardStatePublisher::run()
   int count = 0;
   while (ros::ok())
   {
-    nostop::GuardStateData msg;
+    nostop_agent::GuardStateData msg;
 
     msg.id = m_guard->getID();
     

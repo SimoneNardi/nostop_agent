@@ -1,5 +1,5 @@
 #include "ros/ros.h"
-#include "nostop/PlayerID.h"
+#include "nostop_agent/PlayerIDData.h"
 
 #include "agent.h"
 
@@ -13,8 +13,8 @@ int main(int argc, char **argv)
 	
 	// get the ID from Simulator:
 	ros::NodeHandle l_nodeID;
-	ros::ServiceClient l_clientID = l_nodeID.serviceClient<nostop::PlayerID>("ThiefID");
-	nostop::PlayerID l_srvID;
+	ros::ServiceClient l_clientID = l_nodeID.serviceClient<nostop_agent::PlayerIDData>("ThiefID");
+	nostop_agent::PlayerIDData l_srvID;
 	if (l_clientID.call(l_srvID))
 	{
 		ROS_INFO("Selected ID: %ld", (long int)l_srvID.response.id);

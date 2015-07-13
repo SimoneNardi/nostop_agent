@@ -1,9 +1,9 @@
 #include "ros/ros.h"
-#include "nostop/GuardBenefitData.h"
-#include "nostop/GuardNeighboursData.h"
-#include "nostop/PlayerIDData.h"
-#include "nostop/PlayerConfigurationData.h"
-#include "nostop/AreaData.h"
+#include "nostop_agent/GuardBenefitData.h"
+#include "nostop_agent/GuardNeighboursData.h"
+#include "nostop_agent/PlayerIDData.h"
+#include "nostop_agent/PlayerConfigurationData.h"
+#include "nostop_agent/AreaData.h"
 
 #include "IDSReal2D.h"
 
@@ -27,8 +27,8 @@ int main(int argc, char **argv)
 	///////////////////////////////////////////////
 	// Build the area
 	ros::NodeHandle l_nodeArea;
-	ros::ServiceClient l_clientArea = l_nodeArea.serviceClient<nostop::AreaData>("AreaInitializer");
-	nostop::AreaData l_srvArea;
+	ros::ServiceClient l_clientArea = l_nodeArea.serviceClient<nostop_agent::AreaData>("AreaInitializer");
+	nostop_agent::AreaData l_srvArea;
 	if (l_clientArea.call(l_srvArea))
 	{
 		ROS_INFO("Area description received");
@@ -47,8 +47,8 @@ int main(int argc, char **argv)
 	///////////////////////////////////////////////
 	// get the ID from simulator
 	ros::NodeHandle l_nodeID;
-	ros::ServiceClient l_clientID = l_nodeID.serviceClient<nostop::PlayerIDData>("GuardID");
-	nostop::PlayerIDData l_srvID;
+	ros::ServiceClient l_clientID = l_nodeID.serviceClient<nostop_agent::PlayerIDData>("GuardID");
+	nostop_agent::PlayerIDData l_srvID;
 	if (l_clientID.call(l_srvID))
 	{
 		ROS_INFO("Selected ID: %ld", (long int)l_srvID.response.id);
@@ -62,8 +62,8 @@ int main(int argc, char **argv)
 	///////////////////////////////////////////////
 	// Get the agent configuration:
 	ros::NodeHandle l_nodePos;
-	ros::ServiceClient l_clientPos = l_nodePos.serviceClient<nostop::PlayerConfigurationData>("GuardInitialPosition");
-	nostop::PlayerConfigurationData l_srvPos;
+	ros::ServiceClient l_clientPos = l_nodePos.serviceClient<nostop_agent::PlayerConfigurationData>("GuardInitialPosition");
+	nostop_agent::PlayerConfigurationData l_srvPos;
 	l_srvPos.request.id = l_srvID.response.id;
 	if (l_clientPos.call(l_srvPos))
 	{
@@ -95,14 +95,14 @@ int main(int argc, char **argv)
 	
 	if (argc != 3)
 	{
-		ROS_INFO("usage: agent_client col row");
+		ROS_INFO("usage: nostop_agent col row");
 		return 1;
 	}
 
 	// Benefit
 	ros::NodeHandle l_nodeBenefit;
-	ros::ServiceClient clientBenefit = l_nodeBenefit.serviceClient<nostop::GuardBenefitData>("GuardBenefit");
-	nostop::GuardBenefitData srvBenefit;
+	ros::ServiceClient clientBenefit = l_nodeBenefit.serviceClient<nostop_agent::GuardBenefitData>("GuardBenefit");
+	nostop_agent::GuardBenefitData srvBenefit;
 	srvBenefit.request.col = atoll(argv[1]);
 	srvBenefit.request.row = atoll(argv[2]);
 	if (clientBenefit.call(srvBenefit))
@@ -117,8 +117,8 @@ int main(int argc, char **argv)
 
 	// Number of neighbors
 	ros::NodeHandle l_nodeNeighbours;
-	ros::ServiceClient clientNeighbours = l_nodeNeighbours.serviceClient<nostop::GuardNeighboursData>("GuardNeighbours");
-	nostop::GuardNeighboursData srvNeighbours;
+	ros::ServiceClient clientNeighbours = l_nodeNeighbours.serviceClient<nostop_agent::GuardNeighboursData>("GuardNeighbours");
+	nostop_agent::GuardNeighboursData srvNeighbours;
 	srvNeighbours.request.col = atoll(argv[1]);
 	srvNeighbours.request.row = atoll(argv[2]);
 	if (clientNeighbours.call(srvNeighbours))

@@ -11,7 +11,7 @@
 
 #include "ros/ros.h"
 
-#include "nostop/GuardStateData.h"
+#include "nostop_agent/GuardStateData.h"
 
 #include "ThreadBase.h"
 #include "AgentInterface.h"
