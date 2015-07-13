@@ -1,0 +1,10 @@
+int32 id
+string msg
+float64 x
+float64 y
+float64 heading
+float64 min_radius
+float64 max_radius
+float64 camera_heading
+float64 view
+int32 status 
