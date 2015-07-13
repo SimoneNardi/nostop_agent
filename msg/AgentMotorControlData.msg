@@ -1,0 +1,2 @@
+float64 rotation
+float64 speed
