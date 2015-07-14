@@ -14,7 +14,7 @@ else()
     message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
-find_package(catkin REQUIRED roscpp std_msgs message_generation base_math nostop_learning)
+find_package(catkin REQUIRED COMPONENTS roscpp std_msgs message_generation base_math nostop_learning)
 
 ################################################
 ## Declare ROS messages, services and actions ##
@@ -86,6 +86,16 @@ set(thief_SOURCES
         #Agent/ThiefInterface.cpp
 )
 
+set(agent_SOURCES
+        src/AgentAreaCreator.cpp
+        src/GuardInterface.cpp
+        src/GuardStateUpdater.cpp
+        src/GuardStatePublisher.cpp
+        src/AgentMotorControl.cpp
+        src/AgentAreaCreator.cpp
+        #Agent/ThiefInterface.cpp
+)
+
 add_executable(Guard ${guard_SOURCES})
 target_link_libraries(Guard ${catkin_LIBRARIES} nostop_learning base_math lemon)
 add_dependencies(Guard nostop_gencpp)
@@ -94,12 +104,22 @@ add_executable(Thief ${thief_SOURCES})
 target_link_libraries(Thief ${catkin_LIBRARIES} nostop_learning base_math lemon)
 add_dependencies(Thief nostop_gencpp)
 
+add_library(${PROJECT_NAME} SHARED ${agent_SOURCES})
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} nostop_learning base_math lemon)
+add_dependencies(${PROJECT_NAME} nostop_agent_gencpp nostop_learning base_math lemon)
+
 #############
 ## Install ##
 #############
 
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+)
+
 ## Mark executables and/or libraries for installation
-install(TARGETS Guard Thief
- EXPORT nostop_agent
-   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+install(TARGETS Guard Thief ${PROJECT_NAME}
+ EXPORT ${PROJECT_NAME}
+   ARCHIVE DESTINATION "${CATKIN_PACKAGE_BIN_DESTINATION}" COMPONENT lib
+   RUNTIME DESTINATION "${CATKIN_PACKAGE_BIN_DESTINATION}" COMPONENT bin
+   LIBRARY DESTINATION "${CATKIN_PACKAGE_LIB_DESTINATION}" COMPONENT shlib
  )
