@@ -19,16 +19,32 @@ GuardStatePublisher::GuardStatePublisher(std::shared_ptr<Guard> agent_)
   if(m_guard)
   {
     std::stringstream l_guardname;
-    l_guardname << "GuardState_";
-    l_guardname << m_guard->getID();
+    l_guardname << "GuardPose_";
+    l_guardname << m_guard->getName();
+    m_subPose = m_node.subscribe(l_guardname.str().c_str(), 10, &GuardStatePublisher::poseCallBack, this)
     
-    m_statePub = m_node.advertise<nostop_agent::GuardStateData>(l_guardname.str().c_str(), 10);
+    
+    std::stringstream l_guardID;
+    l_guardID << "GuardState_";
+    l_guardID << m_guard->getID();
+    
+    m_statePub = m_node.advertise<nostop_agent::GuardStateData>(l_guardID.str().c_str(), 10);
   }
 }
 
 /////////////////////////////////////////////
 GuardStatePublisher::~GuardStatePublisher()
 {}
+
+/////////////////////////////////////////////
+void GuardStatePublisher::poseCallBack(const geometry_msgs::PoseConstPtr& msg)
+{
+  geometry_msgs::Point l_point = msg->position;
+  geometry_msgs::Quaternion l_orientation = msg->orientation;
+  
+  m_guard->setCurrentPosition( computeAgentPosition(l_point) );
+  m_orientation = l_orientation;
+}
 
 /////////////////////////////////////////////
 void GuardStatePublisher::run()
@@ -71,5 +87,4 @@ void GuardStatePublisher::run()
     loop_rate.sleep();
     ++count;
   }
-
 }

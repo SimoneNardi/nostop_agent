@@ -1,0 +1,5 @@
+<launch>
+
+  <node pkg="nostop_agent" type="Thief" name="$(anon Thief)" required="true" output="screen" />
+  
+</launch>

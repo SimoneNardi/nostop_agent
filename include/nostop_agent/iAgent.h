@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////
-//	AgentInterface.h
+//	iAgent.h
 //	Created on:	12-jun-2015
 //	Original author: Simone Nardi
 ////////////////////////////////////////////////////
-#ifndef AGENT_INTERFACE_H
-#define AGENT_INTERFACE_H
+#ifndef I_AGENT_H
+#define I_AGENT_H
 #pragma once
 
 #include "agent.h"
@@ -12,22 +12,20 @@
 
 #include <geometry_msgs/Quaternion.h>
 
-namespace Robotics 
+namespace Robotics
 {
 	namespace GameTheory
 	{
-		class AgentInterface
+		/// Tutto ciò che serve per la guida del robot!
+		class iAgent
 	  	{
 		protected:
-			std::shared_ptr<Agent> m_agent;
-			
 			geometry_msgs::Quaternion m_currentOrientation;
+			
 		public:
-			AgentInterface() {};
+			iAgent() {};
 			
-			~AgentInterface() {};
-			
-			std::shared_ptr<Agent> getAgent() {return m_agent;}
+			~iAgent() {};
 			
 			void setCurrentOrientation(geometry_msgs::Quaternion & orientation_) {m_currentOrientation = orientation_;}
 		};
@@ -37,4 +35,4 @@ namespace Robotics
 }
 
 
-#endif // COLLECT_PLAYERS_H
+#endif // I_AGENT_H

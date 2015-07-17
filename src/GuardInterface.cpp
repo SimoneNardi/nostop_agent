@@ -31,3 +31,17 @@ GuardInterface::GuardInterface(int id_, AgentPosition initial_position_)
 /////////////////////////////////////////////
 GuardInterface::~GuardInterface()
 {}
+
+/////////////////////////////////////////////
+AgentPosition computeAgentPosition(geometry_msgs::Point & point_)
+{
+  // TODO
+  return AgentPosition();
+}
+
+/////////////////////////////////////////////
+IDSQuaternion computeAgentOrientation(geometry_msgs::Quaternion & orientation_)
+{
+  // TODO
+  return IDSQuaternion();
+}

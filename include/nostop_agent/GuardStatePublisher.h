@@ -13,6 +13,9 @@
 
 #include <memory>
 
+#include <tf/transform_broadcaster.h>
+#include <geometry_msgs/Pose.h>
+
 namespace Robotics 
 {
 	namespace GameTheory
@@ -26,9 +29,15 @@ namespace Robotics
 		  
 			ros::NodeHandle m_node;
 		  	ros::Publisher m_statePub;
-		
+			
+			tf::TransformBroadcaster m_TFBoradcast;
+			ros::Subscriber m_subPose;
+					
 		protected:
 			virtual void run();
+			
+			void poseCallBack(const geometry_msgs::PoseConstPtr& msg);
+			
 		public:
 			GuardStatePublisher(std::shared_ptr<Guard> agent_);
 			

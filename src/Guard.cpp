@@ -20,6 +20,10 @@ std::shared_ptr<Robotics::GameTheory::LearningWorld> g_coverage = nullptr;
 
 int main(int argc, char **argv)
 {
+      // identificazione nome robot: ... TODO
+  
+      // identificazione algoritmo di learning: ... TODO
+  
 	ros::init(argc, argv, "Guard"); 
 	
 	Robotics::GameTheory::AreaPtr l_area = nullptr;
@@ -83,6 +87,10 @@ int main(int argc, char **argv)
 	
 	std::shared_ptr<Robotics::GameTheory::Agent> l_learningAgent = l_agent->getAgent();
 	g_coverage = std::make_shared<Robotics::GameTheory::LearningWorld>(l_learningAgent, l_area->discretize(), Robotics::GameTheory::DISL);
+	
+	// l'agente deve poter scegliere se compiere un'azione oppure se proseguire la traiettoria assegnata, 
+	// inoltre deve poter inviare un messaggio al simulatore ogni volta che finisce di compire l'azione
+	
 	
 	return 0;
 	
