@@ -11,6 +11,7 @@
 #include <memory>
 
 #include <geometry_msgs/Quaternion.h>
+#include <geometry_msgs/Point.h>
 
 namespace Robotics 
 {
