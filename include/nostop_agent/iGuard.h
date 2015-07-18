@@ -12,7 +12,7 @@
 
 #include <geometry_msgs/Quaternion.h>
 
-namespace Robotics
+namespace Robotics 
 {
 	namespace GameTheory
 	{
