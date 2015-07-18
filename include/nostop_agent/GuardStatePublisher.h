@@ -13,7 +13,7 @@
 
 #include <memory>
 
-#include <tf/transform_broadcaster.h>
+// #include <tf/transform_broadcaster.h>
 #include <geometry_msgs/Pose.h>
 
 namespace Robotics 
@@ -30,7 +30,7 @@ namespace Robotics
 			ros::NodeHandle m_node;
 		  	ros::Publisher m_statePub;
 			
-			tf::TransformBroadcaster m_TFBoradcast;
+// 			tf::TransformBroadcaster m_TFBoradcast;
 			ros::Subscriber m_subPose;
 					
 		protected:
