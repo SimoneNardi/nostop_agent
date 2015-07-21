@@ -15,38 +15,63 @@
 #include <cstdlib>
 
 #include "agent.h"
+#include "iGuard.h"
 
-std::shared_ptr<Robotics::GameTheory::LearningWorld> g_coverage = nullptr;
-
+		    
 int main(int argc, char **argv)
 {
-      // identificazione nome robot: ... TODO
-  
-      // identificazione algoritmo di learning: ... TODO
-  
-	ros::init(argc, argv, "Guard"); 
+      ros::init(argc, argv, "Guard");
+      
+      Robotics::GameTheory::GuardProcess l_guard();
+                  
+      // Identify robot name:
+      std::string l_str;
+      ros::NodeHandle l_node("~");
+      //ros::NodeHandle l_node;
+      if (l_node.getParam("robot_name", l_str))
+      {
+	ROS_INFO("Nome ricevuto: %s", g_robot_name.c_str());
+	l_process->setRobotColor(l_str);
+      }
+      else
+      {
+	l_process->setRobotColor("red_blue");
+	ROS_ERROR("Nome non ricevuto: %s", g_robot_name.c_str());
+      }
 	
-	Robotics::GameTheory::AreaPtr l_area = nullptr;
-	
-	///////////////////////////////////////////////
-	// Build the area
-	ros::NodeHandle l_nodeArea;
-	ros::ServiceClient l_clientArea = l_nodeArea.serviceClient<nostop_agent::AreaData>("AreaInitializer");
-	nostop_agent::AreaData l_srvArea;
-	if (l_clientArea.call(l_srvArea))
-	{
-		ROS_INFO("Area description received");
-		
-		// creazione dell'area:
-		Robotics::GameTheory::AgentAreaCreator l_areaCreator(l_srvArea.response.external, l_srvArea.response.internal);
-		l_area = l_areaCreator.getArea();
-	}
-	else
-	{
-		ROS_ERROR("Failed to call service AreaInitializer");
-		Robotics::GameTheory::AgentAreaCreator l_areaCreator;
-		l_area = l_areaCreator.getArea();
-	}
+        
+      // Identify Robot Algorithm:
+      if (l_node.getParam("learning_name", l_str))
+      {
+	l_process->setRobotAlgorithm(l_str);
+	ROS_INFO("Learning ricevuto: %s", g_robot_name.c_str());
+      }
+      else
+      {
+	l_process->setRobotColor("DISL");
+	ROS_ERROR("Learning non ricevuto: %s", g_robot_name.c_str());
+      }
+      	
+      Robotics::GameTheory::AreaPtr l_area = nullptr;
+      ///////////////////////////////////////////////
+      // Build the area
+      ros::NodeHandle l_nodeArea;
+      ros::ServiceClient l_clientArea = l_nodeArea.serviceClient<nostop_agent::AreaData>("AreaInitializer");
+      nostop_agent::AreaData l_srvArea;
+      if (l_clientArea.call(l_srvArea))
+      {
+	      ROS_INFO("Area description received");
+	      
+	      // creazione dell'area:
+	      Robotics::GameTheory::AgentAreaCreator l_areaCreator(l_srvArea.response.external, l_srvArea.response.internal);
+	      l_area = l_areaCreator.getArea();
+      }
+      else
+      {
+	      ROS_ERROR("Failed to call service AreaInitializer");
+	      Robotics::GameTheory::AgentAreaCreator l_areaCreator;
+	      l_area = l_areaCreator.getArea();
+      }
 	
 	///////////////////////////////////////////////
 	// get the ID from simulator

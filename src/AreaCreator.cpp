@@ -1,4 +1,4 @@
-#include "AgentAreaCreator.h"
+#include "AreaCreator.h"
 
 #include "area.h"
 #include "structuredArea.h"
@@ -9,7 +9,7 @@ using namespace Robotics;
 using namespace Robotics::GameTheory;
 
 /////////////////////////////////////////////////
-AgentAreaCreator::AgentAreaCreator() 
+AreaCreator::AreaCreator() 
 	: m_external()
 	, m_internal()
 {
@@ -24,7 +24,7 @@ AgentAreaCreator::AgentAreaCreator()
 	m_external = l_points;
 }
 
-AgentAreaCreator::AgentAreaCreator(nostop_agent::ShapeData external_, std::vector<nostop_agent::ShapeData> internal_) 
+AreaCreator::AreaCreator(nostop_agent::ShapeData external_, std::vector<nostop_agent::ShapeData> internal_) 
 	: m_external()
 	, m_internal()
 {
@@ -50,7 +50,7 @@ AgentAreaCreator::AgentAreaCreator(nostop_agent::ShapeData external_, std::vecto
 }
 
 /////////////////////////////////////////////////
-AreaPtr AgentAreaCreator::getArea() const
+AreaPtr AreaCreator::getArea() const
 {
 	AreaPtr l_area = std::make_shared<StructuredArea>(m_external);
 	return l_area;

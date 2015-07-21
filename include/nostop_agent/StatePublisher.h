@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////
-//	GuardStatePublisher.h
+//	StatePublisher.h
 //	Created on:	12-jun-2015
 //	Original author: Simone Nardi
 ////////////////////////////////////////////////////
-#ifndef GUARD_STATE_PUBLISHER_H
-#define GUARD_STATE_PUBLISHER_H
+#ifndef STATE_PUBLISHER_H
+#define STATE_PUBLISHER_H
 #pragma once
 
 #include "ThreadBase.h"
@@ -20,12 +20,12 @@ namespace Robotics
 {
 	namespace GameTheory
 	{
-		class Guard;
+		class iGuard;
 	  
-		class GuardStatePublisher: public ThreadBase	  	
+		class StatePublisher: public ThreadBase	  	
 		{
 		protected:
-			std::shared_ptr<Guard> m_guard;
+			std::shared_ptr<iGuard> m_guard;
 		  
 			ros::NodeHandle m_node;
 		  	ros::Publisher m_statePub;
@@ -39,9 +39,9 @@ namespace Robotics
 			void poseCallBack(const geometry_msgs::PoseConstPtr& msg);
 			
 		public:
-			GuardStatePublisher(std::shared_ptr<Guard> agent_);
+			StatePublisher(std::shared_ptr<iGuard> agent_);
 			
-			~GuardStatePublisher();
+			~StatePublisher();
 		};
 
 	}

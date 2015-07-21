@@ -1,7 +1,8 @@
 <launch>
-
-  <!-- <include file="$(find nostop_agent)/name.xml"/> --!>
-
-  <node pkg="nostop_agent" type="Guard" name="$(anon Guard)" required="true" output="screen" />
+    
+  <node pkg="nostop_agent" type="Guard" name="$(anon Guard)" required="true" output="screen">
+    <param name="robot_name" value="red_blue" />
+    <param name="learning_name" value="DISL" />
+  </node>
   
 </launch>

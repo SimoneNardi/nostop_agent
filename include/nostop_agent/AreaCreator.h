@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////
-//	AgentAreaCreator.h
+//	AreaCreator.h
 //	Created on:	12-jun-2015
 //	Original author: Simone Nardi
 ////////////////////////////////////////////////////
-#ifndef AGENT_AREA_CREATOR_H
-#define AGENT_AREA_CREATOR_H
+#ifndef AREA_CREATOR_H
+#define AREA_CREATOR_H
 #pragma once
 
 #include "area.h"
@@ -17,15 +17,15 @@ namespace Robotics
 {
 	namespace GameTheory
 	{
-		class AgentAreaCreator
+		class AreaCreator
 		{
 			std::vector<IDSReal2D> m_external;
 			std::vector< std::vector<IDSReal2D> > m_internal;
 
 		public:
-			AgentAreaCreator();
+			AreaCreator();
 			
-			AgentAreaCreator(nostop_agent::ShapeData external_, std::vector<nostop_agent::ShapeData> internal_);
+			AreaCreator(nostop_agent::ShapeData external_, std::vector<nostop_agent::ShapeData> internal_);
 
 		public:      
 			AreaPtr getArea() const;

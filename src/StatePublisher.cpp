@@ -1,4 +1,4 @@
-#include "GuardStatePublisher.h"
+#include "StatePublisher.h"
 
 #include "nostop_agent/GuardStateData.h"
 
@@ -12,7 +12,7 @@ using namespace Robotics;
 using namespace Robotics::GameTheory;
 
 /////////////////////////////////////////////
-GuardStatePublisher::GuardStatePublisher(std::shared_ptr<Guard> agent_) 
+StatePublisher::StatePublisher(std::shared_ptr<iGuard> agent_) 
   : m_guard(agent_)
   , m_node()
 {
@@ -21,7 +21,7 @@ GuardStatePublisher::GuardStatePublisher(std::shared_ptr<Guard> agent_)
 //     std::stringstream l_guardname;
 //     l_guardname << "GuardPose_";
 //     l_guardname << m_guard->getName();
-//     m_subPose = m_node.subscribe(l_guardname.str().c_str(), 10, &GuardStatePublisher::poseCallBack, this)
+//     m_subPose = m_node.subscribe(l_guardname.str().c_str(), 10, &StatePublisher::poseCallBack, this)
 //     
 //     
 //     std::stringstream l_guardID;
@@ -33,11 +33,11 @@ GuardStatePublisher::GuardStatePublisher(std::shared_ptr<Guard> agent_)
 }
 
 /////////////////////////////////////////////
-GuardStatePublisher::~GuardStatePublisher()
+StatePublisher::~StatePublisher()
 {}
 
 /////////////////////////////////////////////
-void GuardStatePublisher::poseCallBack(const geometry_msgs::PoseConstPtr& msg)
+void StatePublisher::poseCallBack(const geometry_msgs::PoseConstPtr& msg)
 {
   geometry_msgs::Point l_point = msg->position;
   geometry_msgs::Quaternion l_orientation = msg->orientation;
@@ -47,7 +47,7 @@ void GuardStatePublisher::poseCallBack(const geometry_msgs::PoseConstPtr& msg)
 }
 
 /////////////////////////////////////////////
-void GuardStatePublisher::run()
+void StatePublisher::run()
 {
   ros::Rate loop_rate(50);
     

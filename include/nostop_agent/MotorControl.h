@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////
-//	AgentMotorControl.h
+//	MotorControl.h
 //	Created on:	12-jun-2015
 //	Original author: Simone Nardi
 ////////////////////////////////////////////////////
-#ifndef AGENT_MOTOR_CONTROL_H
-#define AGENT_MOTOR_CONTROL_H
+#ifndef MOTOR_CONTROL_H
+#define MOTOR_CONTROL_H
 #pragma once
 
 #include "ThreadBase.h"
@@ -17,12 +17,12 @@ namespace Robotics
 {
 	namespace GameTheory
 	{
-		class Agent;
+		class iAgent;
 	  
-		class AgentMotorControl: public ThreadBase	  	
+		class MotorControl: public ThreadBase	  	
 		{
 		protected:
-			std::shared_ptr<Agent> m_agent;
+			std::shared_ptr<iAgent> m_agent;
 		  
 			ros::NodeHandle m_node;
 		  	ros::Publisher m_controlPub;
@@ -30,9 +30,9 @@ namespace Robotics
 		protected:
 			virtual void run();
 		public:
-			AgentMotorControl(std::shared_ptr<Agent> agent_);
+			MotorControl(std::shared_ptr<iAgent> agent_);
 			
-			~AgentMotorControl();
+			~MotorControl();
 		};
 
 	}

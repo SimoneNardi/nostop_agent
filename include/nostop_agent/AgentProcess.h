@@ -1,33 +1,33 @@
 ////////////////////////////////////////////////////
-//	iGuard.h
+//	AgentProcess.h
 //	Created on:	12-jun-2015
 //	Original author: Simone Nardi
 ////////////////////////////////////////////////////
-#ifndef I_GUARD_H
-#define I_GUARD_H
+#ifndef AGENT_PROCESS_H
+#define AGENT_PROCESS_H
 #pragma once
 
+#include "MotorControl.h"
 #include "iAgent.h"
-#include "guard.h"
 #include <memory>
-
-#include <geometry_msgs/Quaternion.h>
 
 namespace Robotics 
 {
 	namespace GameTheory
 	{
-		class iGuard : public iAgent
+		class AgentProcess
 	  	{
-
+		  std::shared_ptr<iAgent> m_agent;
+		  
+		  std::shared_ptr<MotorControl> m_motorControl;
+		  
 		public:
-			iGuard() {};
+			AgentProcess() {};
 			
-			~iGuard() {};
-			
+			~AgentProcess() {};
 		};
 	}
 }
 
 
-#endif // I_GUARD_H
+#endif // AGENT_PROCESS_H

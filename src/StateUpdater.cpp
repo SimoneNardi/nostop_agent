@@ -1,4 +1,4 @@
-#include "GuardStateUpdater.h"
+#include "StateUpdater.h"
 
 #include "nostop_agent/GuardStateData.h"
 
@@ -12,7 +12,7 @@ using namespace Robotics;
 using namespace Robotics::GameTheory;
 
 /////////////////////////////////////////////
-GuardStateUpdater::GuardStateUpdater(std::shared_ptr<Guard> agent_) 
+StateUpdater::StateUpdater(std::shared_ptr<iGuard> agent_) 
   : m_guard(agent_)
   , m_node()
 {
@@ -27,11 +27,11 @@ GuardStateUpdater::GuardStateUpdater(std::shared_ptr<Guard> agent_)
 }
 
 /////////////////////////////////////////////
-GuardStateUpdater::~GuardStateUpdater()
+StateUpdater::~StateUpdater()
 {}
 
 /////////////////////////////////////////////
-void GuardStateUpdater::run()
+void StateUpdater::run()
 {
   ros::Rate loop_rate(10);
     

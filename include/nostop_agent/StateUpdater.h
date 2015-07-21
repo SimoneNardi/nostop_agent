@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////
-//	GuardStateUpdater.h
+//	StateUpdater.h
 //	Created on:	12-jun-2015
 //	Original author: Simone Nardi
 ////////////////////////////////////////////////////
-#ifndef GUARD_STATE_UPDATER_H
-#define GUARD_STATE_UPDATER_H
+#ifndef STATE_UPDATER_H
+#define STATE_UPDATER_H
 #pragma once
 
 #include "ThreadBase.h"
@@ -17,12 +17,12 @@ namespace Robotics
 {
 	namespace GameTheory
 	{
-		class Guard;
+		class iGuard;
 	  
-		class GuardStateUpdater: public ThreadBase	  	
+		class StateUpdater: public ThreadBase	  	
 		{
 		protected:
-			std::shared_ptr<Guard> m_guard;
+			std::shared_ptr<iGuard> m_guard;
 		  
 			ros::NodeHandle m_node;
 		  	ros::Publisher m_statePub;
@@ -30,9 +30,9 @@ namespace Robotics
 		protected:
 			virtual void run();
 		public:
-			GuardStateUpdater(std::shared_ptr<Guard> agent_);
+			StateUpdater(std::shared_ptr<iGuard> agent_);
 			
-			~GuardStateUpdater();
+			~StateUpdater();
 		};
 
 	}

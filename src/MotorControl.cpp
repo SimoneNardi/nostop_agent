@@ -1,4 +1,4 @@
-#include "AgentMotorControl.h"
+#include "MotorControl.h"
 
 #include "geometry_msgs/Twist.h"
 
@@ -11,26 +11,26 @@ using namespace Robotics;
 using namespace Robotics::GameTheory;
 
 /////////////////////////////////////////////
-AgentMotorControl::AgentMotorControl(std::shared_ptr<Agent> agent_)
+MotorControl::MotorControl(std::shared_ptr<iAgent> agent_)
   : m_agent(agent_)
   , m_node()
 {
   if(m_agent)
   {
     std::stringstream l_agentname;
-    l_agentname << "AgentMotorControl_";
-    l_agentname << m_agent->getID();
+    l_agentname << "MotorControl_";
+    l_agentname << m_agent->getName();
     
     m_controlPub = m_node.advertise<geometry_msgs::Twist>(l_agentname.str().c_str(), 10);
   }
 }
 
 /////////////////////////////////////////////
-AgentMotorControl::~AgentMotorControl()
+MotorControl::~MotorControl()
 {}
 
 /////////////////////////////////////////////
-void AgentMotorControl::run()
+void MotorControl::run()
 {
   ros::Rate loop_rate(50);
     
@@ -39,8 +39,8 @@ void AgentMotorControl::run()
   {
     geometry_msgs::Twist msg;
 
-    double l_angular = m_agent->getCurrentRotation();
-    double l_linear = m_agent->getCurrentSpeed();
+    double l_angular = m_agent->getCurrentAngularSpeed();
+    double l_linear = m_agent->getCurrentLinearSpeed();
     msg.linear.x = l_linear;
     msg.angular.z = l_angular;
         
