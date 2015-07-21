@@ -17,6 +17,7 @@ namespace Robotics
 	{
 		class AgentProcess
 	  	{
+		protected:
 		  std::shared_ptr<iAgent> m_agent;
 		  
 		  std::shared_ptr<MotorControl> m_motorControl;
@@ -25,6 +26,13 @@ namespace Robotics
 			AgentProcess() {};
 			
 			~AgentProcess() {};
+			
+			void setRobotName(std::string name_);
+			void setRobotAlgorithm(std::string alg_);
+			
+			void setCamera(Robotics::GameTheory::CameraPosition & camera_);
+			void setID(int id_);
+			
 		};
 	}
 }

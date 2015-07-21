@@ -26,11 +26,12 @@ namespace Robotics
 	  
 		class GuardProcess : public AgentProcess
 	  	{
+		  protected:
 			std::shared_ptr<StatePublisher> m_statePublisher;
 			std::shared_ptr<StateUpdater> m_stateUpdater;
 		  
 		public:
-			GuardProcess();
+			GuardProcess(std::string name_);
 			
 			~GuardProcess();
 		};

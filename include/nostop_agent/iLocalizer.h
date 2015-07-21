@@ -7,7 +7,15 @@
 #define iLOCALIZER_H
 #pragma once
 
-#include "Threads.h"
+#include "ThreadBase.h"
+
+#include "geometry_msgs/Pose.h"
+#include "geometry_msgs/Point.h"
+#include "geometry_msgs/Quaternion.h"
+
+#include "ros/ros.h"
+
+#include "Configuration.h"
 
 namespace Robotics
 {
@@ -32,25 +40,36 @@ namespace Robotics
 		{
 		protected:
 		  
-		  IDSReal2D m_position;
-		  
-		  double m_orientation;
+		  Configuration m_config;
 
 		  Mutex m_mutex;
+		  
+		  std::string m_name;
+		  
+		  ros::NodeHandle m_node;
+		  ros::Publisher m_sub;
+		protected:
+
+			virtual void updatePosition() = 0;
+			
+			virtual void updateOrientation() = 0;
 		  		  
 		public:
-			iLocalizer() {};
+			iLocalizer(std::string name_) : m_name(name_) {};
 			
 			~iLocalizer() {};
 			
-			IDSReal2D getPosition(); 
+			geometry_msgs::Point getPosition(); 
 			
-			double getOrientation();
+			geometry_msgs::Quaternion getOrientation();
+			
+			Configuration getConfiguration();
 		};
 		
 		/// Localization sensor for robot using the kinect.
 		class KinectLocalizer: public iLocalizer
 	  	{
+		  protected:
 		  /// back ball color
 		  ColorName m_back;
 		  
@@ -58,13 +77,14 @@ namespace Robotics
 		  ColorName m_front;
 		  	
 		protected:
+			virtual void update(geometry_msgs::PoseConstPtr & pose_);
 		  
-			void updatePosition();
+			virtual void updatePosition();
 			
-			void updateOrientation();
+			virtual void updateOrientation();
 									
 		public:
-			KinectLocalizer(ColorName back_, ColorName front_) : m_back(back_), m_front(front_) {};
+			KinectLocalizer(std::string name_);
 			
 			~KinectLocalizer() {};
 		};
@@ -72,16 +92,15 @@ namespace Robotics
 		/// Localization sensor for robot using the simulator.
 		class SimulatorLocalizer: public iLocalizer
 	  	{
-		    std::string m_name;
-		  
 		protected:
+			virtual void update(geometry_msgs::PoseConstPtr & pose_);
 		  
-			void updatePosition();
+			virtual void updatePosition();
 			
-			void updateOrientation();
+			virtual void updateOrientation();
 									
 		public:
-			SimulatorLocalizer(std::string name_) : m_name(name_) {};
+			SimulatorLocalizer(std::string name_);
 			
 			~SimulatorLocalizer() {};
 		};

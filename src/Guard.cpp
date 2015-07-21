@@ -7,8 +7,8 @@
 
 #include "IDSReal2D.h"
 
-#include "AgentAreaCreator.h"
-#include "GuardInterface.h"
+#include "AreaCreator.h"
+#include "GuardProcess.h"
 
 #include "LearningWorld.h"
 
@@ -21,8 +21,6 @@
 int main(int argc, char **argv)
 {
       ros::init(argc, argv, "Guard");
-      
-      Robotics::GameTheory::GuardProcess l_guard();
                   
       // Identify robot name:
       std::string l_str;
@@ -30,26 +28,26 @@ int main(int argc, char **argv)
       //ros::NodeHandle l_node;
       if (l_node.getParam("robot_name", l_str))
       {
-	ROS_INFO("Nome ricevuto: %s", g_robot_name.c_str());
-	l_process->setRobotColor(l_str);
+	ROS_INFO("Nome ricevuto: %s", l_str.c_str());
       }
       else
       {
-	l_process->setRobotColor("red_blue");
-	ROS_ERROR("Nome non ricevuto: %s", g_robot_name.c_str());
+	l_str="red_blue";
+	ROS_ERROR("Nome non ricevuto: %s", l_str.c_str());
       }
 	
+      Robotics::GameTheory::GuardProcess l_guard(l_str);
         
       // Identify Robot Algorithm:
       if (l_node.getParam("learning_name", l_str))
       {
-	l_process->setRobotAlgorithm(l_str);
-	ROS_INFO("Learning ricevuto: %s", g_robot_name.c_str());
+	l_guard.setRobotAlgorithm(l_str);
+	ROS_INFO("Learning ricevuto: %s", l_str.c_str());
       }
       else
       {
-	l_process->setRobotColor("DISL");
-	ROS_ERROR("Learning non ricevuto: %s", g_robot_name.c_str());
+	l_guard.setRobotAlgorithm("DISL");
+	ROS_ERROR("Learning non ricevuto: %s", l_str.c_str());
       }
       	
       Robotics::GameTheory::AreaPtr l_area = nullptr;
@@ -63,13 +61,13 @@ int main(int argc, char **argv)
 	      ROS_INFO("Area description received");
 	      
 	      // creazione dell'area:
-	      Robotics::GameTheory::AgentAreaCreator l_areaCreator(l_srvArea.response.external, l_srvArea.response.internal);
+	      Robotics::GameTheory::AreaCreator l_areaCreator(l_srvArea.response.external, l_srvArea.response.internal);
 	      l_area = l_areaCreator.getArea();
       }
       else
       {
 	      ROS_ERROR("Failed to call service AreaInitializer");
-	      Robotics::GameTheory::AgentAreaCreator l_areaCreator;
+	      Robotics::GameTheory::AreaCreator l_areaCreator;
 	      l_area = l_areaCreator.getArea();
       }
 	
@@ -88,33 +86,36 @@ int main(int argc, char **argv)
 		return 1;
 	}
 	
-	///////////////////////////////////////////////
-	// Get the agent configuration:
-	ros::NodeHandle l_nodePos;
-	ros::ServiceClient l_clientPos = l_nodePos.serviceClient<nostop_agent::PlayerConfigurationData>("GuardInitialPosition");
-	nostop_agent::PlayerConfigurationData l_srvPos;
-	l_srvPos.request.id = l_srvID.response.id;
-	if (l_clientPos.call(l_srvPos))
-	{
-		ROS_INFO("Initial configuration for Player %ld is: %ld, %ld, %ld", (long int)l_srvID.response.id, (long int)l_srvPos.response.x, (long int)l_srvPos.response.y, (long int)l_srvPos.response.heading);
-	}
-	else
-	{
-		ROS_ERROR("Failed to call service GuardInitialPosition");
-		l_srvPos.response.x = 5;
-		l_srvPos.response.y = 5;
-	}
+// 	///////////////////////////////////////////////
+// 	// Get the agent configuration:
+// 	ros::NodeHandle l_nodePos;
+// 	ros::ServiceClient l_clientPos = l_nodePos.serviceClient<nostop_agent::PlayerConfigurationData>("GuardInitialPosition");
+// 	nostop_agent::PlayerConfigurationData l_srvPos;
+// 	l_srvPos.request.id = l_srvID.response.id;
+// 	if (l_clientPos.call(l_srvPos))
+// 	{
+// 		ROS_INFO("Initial configuration for Player %ld is: %ld, %ld, %ld", (long int)l_srvID.response.id, (long int)l_srvPos.response.x, (long int)l_srvPos.response.y, (long int)l_srvPos.response.heading);
+// 	}
+// 	else
+// 	{
+// 		ROS_ERROR("Failed to call service GuardInitialPosition");
+// 		l_srvPos.response.x = 5;
+// 		l_srvPos.response.y = 5;
+// 	}
 	
-	// publish agent configuration to simulator
 	Robotics::GameTheory::CameraPosition l_camera(l_area->getDistance() / 10.);
-	IDSReal2D l_position(l_srvPos.response.x, l_srvPos.response.y);
-	std::shared_ptr<Robotics::GameTheory::GuardInterface> l_agent = std::make_shared<Robotics::GameTheory::GuardInterface>( l_srvID.response.id, Robotics::GameTheory::AgentPosition(l_position, l_camera) );
+	l_guard.setCamera(l_camera);
+	// publish agent configuration to simulator
+	l_guard.setID(l_srvID.response.id);
 	
-	std::shared_ptr<Robotics::GameTheory::Agent> l_learningAgent = l_agent->getAgent();
-	g_coverage = std::make_shared<Robotics::GameTheory::LearningWorld>(l_learningAgent, l_area->discretize(), Robotics::GameTheory::DISL);
+
+
+	
+	//std::shared_ptr<Robotics::GameTheory::Agent> l_learningAgent = l_agent->getAgent();
+	//g_coverage = std::make_shared<Robotics::GameTheory::LearningWorld>(l_learningAgent, l_area->discretize(), Robotics::GameTheory::DISL);
 	
 	// l'agente deve poter scegliere se compiere un'azione oppure se proseguire la traiettoria assegnata, 
-	// inoltre deve poter inviare un messaggio al simulatore ogni volta che finisce di compire l'azione
+	// inoltre deve poter inviare un messaggio al simulatore ogni volta che finisce di compiere l'azione
 	
 	
 	return 0;

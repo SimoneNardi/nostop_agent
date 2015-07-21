@@ -18,17 +18,11 @@ StatePublisher::StatePublisher(std::shared_ptr<iGuard> agent_)
 {
   if(m_guard)
   {
-//     std::stringstream l_guardname;
-//     l_guardname << "GuardPose_";
-//     l_guardname << m_guard->getName();
-//     m_subPose = m_node.subscribe(l_guardname.str().c_str(), 10, &StatePublisher::poseCallBack, this)
-//     
-//     
-//     std::stringstream l_guardID;
-//     l_guardID << "GuardState_";
-//     l_guardID << m_guard->getID();
+     std::stringstream l_guardName;
+     l_guardName << "StatePublisher_";
+     l_guardName << m_guard->getName();
     
-//     m_statePub = m_node.advertise<nostop_agent::GuardStateData>(l_guardID.str().c_str(), 10);
+     m_statePub = m_node.advertise<nostop_agent::GuardStateData>(l_guardName.str().c_str(), 10);
   }
 }
 
@@ -36,15 +30,6 @@ StatePublisher::StatePublisher(std::shared_ptr<iGuard> agent_)
 StatePublisher::~StatePublisher()
 {}
 
-/////////////////////////////////////////////
-void StatePublisher::poseCallBack(const geometry_msgs::PoseConstPtr& msg)
-{
-  geometry_msgs::Point l_point = msg->position;
-  geometry_msgs::Quaternion l_orientation = msg->orientation;
-  
-//   m_guard->setCurrentPosition( computeAgentPosition(l_point) );
-//   m_orientation = l_orientation;
-}
 
 /////////////////////////////////////////////
 void StatePublisher::run()
@@ -60,16 +45,18 @@ void StatePublisher::run()
     
     msg.msg = "GuardState";
     
+    Configuration l_currentPose =  m_guard->getCurrentConfiguration();
+    
     AgentPosition l_agentPos = m_guard->getCurrentPosition();
     IDSReal2D l_point = l_agentPos.getPoint2D();
     msg.x = l_point(0);
     msg.y = l_point(1);
     
-    AgentPosition l_previousPos = m_guard->getPreviousPosition();
-    IDSReal2D l_prev_point = l_previousPos.getPoint2D();
-    IDSReal2D l_delta = l_point - l_prev_point;
-    
-    msg.heading = IDSMath::polarPhi2D(l_delta(0), l_delta(1));
+//     AgentPosition l_previousPos = m_guard->getPreviousPosition();
+//     IDSReal2D l_prev_point = l_previousPos.getPoint2D();
+//     IDSReal2D l_delta = l_point - l_prev_point;
+//     msg.heading = IDSMath::polarPhi2D(l_delta(0), l_delta(1));
+    msg.heading = l_currentPose.getOrientation(); 
         
     CameraPosition l_camera = l_agentPos.getCameraControl();
     

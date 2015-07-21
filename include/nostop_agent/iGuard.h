@@ -19,6 +19,11 @@ namespace Robotics
 	{
 		class iGuard : public iAgent
 	  	{
+		  protected:
+		  std::shared_ptr<Guard> m_guard;
+		  
+		protected:
+			AgentPosition getCurrentAgentPosition();
 
 		public:
 			iGuard() {};

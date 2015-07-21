@@ -6,17 +6,20 @@
 #include "ros/ros.h"
 #include <sstream>
 
-#include "guard.h"
+#include "iGuard.h"
+#include <memory>
 
 using namespace std;
 using namespace Robotics;
 using namespace Robotics::GameTheory;
 
 /////////////////////////////////////////////
-GuardProcess::GuardProcess()
+GuardProcess::GuardProcess(std::string name_)
 : AgentProcess()
 {
   m_agent = std::make_shared<iGuard>();
+  m_agent->setName(name_);
+  
   m_motorControl = std::make_shared<MotorControl>( m_agent );
   m_motorControl->start();
     

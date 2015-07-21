@@ -14,7 +14,7 @@ else()
     message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
-find_package(catkin REQUIRED COMPONENTS roscpp std_msgs message_generation base_math nostop_learning)
+find_package(catkin REQUIRED COMPONENTS roscpp std_msgs geometry_msgs nav_msgs message_generation base_math nostop_learning tf)
 
 ################################################
 ## Declare ROS messages, services and actions ##
@@ -50,6 +50,8 @@ find_package(catkin REQUIRED COMPONENTS roscpp std_msgs message_generation base_
  generate_messages(
    DEPENDENCIES
    std_msgs  # Or other packages containing msgs
+   geometry_msgs
+   nav_msgs
  )
 
 ###################################
@@ -73,26 +75,29 @@ include_directories(${CMAKE_INSTALL_PREFIX}/include) # this line is to find lemo
 
 set(guard_SOURCES
         src/Guard.cpp
-        src/AgentAreaCreator.cpp
-        src/GuardInterface.cpp
-        src/GuardStateUpdater.cpp
-        src/GuardStatePublisher.cpp
-        src/AgentMotorControl.cpp
+        src/AreaCreator.cpp
+        src/GuardProcess.cpp
+        src/iAgent.cpp
+        src/iLocalizer.cpp
+        src/StateUpdater.cpp
+        src/StatePublisher.cpp
+        src/MotorControl.cpp
 )
 
 set(thief_SOURCES
         src/Thief.cpp
-        src/AgentAreaCreator.cpp
+        src/AreaCreator.cpp
         #Agent/ThiefInterface.cpp
 )
 
 set(agent_SOURCES
-        src/AgentAreaCreator.cpp
-        src/GuardInterface.cpp
-        src/GuardStateUpdater.cpp
-        src/GuardStatePublisher.cpp
-        src/AgentMotorControl.cpp
-        src/AgentAreaCreator.cpp
+        src/AreaCreator.cpp
+        src/GuardProcess.cpp
+        src/iAgent.cpp
+        src/iLocalizer.cpp
+        src/StateUpdater.cpp
+        src/StatePublisher.cpp
+        src/MotorControl.cpp
         #Agent/ThiefInterface.cpp
 )
 

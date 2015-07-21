@@ -4,7 +4,7 @@
 
 #include "ros/ros.h"
 
-#include "agent.h"
+#include "iAgent.h"
 
 using namespace std;
 using namespace Robotics;

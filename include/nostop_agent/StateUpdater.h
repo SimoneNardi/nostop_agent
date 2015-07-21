@@ -10,6 +10,7 @@
 #include "ThreadBase.h"
 
 #include "ros/ros.h"
+#include <tf/transform_broadcaster.h>
 
 #include <memory>
 
@@ -19,14 +20,13 @@ namespace Robotics
 	{
 		class iGuard;
 	  
-		class StateUpdater: public ThreadBase	  	
+		class StateUpdater: public ThreadBase
 		{
 		protected:
 			std::shared_ptr<iGuard> m_guard;
-		  
-			ros::NodeHandle m_node;
-		  	ros::Publisher m_statePub;
 		
+			tf::TransformBroadcaster odom_broadcaster;
+			
 		protected:
 			virtual void run();
 		public:

@@ -6,23 +6,48 @@ using namespace std;
 
 
 	////////////////////////////////////////////////////
-	IDSReal2D iLocalizer::getPosition()
+	geometry_msgs::Point iLocalizer::getPosition()
 	{
 	  Lock lock(m_mutex);
-	  return m_position;
+	  return m_config.getPosition();
 	}
 	
 	////////////////////////////////////////////////////
-	double iLocalizer::getOrientation()
+	geometry_msgs::Quaternion iLocalizer::getOrientation()
 	{
 	  Lock lock(m_mutex);
-	  return m_orientation;
+	  return m_config.getOrientation();
+	}
+	
+	////////////////////////////////////////////////////
+	Configuration iLocalizer::getConfiguration()
+	{
+		Lock lock(m_mutex);
+		return m_config;
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+	////////////////////////////////////////////////////
+	SimulatorLocalizer(std::string name_) 
+	: iLocalizer(name_) 
+	{
+	   std::string l_agentname = "SimulatorLocalizer_";
+	   l_agentname+=name_;
+    	  
+	   m_sub = m_node.subscribe(l_agentname.c_str(), 10, &SimulatorLocalizer::update, this);
+	}
+	
+	////////////////////////////////////////////////////
+	void SimulatorLocalizer::update(geometry_msgs::PoseConstPtr & pose_)
+	{
+	  Lock l_lock(m_mutex);
+	  
+	  // TODO: chiede al simulotre la configurazione del robot
+	}
+	
 	////////////////////////////////////////////////////
 	void SimulatorLocalizer::updatePosition()
 	{
@@ -40,6 +65,26 @@ using namespace std;
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+	////////////////////////////////////////////////////
+	KinectLocalizer(std::string name_, ColorName back_, ColorName front_) 
+	: iLocalizer(name_)
+	, m_back(back_)
+	, m_front(front_) 
+	{
+	  std::string l_agentname = "KinectLocalizer_";
+	  l_agentname+=name_;
+	  
+	  m_sub = m_node.subscribe(l_agentname.c_str(), 10, &KinectLocalizer::update, this);
+	}
+	
+	////////////////////////////////////////////////////
+	void KinectLocalizer::update(geometry_msgs::PoseConstPtr & pose_)
+	{
+	  Lock l_lock(m_mutex);
+	  
+	  // TODO: chiede al kinect la configurazione del robot
+	}
+	
 	////////////////////////////////////////////////////
 	void KinectLocalizer::updatePosition()
 	{

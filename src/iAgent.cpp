@@ -7,13 +7,13 @@ using namespace std;
 	////////////////////////////////////////////////////
 	bool operator==(const Configuration& lhs, const Configuration& rhs)
 	{
-	  geometry_msgs::Quaternion lhs_orientation = lhs.getOrientation();
+// 	  geometry_msgs::Quaternion lhs_orientation = lhs.getOrientation();
 	  geometry_msgs::Point lhs_position = lhs.getPosition();
 	  
-	  geometry_msgs::Quaternion rhs_orientation = rhs.getOrientation();
+// 	  geometry_msgs::Quaternion rhs_orientation = rhs.getOrientation();
 	  geometry_msgs::Point rhs_position = rhs.getPosition();
 	  
-	  return lhs_orientation==rhs_orientation && lhs_position==rhs_position;
+	  return lhs_position==rhs_position;
 	}
 
 	////////////////////////////////////////////////////
@@ -21,7 +21,58 @@ using namespace std;
 	{
 	  return !(lhs==rhs);
 	}
+	
+	Configuration::Configuration (nav_msgs::OdometryConstPtr& odom_)
+	{
+	  m_odom = odom_.get();
+	}
+	
+	////////////////////////////////////////////////////
+	Configuration::Configuration (geometry_msgs::PoseConstPtr & pose_)
+	{
+	  m_odom.pose.pose = pose_.get();
+	}
+	
+	////////////////////////////////////////////////////
+	void Configuration::setPosition(geometry_msgs::Point & position_)
+	{
+	  m_odom.pose.pose.position = position_;
+	}
+	
+	////////////////////////////////////////////////////
+	void Configuration::setOrientation(geometry_msgs::Quaternion & orientation_)
+	{
+	  m_odom.pose.pose.orientation = orientation_;
+	}
+	
+	////////////////////////////////////////////////////
+	void Configuration::setPose(geometry_msgs::Pose & pose_)
+	{
+	  m_odom.pose.pose = pose_;
+	}
+	
+	////////////////////////////////////////////////////
+	geometry_msgs::Point Configuration::getPosition()
+	{
+	  return m_odom.pose.pose.position;
+	}
+	
+	////////////////////////////////////////////////////
+	geometry_msgs::Quaternion Configuration::getOrientation()
+	{
+	  return m_odom.pose.pose.orientation;
+	}
+	
+	////////////////////////////////////////////////////
+	geometry_msgs::Pose Configuration::getPose()
+	{
+	  return m_odom.pose.pose;
+	}
 
+	////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////
+	
 	////////////////////////////////////////////////////
 	void iAgent::setCurrentOrientation(geometry_msgs::Quaternion & orientation_) 
 	{
@@ -60,10 +111,10 @@ using namespace std;
 	}
 	
 	////////////////////////////////////////////////////
-	void iAgent::setLocalizer(ColorName back_, ColorName front_)
+	void iAgent::setLocalizer(std::string name_, ColorName back_, ColorName front_)
 	{
 	  Lock lock(m_mutex);
-	  m_localizer = std::make_shared<KinectLocalizer>(back_, front_);
+	  m_localizer = std::make_shared<KinectLocalizer>(name_, back_, front_);
 	}
 	
 	////////////////////////////////////////////////////
@@ -76,11 +127,61 @@ using namespace std;
 	////////////////////////////////////////////////////
 	double iAgent::getCurrentAngularSpeed()
 	{
-	  return m_agent->getCurrentRotation();
+	  // TODO
+	  
+	  return 0.;
 	}
 	
 	////////////////////////////////////////////////////
 	double iAgent::getCurrentLinearSpeed()
 	{
-	  return m_agent->getCurrentSpeed();
+	  // TODO
+
+	  return 0.;
 	}
+	
+	////////////////////////////////////////////////////
+	void iAgent::setCurrentConfiguration( geometry_msgs::PoseConstPtr & pose_ )
+	{
+	  Lock lock(m_mutex);
+	  m_currentConfiguration = Configuration(pose_);
+	}
+	
+	////////////////////////////////////////////////////
+	void iAgent::setCurrentConfiguration( Configuration & config_ )
+	{
+	  Lock lock(m_mutex);
+	  m_currentConfiguration = config_;
+	}
+	
+	////////////////////////////////////////////////////
+	void iAgent::setCurrentConfiguration( nav_msgs::OdometryConstPtr & odometry_ )
+	{
+	  Lock lock(m_mutex);
+	  m_currentConfiguration = Configuration(odometry_);
+	}
+	
+	////////////////////////////////////////////////////
+	bool iAgent::isArrived()
+	{
+	  return m_currentConfiguration == m_targetConfiguration;
+	}
+	
+	////////////////////////////////////////////////////
+	void iAgent::setStandByStatus()
+	{
+	  m_agent->setStatus(Agent::STANDBY);
+	}
+			
+	////////////////////////////////////////////////////
+	void iAgent::setActiveStatus()
+	{
+	  m_agent->setStatus(Agent::ACTIVE);
+	}
+	
+	////////////////////////////////////////////////////
+	void iAgent::setName(std::string name_)
+	{
+	    m_name = name_;
+	}
+	
