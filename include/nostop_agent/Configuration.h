@@ -20,24 +20,23 @@ namespace Robotics
 						
 		public:
 		  Configuration();
-		  Configuration (geometry_msgs::PoseConstPtr & pose_);
-		  Configuration (nav_msgs::OdometryConstPtr& odom_);
+		  Configuration (geometry_msgs::Pose & pose_);
+		  Configuration (nav_msgs::Odometry& odom_);
 		  
 		  void setPosition(geometry_msgs::Point & position_);
 		  void setOrientation(geometry_msgs::Quaternion & orientation_);
 		  void setPose(geometry_msgs::Pose & pose_);
 		  
-		  geometry_msgs::Point getPosition();
-		  geometry_msgs::Quaternion getOrientation();
+		  geometry_msgs::Point getPosition() const;
+		  geometry_msgs::Quaternion getOrientation() const;
 		  
-		  geometry_msgs::Pose getPose();
-		  geometry_msgs::Twist getTwist();
+		  geometry_msgs::Pose getPose() const;
+		  geometry_msgs::Twist getTwist() const;
 		  
-		  nav_msgs::Odometry getOdometry();
+		  nav_msgs::Odometry getOdometry() const;
+		  
+		  bool equals(const Configuration& other_) const;
 		};
-		
-		bool operator==(const Configuration& lhs, const Configuration& rhs);
-		bool operator!=(const Configuration& lhs, const Configuration& rhs);
 	}
 }
 

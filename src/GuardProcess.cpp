@@ -23,10 +23,12 @@ GuardProcess::GuardProcess(std::string name_)
   m_motorControl = std::make_shared<MotorControl>( m_agent );
   m_motorControl->start();
     
-  m_stateUpdater = std::make_shared<StateUpdater>( std::dynamic_pointer_cast<iGuard>(m_agent) );
+  std::shared_ptr<iGuard> l_guard = std::static_pointer_cast<iGuard>(m_agent);
+  
+  m_stateUpdater = std::make_shared<StateUpdater>( l_guard );
   m_stateUpdater->start();
   
-  m_statePublisher = std::make_shared<StatePublisher>( std::dynamic_pointer_cast<iGuard>(m_agent) );
+  m_statePublisher = std::make_shared<StatePublisher>( l_guard );
   m_statePublisher->start();
 }
 

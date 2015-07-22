@@ -12,6 +12,8 @@
 #include "geometry_msgs/Pose.h"
 #include "geometry_msgs/Point.h"
 #include "geometry_msgs/Quaternion.h"
+#include "geometry_msgs/Twist.h"
+#include "nav_msgs/Odometry.h"
 
 #include "ros/ros.h"
 
@@ -29,12 +31,6 @@ namespace Robotics
 		    yellow
 		};
 		
-		enum LocalizerType
-		{
-		    kinect = 0, 
-		    simulator
-		};
-		
 		/// Localization sensor for robot.
 		class iLocalizer
 		{
@@ -42,13 +38,14 @@ namespace Robotics
 		  
 		  Configuration m_config;
 
-		  Mutex m_mutex;
+		  mutable Mutex m_mutex;
 		  
 		  std::string m_name;
 		  
 		  ros::NodeHandle m_node;
-		  ros::Publisher m_sub;
+		  ros::Subscriber m_sub;
 		protected:
+			virtual void subscribe() = 0;
 
 			virtual void updatePosition() = 0;
 			
@@ -59,11 +56,17 @@ namespace Robotics
 			
 			~iLocalizer() {};
 			
-			geometry_msgs::Point getPosition(); 
+			geometry_msgs::Point getPosition() const; 
 			
-			geometry_msgs::Quaternion getOrientation();
+			geometry_msgs::Quaternion getOrientation() const;
 			
-			Configuration getConfiguration();
+			geometry_msgs::Twist getTwist() const; 
+			
+			geometry_msgs::Pose getPose() const;
+			
+			nav_msgs::Odometry getOdometry() const;
+			
+			Configuration getConfiguration() const;
 		};
 		
 		/// Localization sensor for robot using the kinect.
@@ -77,6 +80,8 @@ namespace Robotics
 		  ColorName m_front;
 		  	
 		protected:
+			virtual void subscribe();
+			
 			virtual void update(geometry_msgs::PoseConstPtr & pose_);
 		  
 			virtual void updatePosition();
@@ -93,6 +98,8 @@ namespace Robotics
 		class SimulatorLocalizer: public iLocalizer
 	  	{
 		protected:
+			virtual void subscribe();
+			
 			virtual void update(geometry_msgs::PoseConstPtr & pose_);
 		  
 			virtual void updatePosition();
@@ -109,4 +116,4 @@ namespace Robotics
 }
 
 
-#endif // iLOCALIZATION_H
+#endif // iLOCALIZER_H

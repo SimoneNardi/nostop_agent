@@ -29,15 +29,15 @@ namespace Robotics
 			
 			Mutex m_mutex;
 			
-			std::shared_ptr<Agent> m_agent;
+			std::shared_ptr<Agent> m_LAgent;
 			
 			std::string m_name;
 					
 		public:
 		  
-			void setCurrentConfiguration( nav_msgs::OdometryConstPtr & odometry_ );
+			void setCurrentConfiguration( nav_msgs::Odometry & odometry_ );
 		  
-			void setCurrentConfiguration( geometry_msgs::PoseConstPtr & pose_ );
+			void setCurrentConfiguration( geometry_msgs::Pose & pose_ );
 			
 			void setCurrentConfiguration( Configuration & config_ );
 			
@@ -53,10 +53,10 @@ namespace Robotics
 			/// Create the link between this agent and the agent of the learning
 			void setAgentPtr(std::shared_ptr<Agent> agent_);						
 			/// Create a kinect localizer
-			void setLocalizer(std::string name_, ColorName back_, ColorName front_);
+			void setKinectLocalizer(std::string name_);
 			
 			/// Create a simulator localizer
-			void setLocalizer(std::string name_);
+			void setSimulatorLocalizer(std::string name_);
 			
 			/// get current angular speed in world TF
 			double getCurrentAngularSpeed();

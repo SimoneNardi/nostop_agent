@@ -17,7 +17,6 @@ using namespace Robotics::GameTheory;
 /////////////////////////////////////////////
 StateUpdater::StateUpdater(std::shared_ptr<iGuard> agent_) 
   : m_guard(agent_)
-  , odom_broadcaster
 {
     
 }
@@ -25,7 +24,6 @@ StateUpdater::StateUpdater(std::shared_ptr<iGuard> agent_)
 /////////////////////////////////////////////
 StateUpdater::~StateUpdater()
 {}
-
 
 /////////////////////////////////////////////
 void StateUpdater::run()

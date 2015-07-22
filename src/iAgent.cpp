@@ -1,36 +1,41 @@
 #include "iAgent.h"
 
+#include "geometry_msgs/Point.h"
+#include "geometry_msgs/Pose.h"
+#include "geometry_msgs/Quaternion.h"
+#include "nav_msgs/Odometry.h"
+
+#include "iLocalizer.h"
+
+#include "IDSMath.h"
+
 using namespace Robotics;
 using namespace Robotics::GameTheory;
 using namespace std;
 
 	////////////////////////////////////////////////////
-	bool operator==(const Configuration& lhs, const Configuration& rhs)
+	bool Configuration::equals( const Configuration& rhs ) const
 	{
 // 	  geometry_msgs::Quaternion lhs_orientation = lhs.getOrientation();
-	  geometry_msgs::Point lhs_position = lhs.getPosition();
+	  geometry_msgs::Point lhs_position = this->getPosition();
 	  
 // 	  geometry_msgs::Quaternion rhs_orientation = rhs.getOrientation();
 	  geometry_msgs::Point rhs_position = rhs.getPosition();
 	  
-	  return lhs_position==rhs_position;
+	  return fabs(lhs_position.x - rhs_position.x) < IDSMath::TOLERANCE && 
+		 fabs(lhs_position.y - rhs_position.y) < IDSMath::TOLERANCE && 
+		 fabs(lhs_position.z - rhs_position.z) < IDSMath::TOLERANCE;
 	}
 
-	////////////////////////////////////////////////////
-	bool operator!=(const Configuration& lhs, const Configuration& rhs)
+	Configuration::Configuration (nav_msgs::Odometry& odom_)
 	{
-	  return !(lhs==rhs);
-	}
-	
-	Configuration::Configuration (nav_msgs::OdometryConstPtr& odom_)
-	{
-	  m_odom = odom_.get();
+	  m_odom = odom_;
 	}
 	
 	////////////////////////////////////////////////////
-	Configuration::Configuration (geometry_msgs::PoseConstPtr & pose_)
+	Configuration::Configuration (geometry_msgs::Pose & pose_)
 	{
-	  m_odom.pose.pose = pose_.get();
+	  m_odom.pose.pose = pose_;
 	}
 	
 	////////////////////////////////////////////////////
@@ -52,23 +57,35 @@ using namespace std;
 	}
 	
 	////////////////////////////////////////////////////
-	geometry_msgs::Point Configuration::getPosition()
+	geometry_msgs::Point Configuration::getPosition() const
 	{
 	  return m_odom.pose.pose.position;
 	}
 	
 	////////////////////////////////////////////////////
-	geometry_msgs::Quaternion Configuration::getOrientation()
+	geometry_msgs::Quaternion Configuration::getOrientation() const
 	{
 	  return m_odom.pose.pose.orientation;
 	}
 	
 	////////////////////////////////////////////////////
-	geometry_msgs::Pose Configuration::getPose()
+	geometry_msgs::Pose Configuration::getPose() const
 	{
 	  return m_odom.pose.pose;
 	}
 
+	////////////////////////////////////////////////////
+	geometry_msgs::Twist Configuration::getTwist() const
+	{
+	  return m_odom.twist.twist;
+	}
+		  
+	////////////////////////////////////////////////////
+	nav_msgs::Odometry Configuration::getOdometry() const
+	{
+	  return m_odom;
+	}
+	
 	////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////
@@ -81,44 +98,28 @@ using namespace std;
 	}
 	
 	////////////////////////////////////////////////////
-	void setCurrentPosition(geometry_msgs::Point & point_)
+	void iAgent::setCurrentPosition(geometry_msgs::Point & point_)
 	{
 	  Lock lock(m_mutex);
 	  m_currentConfiguration.setPosition(point_);
 	}
 
 	////////////////////////////////////////////////////
-	AgentPosition getCurrentPosition()
-	{
-	  //TODO ... calcolo dell'agentPosition.
-	  AgentPosition l_pos;
-	  return l_pos;
-	}
-	
-	////////////////////////////////////////////////////
-	AgentPosition  iAgent::computeAgentPosition(geometry_msgs::Point & point_)
-	{
-	  Lock lock(m_mutex);
-	  AgentPosition l_pos;
-	  return l_pos;
-	}
-	
-	////////////////////////////////////////////////////
 	void iAgent::setAgentPtr(std::shared_ptr<Agent> agent_)
 	{
 	  Lock lock(m_mutex);
-	  m_agent = agent_;
+	  m_LAgent = agent_;
 	}
 	
 	////////////////////////////////////////////////////
-	void iAgent::setLocalizer(std::string name_, ColorName back_, ColorName front_)
+	void iAgent::setKinectLocalizer(std::string name_)
 	{
 	  Lock lock(m_mutex);
-	  m_localizer = std::make_shared<KinectLocalizer>(name_, back_, front_);
+	  m_localizer = std::make_shared<KinectLocalizer>(name_);
 	}
 	
 	////////////////////////////////////////////////////
-	void iAgent::setLocalizer(std::string name_)
+	void iAgent::setSimulatorLocalizer(std::string name_)
 	{
 	  Lock lock(m_mutex);
 	  m_localizer = std::make_shared<SimulatorLocalizer>(name_);
@@ -141,7 +142,7 @@ using namespace std;
 	}
 	
 	////////////////////////////////////////////////////
-	void iAgent::setCurrentConfiguration( geometry_msgs::PoseConstPtr & pose_ )
+	void iAgent::setCurrentConfiguration( geometry_msgs::Pose & pose_ )
 	{
 	  Lock lock(m_mutex);
 	  m_currentConfiguration = Configuration(pose_);
@@ -155,7 +156,7 @@ using namespace std;
 	}
 	
 	////////////////////////////////////////////////////
-	void iAgent::setCurrentConfiguration( nav_msgs::OdometryConstPtr & odometry_ )
+	void iAgent::setCurrentConfiguration( nav_msgs::Odometry & odometry_ )
 	{
 	  Lock lock(m_mutex);
 	  m_currentConfiguration = Configuration(odometry_);
@@ -164,19 +165,19 @@ using namespace std;
 	////////////////////////////////////////////////////
 	bool iAgent::isArrived()
 	{
-	  return m_currentConfiguration == m_targetConfiguration;
+	  return m_currentConfiguration.equals(m_targetConfiguration);
 	}
 	
 	////////////////////////////////////////////////////
 	void iAgent::setStandByStatus()
 	{
-	  m_agent->setStatus(Agent::STANDBY);
+	  m_LAgent->setStatus(Agent::STANDBY);
 	}
 			
 	////////////////////////////////////////////////////
 	void iAgent::setActiveStatus()
 	{
-	  m_agent->setStatus(Agent::ACTIVE);
+	  m_LAgent->setStatus(Agent::ACTIVE);
 	}
 	
 	////////////////////////////////////////////////////
