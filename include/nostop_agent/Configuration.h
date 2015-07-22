@@ -22,10 +22,14 @@ namespace Robotics
 		  Configuration();
 		  Configuration (geometry_msgs::Pose & pose_);
 		  Configuration (nav_msgs::Odometry& odom_);
+		  Configuration (geometry_msgs::Point & point_);
 		  
 		  void setPosition(geometry_msgs::Point & position_);
 		  void setOrientation(geometry_msgs::Quaternion & orientation_);
 		  void setPose(geometry_msgs::Pose & pose_);
+		  void setTwist(geometry_msgs::Twist & twist_);
+		  void setOdometry(nav_msgs::Odometry & odometry_);
+		  void setConfiguration(Configuration & config_);
 		  
 		  geometry_msgs::Point getPosition() const;
 		  geometry_msgs::Quaternion getOrientation() const;

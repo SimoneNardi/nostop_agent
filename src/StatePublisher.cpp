@@ -4,8 +4,10 @@
 
 #include "ros/ros.h"
 
-#include "guard.h"
-#include "agent.h"
+#include "iGuard.h"
+
+#include <tf/transform_broadcaster.h>
+#include <nav_msgs/Odometry.h>
 
 using namespace std;
 using namespace Robotics;
@@ -47,7 +49,7 @@ void StatePublisher::run()
     
     Configuration l_currentPose =  m_guard->getCurrentConfiguration();
     
-    AgentPosition l_agentPos = m_guard->getCurrentPosition();
+    AgentPosition l_agentPos = m_guard->getCurrentAgentPosition();
     IDSReal2D l_point = l_agentPos.getPoint2D();
     msg.x = l_point(0);
     msg.y = l_point(1);
@@ -56,8 +58,13 @@ void StatePublisher::run()
 //     IDSReal2D l_prev_point = l_previousPos.getPoint2D();
 //     IDSReal2D l_delta = l_point - l_prev_point;
 //     msg.heading = IDSMath::polarPhi2D(l_delta(0), l_delta(1));
-    msg.heading = l_currentPose.getOrientation(); 
-        
+//     msg.heading = l_currentPose.getOrientation(); 
+    
+    geometry_msgs::Quaternion l_orientation = l_currentPose.getOrientation();
+    tf::Pose l_pose;
+    tf::poseMsgToTF(l_currentPose.getPose(), l_pose);
+    msg.heading = tf::getYaw(l_pose.getRotation());
+            
     CameraPosition l_camera = l_agentPos.getCameraControl();
     
     msg.min_radius = l_camera.getNearRadius();

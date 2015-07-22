@@ -32,7 +32,6 @@ namespace Robotics
 			
 			void setCamera(Robotics::GameTheory::CameraPosition & camera_);
 			void setID(int id_);
-			
 		};
 	}
 }

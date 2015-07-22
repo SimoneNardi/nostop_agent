@@ -74,14 +74,16 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}/src)
 include_directories(${CMAKE_INSTALL_PREFIX}/include) # this line is to find lemon include files.
 
 set(guard_SOURCES
-        src/Guard.cpp
+        src/AgentProcess.cpp
         src/AreaCreator.cpp
+        src/Guard.cpp
         src/GuardProcess.cpp
         src/iAgent.cpp
+        src/iGuard.cpp
         src/iLocalizer.cpp
-        src/StateUpdater.cpp
-        src/StatePublisher.cpp
         src/MotorControl.cpp
+        src/StatePublisher.cpp
+        src/StateUpdater.cpp
 )
 
 set(thief_SOURCES
@@ -91,13 +93,15 @@ set(thief_SOURCES
 )
 
 set(agent_SOURCES
+        src/AgentProcess.cpp
         src/AreaCreator.cpp
         src/GuardProcess.cpp
         src/iAgent.cpp
+        src/iGuard.cpp
         src/iLocalizer.cpp
-        src/StateUpdater.cpp
-        src/StatePublisher.cpp
         src/MotorControl.cpp
+        src/StatePublisher.cpp
+        src/StateUpdater.cpp
         #Agent/ThiefInterface.cpp
 )
 

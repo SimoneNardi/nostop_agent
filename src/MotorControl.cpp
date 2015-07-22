@@ -37,14 +37,7 @@ void MotorControl::run()
   int count = 0;
   while (ros::ok())
   {
-    geometry_msgs::Twist msg;
-
-    double l_angular = m_agent->getCurrentAngularSpeed();
-    double l_linear = m_agent->getCurrentLinearSpeed();
-    msg.linear.x = l_linear;
-    msg.angular.z = l_angular;
-        
-    m_controlPub.publish(msg);
+    m_controlPub.publish(m_agent->getCurrentConfigurationTwist());
 
     ros::spinOnce();
 

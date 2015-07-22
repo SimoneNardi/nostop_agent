@@ -27,6 +27,11 @@ using namespace std;
 		 fabs(lhs_position.z - rhs_position.z) < IDSMath::TOLERANCE;
 	}
 
+	////////////////////////////////////////////////////
+	Configuration::Configuration ()
+	{}
+	
+	////////////////////////////////////////////////////
 	Configuration::Configuration (nav_msgs::Odometry& odom_)
 	{
 	  m_odom = odom_;
@@ -36,6 +41,12 @@ using namespace std;
 	Configuration::Configuration (geometry_msgs::Pose & pose_)
 	{
 	  m_odom.pose.pose = pose_;
+	}
+	
+	////////////////////////////////////////////////////
+	Configuration::Configuration (geometry_msgs::Point & point_)
+	{
+	  m_odom.pose.pose.position = point_;
 	}
 	
 	////////////////////////////////////////////////////
@@ -54,6 +65,24 @@ using namespace std;
 	void Configuration::setPose(geometry_msgs::Pose & pose_)
 	{
 	  m_odom.pose.pose = pose_;
+	}
+	
+	////////////////////////////////////////////////////
+	void Configuration::setTwist(geometry_msgs::Twist & twist_)
+	{
+	  m_odom.twist.twist = twist_;
+	}
+	
+	////////////////////////////////////////////////////
+	void Configuration::setOdometry(nav_msgs::Odometry & odometry_)
+	{
+	  m_odom = odometry_;
+	}
+	
+	////////////////////////////////////////////////////
+	void Configuration::setConfiguration(Configuration & config_)
+	{
+	  m_odom = config_.getOdometry();
 	}
 	
 	////////////////////////////////////////////////////
@@ -91,20 +120,6 @@ using namespace std;
 	////////////////////////////////////////////////////////////////////////////////////
 	
 	////////////////////////////////////////////////////
-	void iAgent::setCurrentOrientation(geometry_msgs::Quaternion & orientation_) 
-	{
-	  Lock lock(m_mutex);
-	  m_currentConfiguration.setOrientation(orientation_);
-	}
-	
-	////////////////////////////////////////////////////
-	void iAgent::setCurrentPosition(geometry_msgs::Point & point_)
-	{
-	  Lock lock(m_mutex);
-	  m_currentConfiguration.setPosition(point_);
-	}
-
-	////////////////////////////////////////////////////
 	void iAgent::setAgentPtr(std::shared_ptr<Agent> agent_)
 	{
 	  Lock lock(m_mutex);
@@ -125,41 +140,10 @@ using namespace std;
 	  m_localizer = std::make_shared<SimulatorLocalizer>(name_);
 	}
 	
-	////////////////////////////////////////////////////
-	double iAgent::getCurrentAngularSpeed()
-	{
-	  // TODO
-	  
-	  return 0.;
-	}
-	
-	////////////////////////////////////////////////////
-	double iAgent::getCurrentLinearSpeed()
-	{
-	  // TODO
-
-	  return 0.;
-	}
-	
-	////////////////////////////////////////////////////
-	void iAgent::setCurrentConfiguration( geometry_msgs::Pose & pose_ )
+	geometry_msgs::Twist iAgent::getCurrentConfigurationTwist()
 	{
 	  Lock lock(m_mutex);
-	  m_currentConfiguration = Configuration(pose_);
-	}
-	
-	////////////////////////////////////////////////////
-	void iAgent::setCurrentConfiguration( Configuration & config_ )
-	{
-	  Lock lock(m_mutex);
-	  m_currentConfiguration = config_;
-	}
-	
-	////////////////////////////////////////////////////
-	void iAgent::setCurrentConfiguration( nav_msgs::Odometry & odometry_ )
-	{
-	  Lock lock(m_mutex);
-	  m_currentConfiguration = Configuration(odometry_);
+	  return m_currentConfiguration.getTwist();
 	}
 	
 	////////////////////////////////////////////////////
@@ -186,3 +170,79 @@ using namespace std;
 	    m_name = name_;
 	}
 	
+	////////////////////////////////////////////////////
+	void iAgent::updateCurrentOdometry( nav_msgs::Odometry & odometry_ )
+	{
+	  Lock lock(m_mutex);
+		m_currentConfiguration.setOdometry(odometry_);
+	}
+	
+	////////////////////////////////////////////////////
+	void iAgent::updateCurrentPose( geometry_msgs::Pose & pose_ )
+	{
+	  Lock lock(m_mutex);
+	  m_currentConfiguration.setPose(pose_);
+	}
+	
+	////////////////////////////////////////////////////
+	void iAgent::updateCurrentTwist( geometry_msgs::Twist & twist_ )
+	{
+	  Lock lock(m_mutex);
+	   m_currentConfiguration.setTwist(twist_);
+	}
+	
+	////////////////////////////////////////////////////
+	void iAgent::updateCurrentOrientation(geometry_msgs::Quaternion & orientation_)
+	{
+	  Lock lock(m_mutex);
+	  m_currentConfiguration.setOrientation(orientation_);
+	}
+	
+	////////////////////////////////////////////////////
+	void iAgent::updateCurrentPosition(geometry_msgs::Point & position_)
+	{
+	  Lock lock(m_mutex);
+	  m_currentConfiguration.setPosition(position_);
+	}
+	
+	////////////////////////////////////////////////////
+	void iAgent::setCurrentConfiguration( Configuration & config_ )
+	{
+	  Lock lock(m_mutex);
+	  m_currentConfiguration.setConfiguration(config_);
+	}
+	
+	////////////////////////////////////////////////////
+	void iAgent::updateTargetConfiguration(geometry_msgs::Point & newTarget_)
+	{
+	  Lock lock(m_mutex);
+	  m_targetConfiguration.setPosition(newTarget_);
+	}
+	
+	////////////////////////////////////////////////////
+	void iAgent::computeConfigurationToTarget()
+	{
+	  Lock lock(m_mutex);
+	  //m_currentConfiguration cambio twist... TODO
+	  
+	}
+	
+	////////////////////////////////////////////////////
+	int iAgent::getID()
+	{
+	  Lock lock(m_mutex);
+	  m_LAgent->getID();
+	}
+	
+	////////////////////////////////////////////////////
+	Agent::Status iAgent::getStatus()
+	{
+	    Lock lock(m_mutex);
+	    m_LAgent->getStatus();
+	}
+	
+	////////////////////////////////////////////////////
+	std::shared_ptr<iLocalizer> iAgent::getLocalizer()
+	{
+	  return m_localizer;
+	}

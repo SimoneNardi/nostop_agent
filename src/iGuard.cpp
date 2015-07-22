@@ -12,6 +12,6 @@ using namespace std;
 		// TODO identifica posizione dal mondo.
 		// ...
 				
-		Agentposition l_pos = m_guard.getCurrenPosition();
+		AgentPosition l_pos;// = m_guard->getCurrenPosition();
 		return l_pos;
 	}

@@ -8,11 +8,14 @@
 #pragma once
 
 #include "agent.h"
+
 #include "Configuration.h"
-#include <memory>
 #include "iLocalizer.h"
 
 #include <nav_msgs/Odometry.h>
+
+#include <memory>
+#include <string>
 
 namespace Robotics
 {
@@ -32,21 +35,30 @@ namespace Robotics
 			std::shared_ptr<Agent> m_LAgent;
 			
 			std::string m_name;
-					
+			
 		public:
+		  		
+			void computeConfigurationToTarget();
 		  
-			void setCurrentConfiguration( nav_msgs::Odometry & odometry_ );
-		  
-			void setCurrentConfiguration( geometry_msgs::Pose & pose_ );
+		  	void updateTargetConfiguration(geometry_msgs::Point & newTarget_);
 			
 			void setCurrentConfiguration( Configuration & config_ );
 			
-			void setCurrentOrientation(geometry_msgs::Quaternion & orientation_);
+			geometry_msgs::Twist getCurrentConfigurationTwist();
+			//////////////////////////////
+		  
+			void updateCurrentOdometry( nav_msgs::Odometry & odometry_ );
+		  
+			void updateCurrentPose( geometry_msgs::Pose & pose_ );
 			
-			void setCurrentPosition(geometry_msgs::Point & currentPosition_);
+			void updateCurrentTwist( geometry_msgs::Twist & twist_ );
+			
+			void updateCurrentOrientation(geometry_msgs::Quaternion & orientation_);
+			
+			void updateCurrentPosition(geometry_msgs::Point & currentPosition_);
 			
 		public:
-			iAgent() : m_localizer(nullptr) {};
+			iAgent() : m_localizer(nullptr), m_LAgent(nullptr) {};
 			
 			~iAgent() {};
 		
@@ -57,12 +69,6 @@ namespace Robotics
 			
 			/// Create a simulator localizer
 			void setSimulatorLocalizer(std::string name_);
-			
-			/// get current angular speed in world TF
-			double getCurrentAngularSpeed();
-	
-			/// get current linear speed in world TF
-			double getCurrentLinearSpeed();
 			
 			Configuration getCurrentConfiguration() {return m_currentConfiguration;}
 			Configuration getTargetConfiguration() {return m_targetConfiguration;}
@@ -77,6 +83,14 @@ namespace Robotics
 			void setActiveStatus();
 			
 			void setName(std::string name_);
+			
+			std::shared_ptr<iLocalizer> getLocalizer();
+			
+			/// Wrapper Agent:
+			
+			int getID();
+			
+			Agent::Status getStatus();
 		};
 	}
 }

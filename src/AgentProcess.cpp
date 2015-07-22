@@ -1,5 +1,7 @@
 #include "AgentProcess.h"
 
+#include "iAgent.h"
+
 using namespace std;
 using namespace Robotics;
 using namespace Robotics::GameTheory;
@@ -7,7 +9,7 @@ using namespace Robotics::GameTheory;
 //////////////////////////////////////////////////
 void AgentProcess::setRobotName(std::string name_)
 {
-    m_agent.setName(name_);
+    m_agent->setName(name_);
 }
 
 //////////////////////////////////////////////////

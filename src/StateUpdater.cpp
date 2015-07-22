@@ -4,8 +4,7 @@
 
 #include "ros/ros.h"
 
-#include "guard.h"
-#include "agent.h"
+#include "iGuard.h"
 
 #include <tf/transform_broadcaster.h>
 #include <nav_msgs/Odometry.h>
@@ -39,9 +38,14 @@ void StateUpdater::run()
   {
     current_time = ros::Time::now();
     
-    m_guard.updateCurrentConfiguration( m_guard.localizer().getConfiguration() );
+    geometry_msgs::Point l_point_ = m_guard->getLocalizer()->getPosition();
+    m_guard->updateCurrentPosition( l_point_ );
+    geometry_msgs::Quaternion l_orientation_ = m_guard->getLocalizer()->getOrientation();
+    m_guard->updateCurrentOrientation( l_orientation_ );
     
-    Configuration l_config = m_guard.getConfiguration();
+    m_guard->computeConfigurationToTarget();
+    
+    Configuration l_config = m_guard->getCurrentConfiguration();
         
     geometry_msgs::Point l_point = l_config.getPosition();
     double x = l_point.x;
@@ -49,12 +53,12 @@ void StateUpdater::run()
     
     geometry_msgs::Quaternion l_orientation = l_config.getOrientation();
     tf::Pose l_pose;
-    tf::poseMsgToTF(l_config.m_odom.pose.pose, l_pose);
+    tf::poseMsgToTF(l_config.getPose(), l_pose);
     double th = tf::getYaw(l_pose.getRotation());
     
-    double vx = l_config.m_odom.twist.twist.linear.x;
-    double vy = l_config.m_odom.twist.twist.linear.y;
-    double vth = l_config.m_odom.twist.twist.angular.z; 
+    double vx = l_config.getTwist().linear.x;
+    double vy = l_config.getTwist().linear.y;
+    double vth = l_config.getTwist().angular.z; 
     
     //compute odometry in a typical way given the velocities of the robot
     double dt = (current_time - last_time).toSec();
@@ -101,10 +105,11 @@ void StateUpdater::run()
     odom.twist.twist.angular.z = vth;
 
     //publish the message
-    m_guard.setCurrentConfiguration( Configuration(odom) );
+    Configuration l_newConfig(odom);
+    m_guard->setCurrentConfiguration( l_newConfig );
     
-    if ( m_guard.isArrived() )
-      m_guard.setStandByStatus();
+    if ( m_guard->isArrived() )
+      m_guard->setStandByStatus();
     
     last_time = current_time;
     

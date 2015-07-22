@@ -22,7 +22,7 @@ namespace Robotics
 		  protected:
 		  std::shared_ptr<Guard> m_LGuard;
 		  
-		protected:
+		public:
 			AgentPosition getCurrentAgentPosition();
 
 		public:

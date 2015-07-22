@@ -1,7 +1,5 @@
 #include "iLocalizer.h"
 
-#include <string>
-
 using namespace Robotics;
 using namespace Robotics::GameTheory;
 using namespace std;
@@ -27,23 +25,39 @@ using namespace std;
 	  return m_config.getOrientation();
 	}
 	
+	////////////////////////////////////////////////////
 	geometry_msgs::Twist iLocalizer::getTwist() const
 	{
 	  Lock lock(m_mutex);
 	  return m_config.getTwist();
 	}
 	
+	////////////////////////////////////////////////////
 	geometry_msgs::Pose iLocalizer::getPose() const
 	{
 	  Lock lock(m_mutex);
 	  return m_config.getPose();
 	}
 	
+	////////////////////////////////////////////////////
 	nav_msgs::Odometry iLocalizer::getOdometry() const
 	{
 	  Lock lock(m_mutex);
 	  return m_config.getOdometry();
 	  
+	}
+	
+	////////////////////////////////////////////////////
+	void iLocalizer::updatePose(const geometry_msgs::Pose::ConstPtr & pose_)
+	{
+	  Lock l_lock(m_mutex);
+ 	  //m_config.setPose(*pose_.get());
+	}
+	
+	////////////////////////////////////////////////////
+	void iLocalizer::subscribeTopic()
+	{
+	  m_sub = m_node.subscribe<geometry_msgs::Pose>(m_name.c_str(), 10, &iLocalizer::updatePose, this);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,37 +67,12 @@ using namespace std;
 	////////////////////////////////////////////////////
 	SimulatorLocalizer::SimulatorLocalizer(std::string name_)
 	: iLocalizer(name_)
-	{}
-	
-	////////////////////////////////////////////////////
-	void SimulatorLocalizer::subscribe()
 	{
 	  std::string l_agentname = "SimulatorLocalizer_";
 	  l_agentname+=m_name;
-	  m_sub = m_node.subscribe(l_agentname.c_str(), 10, &SimulatorLocalizer::update, this);
+	  m_name = l_agentname;
 	}
 	
-	////////////////////////////////////////////////////
-	void SimulatorLocalizer::update(geometry_msgs::PoseConstPtr & pose_)
-	{
-	  Lock l_lock(m_mutex);
-	  
-	  // TODO: chiede al simulotre la configurazione del robot
-	}
-	
-	////////////////////////////////////////////////////
-	void SimulatorLocalizer::updatePosition()
-	{
-	  // TODO: chiede al simulotre la posizione del robot
-	}
-	
-	////////////////////////////////////////////////////
-	void SimulatorLocalizer::updateOrientation()
-	{
-	  // TODO: chiede al simulotre l'orientazione del robot
-	}
-							
-
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -91,32 +80,8 @@ using namespace std;
 	////////////////////////////////////////////////////
 	KinectLocalizer::KinectLocalizer(std::string name_) 
 	: iLocalizer(name_)
-	{}
-	
-	////////////////////////////////////////////////////
-	void KinectLocalizer::subscribe()
 	{
 	  std::string l_agentname = "KinectLocalizer_";
 	  l_agentname+=m_name;
-	  m_sub = m_node.subscribe(l_agentname.c_str(), 10, &KinectLocalizer::update, this);
-	}
-	
-	////////////////////////////////////////////////////
-	void KinectLocalizer::update(geometry_msgs::PoseConstPtr & pose_)
-	{
-	  Lock l_lock(m_mutex);
-	  
-	  // TODO: chiede al kinect la configurazione del robot
-	}
-	
-	////////////////////////////////////////////////////
-	void KinectLocalizer::updatePosition()
-	{
-	  // TODO: chiede al kinect la posizione del robot
-	}
-	
-	////////////////////////////////////////////////////
-	void KinectLocalizer::updateOrientation()
-	{
-	  // TODO: chiede al kinect l'orientazione del robot
+	  m_name = l_agentname;	  
 	}
