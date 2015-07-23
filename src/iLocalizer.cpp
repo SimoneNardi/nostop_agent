@@ -50,8 +50,11 @@ using namespace std;
 	////////////////////////////////////////////////////
 	void iLocalizer::updatePose(const geometry_msgs::Pose::ConstPtr & pose_)
 	{
+	  geometry_msgs::Pose l_pose;
+	  l_pose.orientation = pose_->orientation;
+	  l_pose.position = pose_->position;
 	  Lock l_lock(m_mutex);
- 	  //m_config.setPose(*pose_.get());
+ 	  m_config.setPose(l_pose);
 	}
 	
 	////////////////////////////////////////////////////
