@@ -4,7 +4,7 @@
 
 #include "ros/ros.h"
 
-#include "iGuard.h"
+#include "iAgent.h"
 
 #include <tf/transform_broadcaster.h>
 #include <nav_msgs/Odometry.h>
@@ -14,11 +14,9 @@ using namespace Robotics;
 using namespace Robotics::GameTheory;
 
 /////////////////////////////////////////////
-StateUpdater::StateUpdater(std::shared_ptr<iGuard> agent_) 
-  : m_guard(agent_)
-{
-    
-}
+StateUpdater::StateUpdater(std::shared_ptr<iAgent> agent_) 
+  : m_agent(agent_)
+{}
 
 /////////////////////////////////////////////
 StateUpdater::~StateUpdater()
@@ -38,14 +36,14 @@ void StateUpdater::run()
   {
     current_time = ros::Time::now();
     
-    geometry_msgs::Point l_point_ = m_guard->getLocalizer()->getPosition();
-    m_guard->updateCurrentPosition( l_point_ );
-    geometry_msgs::Quaternion l_orientation_ = m_guard->getLocalizer()->getOrientation();
-    m_guard->updateCurrentOrientation( l_orientation_ );
+    geometry_msgs::Point l_point_ = m_agent->getLocalizer()->getPosition();
+    m_agent->updateCurrentPosition( l_point_ );
+    geometry_msgs::Quaternion l_orientation_ = m_agent->getLocalizer()->getOrientation();
+    m_agent->updateCurrentOrientation( l_orientation_ );
     
-    m_guard->computeConfigurationToTarget();
+    m_agent->computeConfigurationToTarget();
     
-    Configuration l_config = m_guard->getCurrentConfiguration();
+    Configuration l_config = m_agent->getCurrentConfiguration();
         
     geometry_msgs::Point l_point = l_config.getPosition();
     double x = l_point.x;
@@ -106,10 +104,10 @@ void StateUpdater::run()
 
     //publish the message
     Configuration l_newConfig(odom);
-    m_guard->setCurrentConfiguration( l_newConfig );
+    m_agent->setCurrentConfiguration( l_newConfig );
     
-    if ( m_guard->isArrived() )
-      m_guard->setStandByStatus();
+    if ( m_agent->isArrived() )
+      m_agent->setStandByStatus();
     
     last_time = current_time;
     

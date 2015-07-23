@@ -8,25 +8,41 @@
 #pragma once
 
 #include "iAgent.h"
-#include "guard.h"
 #include <memory>
 
 #include <geometry_msgs/Quaternion.h>
+
+#include "nostop_agent/GuardSensorCtrl.h"
 
 namespace Robotics 
 {
 	namespace GameTheory
 	{
+		class LearningWorld;
+		class Guard;
+		class AgentPosition;
+		class GuardNeighbours;
+		class MonitorReceiver;
+		
 		class iGuard : public iAgent
 	  	{
-		  protected:
-		  std::shared_ptr<Guard> m_LGuard;
+		protected:
+			///
+			std::shared_ptr<LearningWorld> m_learninigWorld;
+			///
+			std::shared_ptr<Guard> m_LGuard;
+			
+			  
+			std::shared_ptr<MonitorReceiver> m_monitorReceiver;
+			std::shared_ptr<GuardNeighbours> m_guardNeighbours;
 		  
 		public:
-			AgentPosition getCurrentAgentPosition();
+			//AgentPosition getCurrentAgentPosition();
+			
+			nostop_agent::GuardSensorCtrl getCameraControl();
 
 		public:
-			iGuard() {};
+			iGuard();
 			
 			~iGuard() {};
 			

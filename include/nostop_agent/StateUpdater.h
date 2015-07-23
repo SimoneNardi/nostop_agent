@@ -18,19 +18,19 @@ namespace Robotics
 {
 	namespace GameTheory
 	{
-		class iGuard;
+		class iAgent;
 	  
 		class StateUpdater: public ThreadBase
 		{
 		protected:
-			std::shared_ptr<iGuard> m_guard;
+			std::shared_ptr<iAgent> m_agent;
 		
 			tf::TransformBroadcaster odom_broadcaster;
 			
 		protected:
 			virtual void run();
 		public:
-			StateUpdater(std::shared_ptr<iGuard> agent_);
+			StateUpdater(std::shared_ptr<iAgent> agent_);
 			
 			~StateUpdater();
 		};

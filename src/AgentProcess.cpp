@@ -1,6 +1,11 @@
 #include "AgentProcess.h"
 
+#include "StateUpdater.h"
+#include "MotorControl.h"
+
+
 #include "iAgent.h"
+#include <nostop_agent/GuardSensorCtrl.h>
 
 using namespace std;
 using namespace Robotics;
@@ -19,13 +24,17 @@ void AgentProcess::setRobotAlgorithm(std::string alg_)
 }
 
 //////////////////////////////////////////////////
-void AgentProcess::setCamera(Robotics::GameTheory::CameraPosition & camera_)
+void AgentProcess::setID(int id_)
 {
   // TODO
 }
 
-//////////////////////////////////////////////////
-void AgentProcess::setID(int id_)
+/////////////////////////////////////////////
+void AgentProcess::init()
 {
-  // TODO
+  m_stateUpdater = std::make_shared<StateUpdater>( m_agent );
+  m_stateUpdater->start();
+    
+  m_motorControl = std::make_shared<MotorControl>( m_agent );
+  m_motorControl->start();
 }

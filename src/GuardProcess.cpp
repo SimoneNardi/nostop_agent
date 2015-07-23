@@ -1,7 +1,5 @@
 #include "GuardProcess.h"
-#include "StateUpdater.h"
-#include "StatePublisher.h"
-#include "MotorControl.h"
+#include "GuardStatePublisher.h"
 
 #include "ros/ros.h"
 #include <sstream>
@@ -19,16 +17,14 @@ GuardProcess::GuardProcess(std::string name_)
 {
   m_agent = std::make_shared<iGuard>();
   m_agent->setName(name_);
+}
+ 
+/////////////////////////////////////////////
+void GuardProcess::init()
+{
+  AgentProcess::init();
   
-  m_motorControl = std::make_shared<MotorControl>( m_agent );
-  m_motorControl->start();
-    
-  std::shared_ptr<iGuard> l_guard = std::static_pointer_cast<iGuard>(m_agent);
-  
-  m_stateUpdater = std::make_shared<StateUpdater>( l_guard );
-  m_stateUpdater->start();
-  
-  m_statePublisher = std::make_shared<StatePublisher>( l_guard );
+  m_statePublisher = std::make_shared<GuardStatePublisher>( m_agent );
   m_statePublisher->start();
 }
 
@@ -36,9 +32,13 @@ GuardProcess::GuardProcess(std::string name_)
 GuardProcess::~GuardProcess()
 {}
 
-/////////////////////////////////////////////
-AgentPosition computeAgentPosition(geometry_msgs::Point & point_)
+//////////////////////////////////////////////////
+void GuardProcess::setCamera(nostop_agent::GuardSensorCtrl & camera_)
 {
   // TODO
-  return AgentPosition();
+  std::shared_ptr<iGuard> l_guard = std::static_pointer_cast<iGuard>(m_agent);
+  if (l_guard)
+  {
+    
+  }
 }

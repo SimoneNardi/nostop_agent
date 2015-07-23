@@ -23,10 +23,10 @@ find_package(catkin REQUIRED COMPONENTS roscpp std_msgs geometry_msgs nav_msgs m
 ## Generate messages in the 'msg' folder
  add_message_files(
    FILES
-   AgentMotorControlData.msg
-   GuardStateData.msg
-   ShapeData.msg
-   ThiefStateData.msg
+   GuardSensorCtrl.msg
+   GuardState.msg
+   ThiefState.msg
+   Shape.msg
  )
 
 ## Generate services in the 'srv' folder
@@ -77,13 +77,18 @@ set(guard_SOURCES
         src/AgentProcess.cpp
         src/AreaCreator.cpp
         src/Guard.cpp
+        src/GuardNeighbours.cpp
         src/GuardProcess.cpp
+        src/GuardStatePublisher.cpp
         src/iAgent.cpp
         src/iGuard.cpp
         src/iLocalizer.cpp
+        src/MonitorReceiver.cpp
         src/MotorControl.cpp
+        src/GuardStatePublisher.cpp
         src/StatePublisher.cpp
         src/StateUpdater.cpp
+        src/WorldMap.cpp
 )
 
 set(thief_SOURCES
@@ -93,16 +98,20 @@ set(thief_SOURCES
 )
 
 set(agent_SOURCES
-        src/AgentProcess.cpp
+	src/AgentProcess.cpp
         src/AreaCreator.cpp
+        src/Guard.cpp
+        src/GuardNeighbours.cpp
         src/GuardProcess.cpp
+        src/GuardStatePublisher.cpp
         src/iAgent.cpp
         src/iGuard.cpp
         src/iLocalizer.cpp
+        src/MonitorReceiver.cpp
         src/MotorControl.cpp
         src/StatePublisher.cpp
         src/StateUpdater.cpp
-        #Agent/ThiefInterface.cpp
+        src/WorldMap.cpp
 )
 
 add_executable(Guard ${guard_SOURCES})

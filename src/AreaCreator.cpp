@@ -3,7 +3,7 @@
 #include "area.h"
 #include "structuredArea.h"
 
-#include "nostop_agent/ShapeData.h"
+#include "nostop_agent/Shape.h"
 
 using namespace Robotics;
 using namespace Robotics::GameTheory;
@@ -24,7 +24,7 @@ AreaCreator::AreaCreator()
 	m_external = l_points;
 }
 
-AreaCreator::AreaCreator(nostop_agent::ShapeData external_, std::vector<nostop_agent::ShapeData> internal_) 
+AreaCreator::AreaCreator(nostop_agent::Shape external_, std::vector<nostop_agent::Shape> internal_) 
 	: m_external()
 	, m_internal()
 {

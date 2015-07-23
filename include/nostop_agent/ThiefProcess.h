@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////
-//	GuardProcess.h
+//	ThiefProcess.h
 //	Created on:	12-jun-2015
 //	Original author: Simone Nardi
 ////////////////////////////////////////////////////
-#ifndef GUARD_PROCESS_H
-#define GUARD_PROCESS_H
+#ifndef THIEF_PROCESS_H
+#define THIEF_PROCESS_H
 #pragma once
 
 #include "AgentProcess.h"
@@ -14,14 +14,12 @@ namespace Robotics
 {
 	namespace GameTheory
 	{
-		class GuardProcess : public AgentProcess
+		class ThiefProcess : public AgentProcess
 	  	{
 		public:
-			void setCamera(nostop_agent::GuardSensorCtrl & camera_);
-		  
-			GuardProcess(std::string name_);
+			ThiefProcess(std::string name_);
 			
-			~GuardProcess();
+			~ThiefProcess();
 			
 			virtual void init();
 		};

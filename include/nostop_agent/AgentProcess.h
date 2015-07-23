@@ -7,20 +7,25 @@
 #define AGENT_PROCESS_H
 #pragma once
 
-#include "MotorControl.h"
-#include "iAgent.h"
 #include <memory>
 
 namespace Robotics 
 {
 	namespace GameTheory
 	{
+	  class MotorControl;
+	  class iAgent;
+	  class StatePublisher;
+	  class StateUpdater;
+	  
 		class AgentProcess
 	  	{
 		protected:
 		  std::shared_ptr<iAgent> m_agent;
 		  
 		  std::shared_ptr<MotorControl> m_motorControl;
+		  std::shared_ptr<StatePublisher> m_statePublisher;
+		  std::shared_ptr<StateUpdater> m_stateUpdater;
 		  
 		public:
 			AgentProcess() {};
@@ -30,8 +35,9 @@ namespace Robotics
 			void setRobotName(std::string name_);
 			void setRobotAlgorithm(std::string alg_);
 			
-			void setCamera(Robotics::GameTheory::CameraPosition & camera_);
 			void setID(int id_);
+			
+			virtual void init();
 		};
 	}
 }

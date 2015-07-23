@@ -103,13 +103,12 @@ int main(int argc, char **argv)
 // 		l_srvPos.response.y = 5;
 // 	}
 	
-	Robotics::GameTheory::CameraPosition l_camera(l_area->getDistance() / 10.);
+	nostop_agent::GuardSensorCtrl l_camera;
+	l_camera.max_radius = l_area->getDistance() / 10.;
+	
 	l_guard.setCamera(l_camera);
 	// publish agent configuration to simulator
 	l_guard.setID(l_srvID.response.id);
-	
-
-
 	
 	//std::shared_ptr<Robotics::GameTheory::Agent> l_learningAgent = l_agent->getAgent();
 	//g_coverage = std::make_shared<Robotics::GameTheory::LearningWorld>(l_learningAgent, l_area->discretize(), Robotics::GameTheory::DISL);

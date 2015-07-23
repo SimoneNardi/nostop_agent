@@ -12,6 +12,8 @@
 #include "Configuration.h"
 #include "iLocalizer.h"
 
+#include "Threads.h"
+
 #include <nav_msgs/Odometry.h>
 
 #include <memory>
@@ -30,12 +32,11 @@ namespace Robotics
 			
 			std::shared_ptr<iLocalizer> m_localizer;
 			
-			Mutex m_mutex;
-			
 			std::shared_ptr<Agent> m_LAgent;
 			
 			std::string m_name;
 			
+			Mutex m_mutex;
 		public:
 		  		
 			void computeConfigurationToTarget();

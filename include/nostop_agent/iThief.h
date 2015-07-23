@@ -7,22 +7,32 @@
 #define I_THIEF_H
 #pragma once
 
-#include "guard.h"
 #include "iAgent.h"
 #include <memory>
 
 #include <geometry_msgs/Quaternion.h>
 
-namespace Robotics
+#include "nostop_agent/GuardSensorCtrl.h"
+
+namespace Robotics 
 {
 	namespace GameTheory
 	{
-		class iGuard : public iAgent, public Guard
+		class LearningWorld;
+		class Thief;
+		
+		class iThief : public iAgent
 	  	{
-		public:
-			iGuard() {};
+		protected:
+			///
+			std::shared_ptr<LearningWorld> m_learninigWorld;
+			///
+			std::shared_ptr<Thief> m_LThief;
 			
-			~iGuard() {};
+		public:
+			iThief();
+			
+			~iThief() {};
 			
 		};
 	}

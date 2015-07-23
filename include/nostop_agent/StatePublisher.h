@@ -20,13 +20,13 @@ namespace Robotics
 {
 	namespace GameTheory
 	{
-		class iGuard;
+		class iAgent;
 	  
 		class StatePublisher: public ThreadBase	  	
 		{
 		protected:
-			std::shared_ptr<iGuard> m_guard;
-		  
+			std::shared_ptr<iAgent> m_agent;
+
 			ros::NodeHandle m_node;
 		  	ros::Publisher m_statePub;
 			
@@ -34,12 +34,10 @@ namespace Robotics
 			ros::Subscriber m_subPose;
 					
 		protected:
-			virtual void run();
-			
-			void poseCallBack(const geometry_msgs::PoseConstPtr& msg);
+			virtual void run() = 0;
 			
 		public:
-			StatePublisher(std::shared_ptr<iGuard> agent_);
+			StatePublisher(std::shared_ptr<iAgent> agent_);
 			
 			~StatePublisher();
 		};
