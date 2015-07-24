@@ -9,10 +9,10 @@
 
 #include "agent.h"
 
+#include "Threads.h"
+
 #include "Configuration.h"
 #include "iLocalizer.h"
-
-#include "Threads.h"
 
 #include <nav_msgs/Odometry.h>
 
