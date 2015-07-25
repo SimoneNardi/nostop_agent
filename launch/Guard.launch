@@ -4,5 +4,5 @@
     <param name="robot_name" value="red_blue" />
     <param name="learning_name" value="DISL" />
   </node>
-  
+
 </launch>
