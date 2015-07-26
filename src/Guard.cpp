@@ -22,6 +22,8 @@ int main(int argc, char **argv)
 {
       ros::init(argc, argv, "Guard");
                   
+      // Info From Launch File
+      
       // Identify robot name:
       std::string l_str;
       ros::NodeHandle l_node("~");
@@ -49,7 +51,9 @@ int main(int argc, char **argv)
 	l_guard.setRobotAlgorithm("DISL");
 	ROS_ERROR("Learning non ricevuto: %s", l_str.c_str());
       }
-      	
+      
+      // Info From Kinect Sensor (Initial Area and Localization)
+      
       Robotics::GameTheory::AreaPtr l_area = nullptr;
       ///////////////////////////////////////////////
       // Build the area
@@ -70,22 +74,7 @@ int main(int argc, char **argv)
 	      Robotics::GameTheory::AreaCreator l_areaCreator;
 	      l_area = l_areaCreator.getArea();
       }
-	
-	///////////////////////////////////////////////
-	// get the ID from simulator
-	ros::NodeHandle l_nodeID;
-	ros::ServiceClient l_clientID = l_nodeID.serviceClient<nostop_agent::PlayerIDData>("GuardID");
-	nostop_agent::PlayerIDData l_srvID;
-	if (l_clientID.call(l_srvID))
-	{
-		ROS_INFO("Selected ID: %ld", (long int)l_srvID.response.id);
-	}
-	else
-	{
-		ROS_ERROR("Failed to call service GuardID");
-		return 1;
-	}
-	
+      	
 // 	///////////////////////////////////////////////
 // 	// Get the agent configuration:
 // 	ros::NodeHandle l_nodePos;
@@ -108,6 +97,25 @@ int main(int argc, char **argv)
 	
 	l_guard.setCamera(l_camera);
 	// publish agent configuration to simulator
+	
+	
+	      // Info From Monitor Sensor (Learning Benefir and Neighbours)
+	
+      ///////////////////////////////////////////////
+      // get the ID from simulator
+      ros::NodeHandle l_nodeID;
+      ros::ServiceClient l_clientID = l_nodeID.serviceClient<nostop_agent::PlayerIDData>("GuardID");
+      nostop_agent::PlayerIDData l_srvID;
+      if (l_clientID.call(l_srvID))
+      {
+	      ROS_INFO("Selected ID: %ld", (long int)l_srvID.response.id);
+      }
+      else
+      {
+	      ROS_ERROR("Failed to call service GuardID");
+	      return 1;
+      }
+	
 	l_guard.setID(l_srvID.response.id);
 	
 	//std::shared_ptr<Robotics::GameTheory::Agent> l_learningAgent = l_agent->getAgent();
