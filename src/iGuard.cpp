@@ -79,8 +79,8 @@ using namespace std;
 	////////////////////////////////////////////////////
 	void iGuard::setTargetConfigurationToCenterOfSquare(geometry_msgs::Point const& target_)
 	{
-	  Lock lock(m_mutex);
-	  m_targetConfiguration = Configuration(target_);
+		Lock lock(m_mutex);
+		m_targetConfiguration = Configuration(target_);
 	}
 	
 	

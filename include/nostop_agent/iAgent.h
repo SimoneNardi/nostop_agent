@@ -94,6 +94,12 @@ namespace Robotics
 			int getID();
 			
 			Agent::Status getStatus();
+			
+		protected:
+			  void goForward();
+			  void goBackward();
+			  void RotateLeft();
+			  void RotateRight();
 		};
 	}
 }

@@ -9,6 +9,8 @@
 
 #include "IDSMath.h"
 
+#include "Conversions.h"
+
 using namespace Robotics;
 using namespace Robotics::GameTheory;
 using namespace std;
@@ -231,8 +233,31 @@ using namespace std;
 	void iAgent::computeConfigurationToTarget()
 	{
 	  Lock lock(m_mutex);
-	  //m_currentConfiguration cambio twist... TODO
 	  
+	  IDSReal2D l_current = Conversions::Point2IDSReal2D(m_currentConfiguration.getPosition());
+	  IDSReal2D l_target = Conversions::Point2IDSReal2D(m_targetConfiguration.getPosition());
+	  
+	  IDSReal2D l_delta = l_target-l_current;
+	  
+	  double l_phi = IDSMath::polarPhi2D(l_delta);
+	  
+	  double l_tolerance = 100.*IDSMath::TOLERANCE;
+	  if (fabs(l_phi) > l_tolerance || fabs(l_phi-IDSMath::Pi) > l_tolerance)
+	  // allineamento degli heading:
+	  {
+	    if (l_phi>0)
+	      RotateLeft();
+	    else
+	      RotateRight();
+	  }
+	  else
+	  // movimento lineare:
+	  {
+	    if(fabs(l_phi-IDSMath::Pi) > l_tolerance)
+	      goBackward();
+	    else
+	      goForward();
+	  }
 	}
 	
 	////////////////////////////////////////////////////
@@ -254,3 +279,65 @@ using namespace std;
 	{
 	  return m_localizer;
 	}
+	
+	////////////////////////////////////////////////////
+	void goForward()
+	{
+	  geometry_msgs::Twist l_twist;
+	  l_twist.linear.x = 1;
+	  l_twist.linear.y = 0;
+	  l_twist.linear.z = 0;
+	  
+	  l_twist.angular.x = 0;
+	  l_twist.angular.y = 0;
+	  l_twist.angular.z = 0;
+	  
+	  m_currentConfiguration.setTwist(l_twist);
+	}
+	
+	////////////////////////////////////////////////////
+	void goBackward()
+	{
+	  geometry_msgs::Twist l_twist;
+	  l_twist.linear.x = -1;
+	  l_twist.linear.y = 0;
+	  l_twist.linear.z = 0;
+	  
+	  l_twist.angular.x = 0;
+	  l_twist.angular.y = 0;
+	  l_twist.angular.z = 0;
+	  
+	  m_currentConfiguration.setTwist(l_twist);
+	}
+	
+	////////////////////////////////////////////////////
+	void RotateLeft()
+	{
+	  geometry_msgs::Twist l_twist;
+	  l_twist.linear.x = 0;
+	  l_twist.linear.y = 0;
+	  l_twist.linear.z = 0;
+	  
+	  l_twist.angular.x = 0;
+	  l_twist.angular.y = 0;
+	  l_twist.angular.z = 1;
+	  
+	  m_currentConfiguration.setTwist(l_twist);
+	}
+	
+	////////////////////////////////////////////////////
+	void RotateRight()
+	{
+	  geometry_msgs::Twist l_twist;
+	  l_twist.linear.x = 0;
+	  l_twist.linear.y = 0;
+	  l_twist.linear.z = 0;
+	  
+	  l_twist.angular.x = 0;
+	  l_twist.angular.y = 0;
+	  l_twist.angular.z = -1;
+	  
+	  m_currentConfiguration.setTwist(l_twist);
+	}
+
+	
