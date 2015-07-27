@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////
-//	LearningInitialization.h
+//	Learning.h
 //	Created on:	12-jun-2015
 //	Original author: Simone Nardi
 ////////////////////////////////////////////////////
-#ifndef LEARNING_INITIALIZATION_H
-#define LEARNING_INITIALIZATION_H
+#ifndef LEARNING_H
+#define LEARNING_H
 #pragma once
 
 #include <memory>
@@ -16,19 +16,21 @@ namespace Robotics
 	{	 
 	  class iAgent;
 	  
-		class LearningInitialization : public ThreadBase
+		class Learning : public ThreadBase
 	  	{
+		  AgentPosition m_nextPosition;
+		  
+		  
+		  
 		protected:
-		  std::shared_ptr<iAgent> m_agent;
-		protected:
-		  virtual void run();
+			virtual void run();
 		public:
-			LearningInitialization() {};
+			Learning();
 			
-			~LearningInitialization() {};
+			~Learning() {};
 		};
 	}
 }
 
 
-#endif // LEARNING_INITIALIZATION_H
+#endif // LEARNING_H

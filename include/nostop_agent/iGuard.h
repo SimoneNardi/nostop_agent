@@ -23,6 +23,7 @@ namespace Robotics
 		class AgentPosition;
 		class GuardNeighbours;
 		class MonitorReceiver;
+		class Learning;
 		
 		class iGuard : public iAgent
 	  	{
@@ -35,6 +36,7 @@ namespace Robotics
 			  
 			std::shared_ptr<MonitorReceiver> m_monitorReceiver;
 			std::shared_ptr<GuardNeighbours> m_guardNeighbours;
+			std::shared_ptr<Learning> m_learninig;
 		  
 		public:
 			//AgentPosition getCurrentAgentPosition();
