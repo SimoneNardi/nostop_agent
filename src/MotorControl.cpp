@@ -12,7 +12,8 @@ using namespace Robotics::GameTheory;
 
 /////////////////////////////////////////////
 MotorControl::MotorControl(std::shared_ptr<iAgent> agent_)
-  : m_agent(agent_)
+  : ThreadBase()
+  , m_agent(agent_)
   , m_node()
 {
   if(m_agent)

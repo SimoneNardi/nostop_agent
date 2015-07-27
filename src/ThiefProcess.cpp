@@ -44,3 +44,10 @@ void ThiefProcess::setCamera(nostop_agent::GuardSensorCtrl & camera_)
     
   }
 }
+
+//////////////////////////////////////////////////
+bool ThiefProcess::isReady() const
+{
+  return true;
+}
+

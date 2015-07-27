@@ -20,9 +20,9 @@ namespace Robotics
 						
 		public:
 		  Configuration();
-		  Configuration (geometry_msgs::Pose & pose_);
-		  Configuration (nav_msgs::Odometry& odom_);
-		  Configuration (geometry_msgs::Point & point_);
+		  Configuration (geometry_msgs::Pose const& pose_);
+		  Configuration (nav_msgs::Odometry const& odom_);
+		  Configuration (geometry_msgs::Point const& point_);
 		  
 		  void setPosition(geometry_msgs::Point & position_);
 		  void setOrientation(geometry_msgs::Quaternion & orientation_);

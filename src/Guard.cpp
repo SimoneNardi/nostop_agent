@@ -25,21 +25,22 @@ int main(int argc, char **argv)
       // Info From Launch File
       
       // Identify robot name:
-      std::string l_str;
+      std::string l_name;
       ros::NodeHandle l_node("~");
       //ros::NodeHandle l_node;
-      if (l_node.getParam("robot_name", l_str))
+      if (l_node.getParam("robot_name", l_name))
       {
-	ROS_INFO("Nome ricevuto: %s", l_str.c_str());
+	ROS_INFO("Nome ricevuto: %s", l_name.c_str());
       }
       else
       {
-	l_str="red_blue";
-	ROS_ERROR("Nome non ricevuto: %s", l_str.c_str());
+	l_name="red_blue";
+	ROS_ERROR("Nome non ricevuto: %s", l_name.c_str());
       }
 	
-      Robotics::GameTheory::GuardProcess l_guard(l_str);
+      Robotics::GameTheory::GuardProcess l_guard(l_name);
         
+      std::string l_str;
       // Identify Robot Algorithm:
       if (l_node.getParam("learning_name", l_str))
       {
@@ -91,32 +92,23 @@ int main(int argc, char **argv)
 // 		l_srvPos.response.x = 5;
 // 		l_srvPos.response.y = 5;
 // 	}
+
+	while (!l_guard.isReady())
+	  ros::spinOnce();
 	
 	nostop_agent::GuardSensorCtrl l_camera;
 	l_camera.max_radius = l_area->getDistance() / 10.;
 	
 	l_guard.setCamera(l_camera);
+
+	
 	// publish agent configuration to simulator
 	
 	
-	      // Info From Monitor Sensor (Learning Benefir and Neighbours)
+	// Info From Monitor Sensor (Learning Benefit and Neighbours)
 	
-      ///////////////////////////////////////////////
-      // get the ID from simulator
-      ros::NodeHandle l_nodeID;
-      ros::ServiceClient l_clientID = l_nodeID.serviceClient<nostop_agent::PlayerIDData>("GuardID");
-      nostop_agent::PlayerIDData l_srvID;
-      if (l_clientID.call(l_srvID))
-      {
-	      ROS_INFO("Selected ID: %ld", (long int)l_srvID.response.id);
-      }
-      else
-      {
-	      ROS_ERROR("Failed to call service GuardID");
-	      return 1;
-      }
 	
-	l_guard.setID(l_srvID.response.id);
+// 	l_guard.setID(l_srvID.response.id);
 	
 	//std::shared_ptr<Robotics::GameTheory::Agent> l_learningAgent = l_agent->getAgent();
 	//g_coverage = std::make_shared<Robotics::GameTheory::LearningWorld>(l_learningAgent, l_area->discretize(), Robotics::GameTheory::DISL);
@@ -124,54 +116,11 @@ int main(int argc, char **argv)
 	// l'agente deve poter scegliere se compiere un'azione oppure se proseguire la traiettoria assegnata, 
 	// inoltre deve poter inviare un messaggio al simulatore ogni volta che finisce di compiere l'azione
 	
-	
-	return 0;
-	
-	
-	// create Logical object
-	
-	// send back to simulator ID, position, control and kind!
-	
-	//std::shared_ptr<Robotics::GameTheory::Agent> l_agent = std::make_shared<Guard>();
-	
-	if (argc != 3)
-	{
-		ROS_INFO("usage: nostop_agent col row");
-		return 1;
-	}
+	/////////////////////////////////////////////////
+	// WAIT FOR ROS MESSAGES
+	ros::spin();
 
-	// Benefit
-	ros::NodeHandle l_nodeBenefit;
-	ros::ServiceClient clientBenefit = l_nodeBenefit.serviceClient<nostop_agent::GuardBenefitData>("GuardBenefit");
-	nostop_agent::GuardBenefitData srvBenefit;
-	srvBenefit.request.col = atoll(argv[1]);
-	srvBenefit.request.row = atoll(argv[2]);
-	if (clientBenefit.call(srvBenefit))
-	{
-		ROS_INFO("Benefit: %ld", (long int)srvBenefit.response.benefit);
-	}
-	else
-	{
-		ROS_ERROR("Failed to call service GuardBenefit");
-		return 1;
-	}
-
-	// Number of neighbors
-	ros::NodeHandle l_nodeNeighbours;
-	ros::ServiceClient clientNeighbours = l_nodeNeighbours.serviceClient<nostop_agent::GuardNeighboursData>("GuardNeighbours");
-	nostop_agent::GuardNeighboursData srvNeighbours;
-	srvNeighbours.request.col = atoll(argv[1]);
-	srvNeighbours.request.row = atoll(argv[2]);
-	if (clientNeighbours.call(srvNeighbours))
-	{
-		ROS_INFO("Neighbours: %ld", (long int)srvNeighbours.response.neighbors);
-	}
-	else
-	{
-		ROS_ERROR("Failed to call service GuardNeighbours");
-		return 1;
-	}
-
+	ROS_INFO("Ending agent %s.", l_name.c_str());
 
 
 	return 0;

@@ -39,6 +39,21 @@ void GuardProcess::setCamera(nostop_agent::GuardSensorCtrl & camera_)
   std::shared_ptr<iGuard> l_guard = std::static_pointer_cast<iGuard>(m_agent);
   if (l_guard)
   {
-    
+	l_guard->setCameraCtrl(camera_);
   }
+}
+
+//////////////////////////////////////////////////
+bool GuardProcess::isReady()
+{
+  std::shared_ptr<LearningInitializer> l_learning = (std::static_pointer_cast<iGuard>(m_agent))->getLearningInitializer();
+  
+  bool l_ready = l_learning->isLearningInitialized();
+  
+  if (l_ready)
+  {
+    this->setID( l_learning->getID() );
+  }
+  
+  return l_ready;
 }

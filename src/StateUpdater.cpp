@@ -15,7 +15,8 @@ using namespace Robotics::GameTheory;
 
 /////////////////////////////////////////////
 StateUpdater::StateUpdater(std::shared_ptr<iAgent> agent_) 
-  : m_agent(agent_)
+  : ThreadBase()
+  , m_agent(agent_)
 {}
 
 /////////////////////////////////////////////

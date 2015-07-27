@@ -16,6 +16,7 @@ using namespace Robotics::GameTheory;
 
 /////////////////////////////////////////////
 StatePublisher::StatePublisher(std::shared_ptr<iAgent> agent_) 
+: ThreadBase()
 {}
 
 /////////////////////////////////////////////

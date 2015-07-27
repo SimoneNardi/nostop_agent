@@ -32,19 +32,19 @@ using namespace std;
 	{}
 	
 	////////////////////////////////////////////////////
-	Configuration::Configuration (nav_msgs::Odometry& odom_)
+	Configuration::Configuration (nav_msgs::Odometry const& odom_)
 	{
 	  m_odom = odom_;
 	}
 	
 	////////////////////////////////////////////////////
-	Configuration::Configuration (geometry_msgs::Pose & pose_)
+	Configuration::Configuration (geometry_msgs::Pose const& pose_)
 	{
 	  m_odom.pose.pose = pose_;
 	}
 	
 	////////////////////////////////////////////////////
-	Configuration::Configuration (geometry_msgs::Point & point_)
+	Configuration::Configuration (geometry_msgs::Point const& point_)
 	{
 	  m_odom.pose.pose.position = point_;
 	}
@@ -140,10 +140,18 @@ using namespace std;
 	  m_localizer = std::make_shared<SimulatorLocalizer>(name_);
 	}
 	
+	////////////////////////////////////////////////////
 	geometry_msgs::Twist iAgent::getCurrentConfigurationTwist()
 	{
 	  Lock lock(m_mutex);
 	  return m_currentConfiguration.getTwist();
+	}
+	
+	////////////////////////////////////////////////////
+	geometry_msgs::Point iAgent::getCurrentConfigurationPosition()
+	{
+	  Lock lock(m_mutex);
+	  return m_currentConfiguration.getPosition();
 	}
 	
 	////////////////////////////////////////////////////

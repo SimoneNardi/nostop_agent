@@ -14,6 +14,8 @@ namespace Robotics
 {
 	namespace GameTheory
 	{
+		class Area;
+		
 		class GuardProcess : public AgentProcess
 	  	{
 		public:
@@ -24,6 +26,12 @@ namespace Robotics
 			~GuardProcess();
 			
 			virtual void init();
+			
+			virtual bool isReady();
+			
+			void createLearningAlgorithm( std::shared_ptr<Area> l_area );
+			
+			void setCamera(double max_dist);
 		};
 
 	}

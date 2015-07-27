@@ -1,13 +1,12 @@
 ////////////////////////////////////////////////////
-//	Learning.h
+//	LearningInitializer.h
 //	Created on:	12-jun-2015
 //	Original author: Simone Nardi
 ////////////////////////////////////////////////////
-#ifndef LEARNING_H
-#define LEARNING_H
+#ifndef LEARNING_INITIALIZER_H
+#define LEARNING_INITIALIZER_H
 #pragma once
 
-#include <memory>
 #include "ThreadBase.h"
 
 namespace Robotics 
@@ -16,21 +15,25 @@ namespace Robotics
 	{	 
 	  class iAgent;
 	  
-		class Learning : public ThreadBase
+		class LearningInitializer : public ThreadBase
 	  	{
-		  AgentPosition m_nextPosition;
+		  int m_id;
 		  
-		  
+		  mutable Mutex m_mutex;
 		  
 		protected:
 			virtual void run();
 		public:
-			Learning();
+			LearningInitializer();
 			
-			~Learning() {};
+			~LearningInitializer();
+			
+			bool isLearningInitialized() const;
+			
+			int getID() const;
 		};
 	}
 }
 
 
-#endif // LEARNING_H
+#endif // LEARNING_INITIALIZER_H
