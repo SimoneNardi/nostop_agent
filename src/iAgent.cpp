@@ -129,17 +129,17 @@ using namespace std;
 	}
 	
 	////////////////////////////////////////////////////
-	void iAgent::setKinectLocalizer(std::string name_)
+	void iAgent::setKinectLocalizer()
 	{
 	  Lock lock(m_mutex);
-	  m_localizer = std::make_shared<KinectLocalizer>(name_);
+	  m_localizer = std::make_shared<KinectLocalizer>(m_name);
 	}
 	
 	////////////////////////////////////////////////////
-	void iAgent::setSimulatorLocalizer(std::string name_)
+	void iAgent::setSimulatorLocalizer()
 	{
 	  Lock lock(m_mutex);
-	  m_localizer = std::make_shared<SimulatorLocalizer>(name_);
+	  m_localizer = std::make_shared<SimulatorLocalizer>(m_name);
 	}
 	
 	////////////////////////////////////////////////////

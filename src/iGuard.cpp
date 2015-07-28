@@ -46,6 +46,19 @@ using namespace std;
 		m_learningInit->start();
 	}
 	
+	//////////////////////////////////////////////////
+	void iGuard::setRobotAlgorithm(std::string alg_)
+	{
+		if (alg_=="PIPIP")
+		    m_algorithmFLAG = Robotics::GameTheory::PIPIP;
+		else if (alg_=="PARETO")
+		    m_algorithmFLAG = Robotics::GameTheory::PARETO;
+		else if (alg_=="CORRELATED")
+		    m_algorithmFLAG = Robotics::GameTheory::CORRELATED;
+		else 
+		    m_algorithmFLAG = Robotics::GameTheory::DISL;
+	}
+	
 	////////////////////////////////////////////////////
 	void iGuard::setCameraCtrl(nostop_agent::GuardSensorCtrl l_ctrl)
 	{
@@ -58,14 +71,6 @@ using namespace std;
 		std::shared_ptr<DiscretizedArea> l_space = l_area->discretize();
 	
 		Lock lock(m_mutex);
-// 		geometry_msgs::Point l_geomPoint = this->getCurrentConfigurationPosition();
-// 		IDSReal2D l_point = Conversions::Point2IDSReal2D( l_geomPoint );
-// 		nostop_agent::GuardSensorCtrl l_ctrl = this->getCameraControl();
-// 		CameraPosition l_camera = Conversions::GuardSensorCtrl2CameraPosition( l_ctrl );
-// 		AgentPosition l_agentPos(l_point, l_camera);
-// 	  
-// 		m_LGuard = std::make_shared<Guard>(1, m_learningInit->getID(), l_agentPos, 1, 2);
-		
 		std::set< std::shared_ptr<Agent> > l_agents; 
 		l_agents.insert(m_LGuard);
 				

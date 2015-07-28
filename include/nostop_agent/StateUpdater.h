@@ -9,9 +9,6 @@
 
 #include "ThreadBase.h"
 
-#include "ros/ros.h"
-#include <tf/transform_broadcaster.h>
-
 #include <memory>
 
 namespace Robotics 
@@ -25,8 +22,6 @@ namespace Robotics
 		protected:
 			std::shared_ptr<iAgent> m_agent;
 		
-			tf::TransformBroadcaster odom_broadcaster;
-			
 		protected:
 			virtual void run();
 		public:

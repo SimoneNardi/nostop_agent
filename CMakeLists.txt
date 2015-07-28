@@ -83,11 +83,11 @@ set(guard_SOURCES
         src/GuardStatePublisher.cpp
         src/iAgent.cpp
         src/iGuard.cpp
-        src/LearningInitializer.cpp
         src/iLocalizer.cpp
+        src/LearningInitializer.cpp
+        src/LearningProcess.cpp
         src/MonitorReceiver.cpp
         src/MotorControl.cpp
-        src/GuardStatePublisher.cpp
         src/StatePublisher.cpp
         src/StateUpdater.cpp
         src/WorldMap.cpp
@@ -103,14 +103,14 @@ set(agent_SOURCES
 	src/AgentProcess.cpp
         src/AreaCreator.cpp
         src/Conversions.cpp
-        src/Guard.cpp
         src/GuardNeighbours.cpp
         src/GuardProcess.cpp
         src/GuardStatePublisher.cpp
         src/iAgent.cpp
         src/iGuard.cpp
-        src/LearningInitializer.cpp
         src/iLocalizer.cpp
+        src/LearningInitializer.cpp
+        src/LearningProcess.cpp
         src/MonitorReceiver.cpp
         src/MotorControl.cpp
         src/StatePublisher.cpp

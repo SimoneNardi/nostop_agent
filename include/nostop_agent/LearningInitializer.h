@@ -28,7 +28,7 @@ namespace Robotics
 			
 			~LearningInitializer();
 			
-			bool isLearningInitialized() const;
+			bool isInitialized() const;
 			
 			int getID() const;
 		};

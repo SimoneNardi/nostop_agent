@@ -4,9 +4,12 @@
 #include "Conversions.h"
 
 #include "ros/ros.h"
-#include <sstream>
 
 #include "iGuard.h"
+
+#include "guard.h"
+
+#include <sstream>
 #include <memory>
 
 using namespace std;
@@ -35,6 +38,13 @@ GuardProcess::~GuardProcess()
 {}
 
 //////////////////////////////////////////////////
+void GuardProcess::setRobotAlgorithm(std::string alg_)
+{
+  std::shared_ptr<iGuard> l_guard = std::static_pointer_cast<iGuard>(m_agent);
+  l_guard->setRobotAlgorithm(alg_);
+}
+
+//////////////////////////////////////////////////
 void GuardProcess::setCamera(nostop_agent::GuardSensorCtrl & camera_)
 {
   // TODO
@@ -54,10 +64,10 @@ bool GuardProcess::isReady()
   std::shared_ptr<iLocalizer> l_localizer = l_guard->getLocalizer();
   
   // learning initialization:
-  bool l_learning_is_ready = l_learning->isLearningInitialized();
+  bool l_learning_is_ready = l_learning->isInitialized();
   
   // initial position:
-  bool l_position_is_ready = l_localizer->isLocalizerInitialized();
+  bool l_position_is_ready = l_localizer->isInitialized();
 
   if (l_learning_is_ready && l_position_is_ready)
   {
@@ -72,8 +82,15 @@ bool GuardProcess::isReady()
       
       std::shared_ptr<Guard> l_LGuard = std::make_shared<Guard>(1, l_id, l_agentPos, 1, 2);
     
-      l_guard->setLearnGuard(l_LGuard);
+      l_guard->setGuardPtr(l_LGuard);
+      return true;
   }
   
-  return l_ready;
+  return false;
+}
+
+//////////////////////////////////////////////////
+void GuardProcess::createLearningAlgorithm(std::shared_ptr<Area> area_)
+{
+	std::static_pointer_cast<iGuard>(m_agent)->createLearningAlgorithm(area_);
 }

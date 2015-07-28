@@ -34,11 +34,11 @@ namespace Robotics
 		  ros::NodeHandle m_node;
 		  ros::Subscriber m_sub;
 		  
-		  bool m_ready;
-		  bool m_alreadyRead;
+		  mutable bool m_initialized;
+		  mutable bool m_updated;
 
 		public:
-			iLocalizer(std::string name_) : m_name(name_), m_ready(false), m_alreadyRead(false) {};
+			iLocalizer(std::string name_) : m_name(name_), m_initialized(false), m_updated(false) {};
 			
 			~iLocalizer() {};
 			
@@ -58,8 +58,12 @@ namespace Robotics
 			
 			void subscribeTopic();
 			
-			bool isLocalizerInitialized() const;
+			bool isInitialized() const;
+			
+			bool isUpdated() const;
 		};
+		
+		typedef std::shared_ptr<iLocalizer> iLocalizerPtr;
 		
 		/// Localization sensor for robot using the kinect.
 		class KinectLocalizer: public iLocalizer
@@ -70,6 +74,8 @@ namespace Robotics
 			~KinectLocalizer() {};
 		};
 		
+		typedef std::shared_ptr<KinectLocalizer> KinectLocalizerPtr;
+		
 		/// Localization sensor for robot using the simulator.
 		class SimulatorLocalizer: public iLocalizer
 	  	{
@@ -78,6 +84,9 @@ namespace Robotics
 			
 			~SimulatorLocalizer() {};
 		};
+		
+		typedef std::shared_ptr<SimulatorLocalizer> SimulatorLocalizerPtr;
+		
 	}
 }
 

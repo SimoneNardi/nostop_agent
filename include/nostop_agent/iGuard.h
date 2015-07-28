@@ -54,13 +54,15 @@ namespace Robotics
 
 		public:
 		  
-		  void setCameraCtrl(nostop_agent::GuardSensorCtrl l_ctrl);
+		  void setCameraCtrl(nostop_agent::GuardSensorCtrl ctrl_);
 		  
-		  void createLearningAlgorithm( std::shared_ptr<Area>  l_area );
+		  void createLearningAlgorithm( std::shared_ptr<Area>  area_ );
 		  
 		  void setTargetConfigurationToCenterOfSquare(geometry_msgs::Point const& target_);
 		  
 		  void setGuardPtr(std::shared_ptr<Guard> lGuard_);
+		  
+		  void setRobotAlgorithm(std::string alg_);
 			
 		public:
 			iGuard();
@@ -68,6 +70,8 @@ namespace Robotics
 			~iGuard() {};
 			
 		};
+		
+		typedef std::shared_ptr<iGuard> iGuardPtr;
 	}
 }
 

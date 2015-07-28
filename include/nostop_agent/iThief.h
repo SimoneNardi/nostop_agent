@@ -35,6 +35,8 @@ namespace Robotics
 			~iThief() {};
 			
 		};
+		
+		typedef std::shared_ptr<iThief> iThiefPtr;
 	}
 }
 

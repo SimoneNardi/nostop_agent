@@ -68,10 +68,10 @@ namespace Robotics
 			/// Create the link between this agent and the agent of the learning
 			void setAgentPtr(std::shared_ptr<Agent> agent_);						
 			/// Create a kinect localizer
-			void setKinectLocalizer(std::string name_);
+			void setKinectLocalizer();
 			
 			/// Create a simulator localizer
-			void setSimulatorLocalizer(std::string name_);
+			void setSimulatorLocalizer();
 			
 			Configuration getCurrentConfiguration() {return m_currentConfiguration;}
 			Configuration getTargetConfiguration() {return m_targetConfiguration;}
@@ -103,6 +103,8 @@ namespace Robotics
 			  void rotateLeft();
 			  void rotateRight();
 		};
+		
+		typedef std::shared_ptr<iAgent> iAgentPtr;
 	}
 }
 

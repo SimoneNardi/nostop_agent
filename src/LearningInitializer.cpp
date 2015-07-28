@@ -48,7 +48,7 @@ using namespace Robotics::GameTheory;
   }
   
   ///////////////////////////////////////////////
-  bool LearningInitializer::isLearningInitialized() const
+  bool LearningInitializer::isInitialized() const
   {
     return !(m_id < 0);
   }

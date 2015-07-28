@@ -27,7 +27,6 @@ int main(int argc, char **argv)
       // Identify robot name:
       std::string l_name;
       ros::NodeHandle l_node("~");
-      //ros::NodeHandle l_node;
       if (l_node.getParam("robot_name", l_name))
       {
 	ROS_INFO("Nome ricevuto: %s", l_name.c_str());
@@ -39,8 +38,22 @@ int main(int argc, char **argv)
       }
 	
       Robotics::GameTheory::GuardProcess l_guard(l_name);
-        
+       
+      ////////////////////////////////////////
+      // Identify sensor localizer:
       std::string l_str;
+      if (l_node.getParam("localizer", l_str))
+      {
+	l_guard.setKinectLocalizer();
+	ROS_INFO("Kinect Localizer.");
+      }
+      else
+      {
+	l_guard.setSimulatorLocalizer();
+	ROS_INFO("Simulator Localizer.");
+      }
+            
+      ////////////////////////////////////////
       // Identify Robot Algorithm:
       if (l_node.getParam("learning_name", l_str))
       {
@@ -52,12 +65,11 @@ int main(int argc, char **argv)
 	l_guard.setRobotAlgorithm("DISL");
 	ROS_ERROR("Learning non ricevuto: %s", l_str.c_str());
       }
-      
-      // Info From Kinect Sensor (Initial Area and Localization)
-      
-      Robotics::GameTheory::AreaPtr l_area = nullptr;
+
       ///////////////////////////////////////////////
       // Build the area
+      Robotics::GameTheory::AreaPtr l_area = nullptr;
+      
       ros::NodeHandle l_nodeArea;
       ros::ServiceClient l_clientArea = l_nodeArea.serviceClient<nostop_agent::AreaData>("AreaInitializer");
       nostop_agent::AreaData l_srvArea;
@@ -75,32 +87,11 @@ int main(int argc, char **argv)
 	      Robotics::GameTheory::AreaCreator l_areaCreator;
 	      l_area = l_areaCreator.getArea();
       }
-      	
-// 	///////////////////////////////////////////////
-// 	// Get the agent configuration:
-// 	ros::NodeHandle l_nodePos;
-// 	ros::ServiceClient l_clientPos = l_nodePos.serviceClient<nostop_agent::PlayerConfigurationData>("GuardInitialPosition");
-// 	nostop_agent::PlayerConfigurationData l_srvPos;
-// 	l_srvPos.request.id = l_srvID.response.id;
-// 	if (l_clientPos.call(l_srvPos))
-// 	{
-// 		ROS_INFO("Initial configuration for Player %ld is: %ld, %ld, %ld", (long int)l_srvID.response.id, (long int)l_srvPos.response.x, (long int)l_srvPos.response.y, (long int)l_srvPos.response.heading);
-// 	}
-// 	else
-// 	{
-// 		ROS_ERROR("Failed to call service GuardInitialPosition");
-// 		l_srvPos.response.x = 5;
-// 		l_srvPos.response.y = 5;
-// 	}
 
 	while (!l_guard.isReady())
 	  ros::spinOnce();
 	
-	nostop_agent::GuardSensorCtrl l_camera;
-	l_camera.max_radius = l_area->getDistance() / 10.;
-	
-	l_guard.setCamera(l_camera);
-
+	l_guard.createLearningAlgorithm(l_area);
 	
 	// publish agent configuration to simulator
 	

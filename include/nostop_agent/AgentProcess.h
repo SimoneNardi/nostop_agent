@@ -35,11 +35,12 @@ namespace Robotics
 			void setRobotName(std::string name_);
 			void setRobotAlgorithm(std::string alg_);
 			
-			virtual void setID( int id_ );
-			
 			virtual void init();
 			
 			virtual bool isReady() = 0;
+			
+			void setKinectLocalizer();
+			void setSimulatorLocalizer();
 		};
 	}
 }

@@ -17,18 +17,6 @@ void AgentProcess::setRobotName(std::string name_)
     m_agent->setName(name_);
 }
 
-//////////////////////////////////////////////////
-void AgentProcess::setRobotAlgorithm(std::string alg_)
-{
-  // TODO
-}
-
-//////////////////////////////////////////////////
-void AgentProcess::setID(int id_)
-{
-  // TODO
-}
-
 /////////////////////////////////////////////
 void AgentProcess::init()
 {
@@ -37,4 +25,16 @@ void AgentProcess::init()
     
   m_motorControl = std::make_shared<MotorControl>( m_agent );
   m_motorControl->start();
+}
+
+/////////////////////////////////////////////
+void AgentProcess::setKinectLocalizer()
+{
+  m_agent->setKinectLocalizer();
+}
+
+/////////////////////////////////////////////
+void AgentProcess::setSimulatorLocalizer()
+{
+  m_agent->setSimulatorLocalizer();
 }

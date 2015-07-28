@@ -8,7 +8,7 @@ using namespace std;
 	Configuration iLocalizer::getConfiguration() const
 	{
 		Lock lock(m_mutex);
-		m_alreadyRead = true;
+		m_updated = false;
 		return m_config;
 	}
 
@@ -16,7 +16,7 @@ using namespace std;
 	geometry_msgs::Point iLocalizer::getPosition() const
 	{
 	  Lock lock(m_mutex);
-	  m_alreadyRead = true;
+	  m_updated = false;
 	  return m_config.getPosition();
 	}
 	
@@ -24,7 +24,7 @@ using namespace std;
 	geometry_msgs::Quaternion iLocalizer::getOrientation() const
 	{
 	  Lock lock(m_mutex);
-	  m_alreadyRead = true;
+	  m_updated = false;
 	  return m_config.getOrientation();
 	}
 	
@@ -32,7 +32,7 @@ using namespace std;
 	geometry_msgs::Twist iLocalizer::getTwist() const
 	{
 	  Lock lock(m_mutex);
-	  m_alreadyRead = true;
+	  m_updated = false;
 	  return m_config.getTwist();
 	}
 	
@@ -40,7 +40,7 @@ using namespace std;
 	geometry_msgs::Pose iLocalizer::getPose() const
 	{
 	  Lock lock(m_mutex);
-	  m_alreadyRead = true;
+	  m_updated = false;
 	  return m_config.getPose();
 	}
 	
@@ -48,7 +48,7 @@ using namespace std;
 	nav_msgs::Odometry iLocalizer::getOdometry() const
 	{
 	  Lock lock(m_mutex);
-	  m_alreadyRead = true;
+	  m_updated = false;
 	  return m_config.getOdometry();
 	}
 	
@@ -60,11 +60,11 @@ using namespace std;
 	  l_pose.position = pose_->position;
 
 	  Lock l_lock(m_mutex);
-	  m_alreadyRead = false;
+	  m_updated = true;
 	  
  	  m_config.setPose(l_pose);
 	  
-	  m_ready = true;
+	  m_initialized = true;
 	}
 	
 	////////////////////////////////////////////////////
@@ -74,10 +74,17 @@ using namespace std;
 	}
 	
 	////////////////////////////////////////////////////
-	bool iLocalizer::isLocalizerInitialized() const
+	bool iLocalizer::isInitialized() const
 	{
 	  Lock l_lock(m_mutex);
-	  return m_ready;
+	  return m_initialized;
+	}
+	
+	////////////////////////////////////////////////////
+	bool iLocalizer::isUpdated() const
+	{
+	  Lock l_lock(m_mutex);
+	  return m_updated;
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
