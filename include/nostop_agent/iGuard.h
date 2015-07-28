@@ -59,6 +59,8 @@ namespace Robotics
 		  void createLearningAlgorithm( std::shared_ptr<Area>  l_area );
 		  
 		  void setTargetConfigurationToCenterOfSquare(geometry_msgs::Point const& target_);
+		  
+		  void setGuardPtr(std::shared_ptr<Guard> lGuard_);
 			
 		public:
 			iGuard();

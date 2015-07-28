@@ -55,23 +55,23 @@ using namespace std;
 	////////////////////////////////////////////////////
 	void iGuard::createLearningAlgorithm( AreaPtr l_area )
 	{
-		Lock lock(m_mutex);
 		std::shared_ptr<DiscretizedArea> l_space = l_area->discretize();
-		
-		geometry_msgs::Point l_geomPoint = this->getCurrentConfigurationPosition();
-		IDSReal2D l_point = Conversions::Point2IDSReal2D( l_geomPoint );
-		nostop_agent::GuardSensorCtrl l_ctrl = this->getCameraControl();
-		CameraPosition l_camera = Conversions::GuardSensorCtrl2CameraPosition( l_ctrl );
-		AgentPosition l_agentPos(l_point, l_camera);
-	  
-		m_LGuard = std::make_shared<Guard>(1, m_learningInit->getID(), l_agentPos, 1, 2);
+	
+		Lock lock(m_mutex);
+// 		geometry_msgs::Point l_geomPoint = this->getCurrentConfigurationPosition();
+// 		IDSReal2D l_point = Conversions::Point2IDSReal2D( l_geomPoint );
+// 		nostop_agent::GuardSensorCtrl l_ctrl = this->getCameraControl();
+// 		CameraPosition l_camera = Conversions::GuardSensorCtrl2CameraPosition( l_ctrl );
+// 		AgentPosition l_agentPos(l_point, l_camera);
+// 	  
+// 		m_LGuard = std::make_shared<Guard>(1, m_learningInit->getID(), l_agentPos, 1, 2);
 		
 		std::set< std::shared_ptr<Agent> > l_agents; 
 		l_agents.insert(m_LGuard);
 				
 		m_learninigWorld = std::make_shared<LearningWorld>(l_agents, l_space, m_algorithmFLAG);
 		
-		AgentPosition l_targetPos = m_LGuard->getCurrentPosition();
+		AgentPosition l_targetPos = m_LGuard->getCurrentPosition(); // TODO: first position calibrated with the learning algorithm.
 		// primo comando di movimento per il robot.
 		this->setTargetConfigurationToCenterOfSquare( Conversions::IDSReal2D2Point( l_targetPos.getPoint2D() ) );
 	}
@@ -81,6 +81,15 @@ using namespace std;
 	{
 		Lock lock(m_mutex);
 		m_targetConfiguration = Configuration(target_);
+	}
+	
+	////////////////////////////////////////////////////
+	void iGuard::setGuardPtr(std::shared_ptr<Guard> lGuard_)
+	{
+	  	Lock lock(m_mutex);
+		m_LGuard = lGuard_;
+		iAgent::setAgentPtr(m_LGuard);
+	  
 	}
 	
 	

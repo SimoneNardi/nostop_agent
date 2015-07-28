@@ -33,9 +33,12 @@ namespace Robotics
 		  
 		  ros::NodeHandle m_node;
 		  ros::Subscriber m_sub;
+		  
+		  bool m_ready;
+		  bool m_alreadyRead;
 
 		public:
-			iLocalizer(std::string name_) : m_name(name_) {};
+			iLocalizer(std::string name_) : m_name(name_), m_ready(false), m_alreadyRead(false) {};
 			
 			~iLocalizer() {};
 			
@@ -54,6 +57,8 @@ namespace Robotics
 			void updatePose(const geometry_msgs::Pose::ConstPtr  & pose_);
 			
 			void subscribeTopic();
+			
+			bool isLocalizerInitialized() const;
 		};
 		
 		/// Localization sensor for robot using the kinect.

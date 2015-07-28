@@ -91,6 +91,8 @@ namespace Robotics
 			
 			/// Wrapper Agent:
 			
+			void setLearnAgent(std::shared_ptr<Agent> lAgent_);
+			
 			int getID();
 			
 			Agent::Status getStatus();
@@ -98,8 +100,8 @@ namespace Robotics
 		protected:
 			  void goForward();
 			  void goBackward();
-			  void RotateLeft();
-			  void RotateRight();
+			  void rotateLeft();
+			  void rotateRight();
 		};
 	}
 }

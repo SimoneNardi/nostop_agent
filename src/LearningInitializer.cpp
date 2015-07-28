@@ -23,6 +23,8 @@ using namespace Robotics::GameTheory;
   {
     ros::Rate loop_rate(1);
     
+    ROS_INFO("Waiting for Monitor Simulator.");
+    
     int count = 0;
     while (ros::ok() && m_id < 0)
     {
@@ -36,10 +38,6 @@ using namespace Robotics::GameTheory;
 	      ROS_INFO("Selected ID: %ld", (long int)l_srvID.response.id);
 	      Lock l_lock(m_mutex);
 	      m_id = (long int)l_srvID.response.id;
-      }
-      else
-      {
-	      ROS_ERROR("Failed to call service GuardID");
       }
       
       ros::spinOnce();

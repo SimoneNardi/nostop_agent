@@ -246,17 +246,17 @@ using namespace std;
 	  // allineamento degli heading:
 	  {
 	    if (l_phi>0)
-	      RotateLeft();
+	      this->rotateLeft();
 	    else
-	      RotateRight();
+	      this->rotateRight();
 	  }
 	  else
 	  // movimento lineare:
 	  {
 	    if(fabs(l_phi-IDSMath::Pi) > l_tolerance)
-	      goBackward();
+	      this->goBackward();
 	    else
-	      goForward();
+	      this->goForward();
 	  }
 	}
 	
@@ -273,7 +273,7 @@ using namespace std;
 	    Lock lock(m_mutex);
 	    m_LAgent->getStatus();
 	}
-	
+
 	////////////////////////////////////////////////////
 	std::shared_ptr<iLocalizer> iAgent::getLocalizer()
 	{
@@ -281,7 +281,7 @@ using namespace std;
 	}
 	
 	////////////////////////////////////////////////////
-	void goForward()
+	void iAgent::goForward()
 	{
 	  geometry_msgs::Twist l_twist;
 	  l_twist.linear.x = 1;
@@ -296,7 +296,7 @@ using namespace std;
 	}
 	
 	////////////////////////////////////////////////////
-	void goBackward()
+	void iAgent::goBackward()
 	{
 	  geometry_msgs::Twist l_twist;
 	  l_twist.linear.x = -1;
@@ -311,7 +311,7 @@ using namespace std;
 	}
 	
 	////////////////////////////////////////////////////
-	void RotateLeft()
+	void iAgent::rotateLeft()
 	{
 	  geometry_msgs::Twist l_twist;
 	  l_twist.linear.x = 0;
@@ -326,7 +326,7 @@ using namespace std;
 	}
 	
 	////////////////////////////////////////////////////
-	void RotateRight()
+	void iAgent::rotateRight()
 	{
 	  geometry_msgs::Twist l_twist;
 	  l_twist.linear.x = 0;
