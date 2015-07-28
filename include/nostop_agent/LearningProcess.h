@@ -9,8 +9,10 @@
 
 #include "ThreadBase.h"
 
+#include "Configuration.h"
+
 #include "ros/ros.h"
-#include <tf/transform_broadcaster.h>
+#include "std_msgs/Bool.h"
 
 #include <memory>
 
@@ -19,22 +21,31 @@ namespace Robotics
 	namespace GameTheory
 	{
 		class iGuard;
+		class LearningWorld;
+		class MonitorReceiver;
+		class GuardNeighbours;
 	  
 		class LearningProcess: public ThreadBase
 		{
 		protected:
-			int m_id;
 			bool m_update;
 			
 			ros::NodeHandle m_node;
 			ros::Subscriber m_sub;
 			
 			Mutex m_mutex;
-		
+			
+			Configuration m_nextConfiguration;
+			
+			std::shared_ptr<LearningWorld> m_learning;
+			
+			std::shared_ptr<MonitorReceiver> m_monitorReceiver;
+			std::shared_ptr<GuardNeighbours> m_guardNeighbours;
+			
 		protected:
 			virtual void run();
 		public:
-			LearningProcess(int id_);
+			LearningProcess(std::shared_ptr<LearningWorld> learning_);
 			
 			~LearningProcess();
 			

@@ -27,3 +27,9 @@ void MonitorReceiver::UpdateMonitorCallBack(const nav_msgs::OccupancyGrid::Const
 {
   m_data->update(msg->data);
 }
+
+/////////////////////////////////////////////
+std::shared_ptr<WorldMap> MonitorReceiver::getData() const
+{
+  return m_data;
+}

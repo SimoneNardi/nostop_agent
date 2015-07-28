@@ -26,3 +26,9 @@ void GuardNeighbours::UpdateNeighboursCallBack(const nav_msgs::OccupancyGrid::Co
 {
 	m_data->update(msg->data);
 }
+
+/////////////////////////////////////////////
+std::shared_ptr<WorldMap> GuardNeighbours::getData() const
+{
+  return m_data;
+}

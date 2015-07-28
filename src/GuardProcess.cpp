@@ -6,6 +6,7 @@
 #include "ros/ros.h"
 
 #include "iGuard.h"
+#include "LearningInitializer.h"
 
 #include "guard.h"
 

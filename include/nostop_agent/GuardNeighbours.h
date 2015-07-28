@@ -33,6 +33,8 @@ namespace Robotics
 			GuardNeighbours();
 			
 			~GuardNeighbours();
+			
+			std::shared_ptr<WorldMap> getData() const;
 		};
 
 	}

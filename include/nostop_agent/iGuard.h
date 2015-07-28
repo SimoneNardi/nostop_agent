@@ -14,8 +14,7 @@
 
 #include "nostop_agent/GuardSensorCtrl.h"
 
-#include "LearningInitializer.h"
-#include <LearningWorld.h>
+#include "learningWorld.h"
 
 namespace Robotics 
 {
@@ -27,27 +26,24 @@ namespace Robotics
 		class GuardNeighbours;
 		class MonitorReceiver;
 		class Area;
+		class LearningProcess;
+		class LearningInitializer;
 
 		class iGuard : public iAgent
 	  	{
 		protected:
-			///
-			std::shared_ptr<LearningWorld> m_learninigWorld;
+			/// Learning Initializer
+			std::shared_ptr<LearningInitializer> m_learningInit;
+			/// Learning
+			std::shared_ptr<LearningProcess> m_learning;
 			///
 			std::shared_ptr<Guard> m_LGuard;
-			
-			  
-			std::shared_ptr<MonitorReceiver> m_monitorReceiver;
-			std::shared_ptr<GuardNeighbours> m_guardNeighbours;
-			std::shared_ptr<LearningInitializer> m_learningInit;
 			
 			LEARNING m_algorithmFLAG;
 			
 			nostop_agent::GuardSensorCtrl m_currentControl;
 			
 		public:
-			//AgentPosition getCurrentAgentPosition();
-			
 			nostop_agent::GuardSensorCtrl getCameraControl();
 			
 			std::shared_ptr<LearningInitializer> getLearningInitializer() {return m_learningInit;}

@@ -10,7 +10,7 @@
 #include "AreaCreator.h"
 #include "GuardProcess.h"
 
-#include "LearningWorld.h"
+#include "learningWorld.h"
 
 #include <cstdlib>
 

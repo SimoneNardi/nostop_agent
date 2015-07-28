@@ -1,12 +1,14 @@
 #include "iGuard.h"
 #include "MonitorReceiver.h"
 #include "GuardNeighbours.h"
+
 #include "LearningInitializer.h"
+#include "LearningProcess.h"
 
 #include "area.h"
 #include "guard.h"
 #include "discretizedArea.h"
-#include <LearningWorld.h>
+#include "learningWorld.h"
 
 #include "Conversions.h"
 
@@ -14,18 +16,6 @@ using namespace Robotics;
 using namespace Robotics::GameTheory;
 using namespace std;
 
-// 	////////////////////////////////////////////////////
-// 	AgentPosition iGuard::getCurrentAgentPosition()
-// 	{
-// 		Configuration l_config = this->getCurrentConfiguration();
-// 		
-// 		// TODO identifica posizione dal mondo.
-// 		// ...
-// 				
-// 		AgentPosition l_pos;// = m_guard->getCurrenPosition();
-// 		return l_pos;
-// 	}
-// 	
 	////////////////////////////////////////////////////
 	nostop_agent::GuardSensorCtrl iGuard::getCameraControl()
 	{
@@ -35,13 +25,10 @@ using namespace std;
 	
 	////////////////////////////////////////////////////
 	iGuard::iGuard() 
-	: m_learninigWorld(nullptr)
+	: m_learning(nullptr)
+	, m_learningInit(nullptr)
 	, m_LGuard(nullptr)
-	, m_monitorReceiver(nullptr)
-	, m_guardNeighbours(nullptr)
 	{
-		m_monitorReceiver = std::make_shared<MonitorReceiver>();
-		m_guardNeighbours = std::make_shared<GuardNeighbours>();
 		m_learningInit = std::make_shared<LearningInitializer>();
 		m_learningInit->start();
 	}
@@ -74,10 +61,11 @@ using namespace std;
 		std::set< std::shared_ptr<Agent> > l_agents; 
 		l_agents.insert(m_LGuard);
 				
-		m_learninigWorld = std::make_shared<LearningWorld>(l_agents, l_space, m_algorithmFLAG);
+		std::shared_ptr<LearningWorld> l_learn = std::make_shared<LearningWorld>(l_agents, l_space, m_algorithmFLAG);
+		m_learning = std::make_shared<LearningProcess>(l_learn);
 		
-		AgentPosition l_targetPos = m_LGuard->getCurrentPosition(); // TODO: first position calibrated with the learning algorithm.
-		// primo comando di movimento per il robot.
+		// TODO: first target position is determined by the learning algorithm.
+		AgentPosition l_targetPos = m_LGuard->getCurrentPosition(); 
 		this->setTargetConfigurationToCenterOfSquare( Conversions::IDSReal2D2Point( l_targetPos.getPoint2D() ) );
 	}
 	

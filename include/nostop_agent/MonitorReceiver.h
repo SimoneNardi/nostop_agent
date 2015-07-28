@@ -33,6 +33,8 @@ namespace Robotics
 			MonitorReceiver();
 			
 			~MonitorReceiver();
+			
+			std::shared_ptr<WorldMap> getData() const;
 		};
 
 	}
