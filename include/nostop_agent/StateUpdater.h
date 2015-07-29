@@ -11,6 +11,8 @@
 
 #include <memory>
 
+#include <tf/transform_broadcaster.h>
+
 namespace Robotics 
 {
 	namespace GameTheory
@@ -22,6 +24,8 @@ namespace Robotics
 		protected:
 			std::shared_ptr<iAgent> m_agent;
 		
+			tf::TransformBroadcaster m_broadcaster;
+			
 		protected:
 			virtual void run();
 		public:

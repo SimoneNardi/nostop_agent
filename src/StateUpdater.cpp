@@ -37,10 +37,10 @@ void StateUpdater::run()
       l_currentConfig = l_localizer->getConfiguration();
     } 
       
-    geometry_msgs::Point l_point_ = l_currentConfig.getPosition();
-    m_agent->updateCurrentPosition( l_point_ );
-    geometry_msgs::Quaternion l_orientation_ = l_currentConfig.getOrientation();
-    m_agent->updateCurrentOrientation( l_orientation_ );
+    geometry_msgs::Point l_point = l_currentConfig.getPosition();
+    m_agent->updateCurrentPosition( l_point );
+    geometry_msgs::Quaternion l_orientation = l_currentConfig.getOrientation();
+    m_agent->updateCurrentOrientation( l_orientation );
     
     m_agent->computeConfigurationToTarget();
     
@@ -50,7 +50,15 @@ void StateUpdater::run()
     
     if ( m_agent->isArrived() )
       m_agent->setStandByStatus();
-      
+    
+    geometry_msgs::Pose l_pose = l_newConfig.getPose();
+    tf::Transform l_transform;
+    l_transform.setOrigin( tf::Vector3(l_pose.position.x, l_pose.position.y, l_pose.position.z) );
+    tf::Quaternion l_quaternion;
+    l_quaternion.setRPY(0, 0, l_pose.orientation.z);
+    l_transform.setRotation( l_quaternion );
+    m_broadcaster.sendTransform(tf::StampedTransform(l_transform, ros::Time::now(), "world", m_agent->getName()));
+    
     ros::spinOnce();
 
     loop_rate.sleep();
