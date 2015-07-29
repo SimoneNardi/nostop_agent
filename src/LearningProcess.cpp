@@ -48,20 +48,22 @@ void LearningProcess::run()
 	ros::Rate loop_rate(1);
 	
 	int count = 0;
-	while (ros::ok() && m_update)
+	while (ros::ok())
 	{
-	  // Collect Monitor Data:
-	  m_learning->updateMonitor(m_monitorReceiver->getData()->getMap());
-	  
-	  // Collect Neighbours Data:
-	  m_learning->updateNeighbours(m_guardNeighbours->getData()->getMap());
-	  
-	  // Compute Benefit, Save current action and Select next position:
-	  m_learning->forwardOneStep();
-	  	  
-	  m_mutex.lock();
-	    m_update = false;
-	  m_mutex.unlock();
+	  Lock lock(m_mutex);
+	  if (m_update)
+	  {
+		// Collect Monitor Data:
+		m_learning->updateMonitor(m_monitorReceiver->getData()->getMap());
+		
+		// Collect Neighbours Data:
+		m_learning->updateNeighbours(m_guardNeighbours->getData()->getMap());
+		
+		// Compute Benefit, Save current action and Select next position:
+		m_learning->forwardOneStep();
+
+		m_update = false;
+	  }
 	  
 	  ros::spinOnce();
 

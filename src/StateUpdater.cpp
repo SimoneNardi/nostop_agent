@@ -49,7 +49,9 @@ void StateUpdater::run()
     m_agent->setCurrentConfiguration( l_newConfig );
     
     if ( m_agent->isArrived() )
+    {
       m_agent->setStandByStatus();
+    }
     
     geometry_msgs::Pose l_pose = l_newConfig.getPose();
     tf::Transform l_transform;
