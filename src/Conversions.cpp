@@ -4,14 +4,14 @@ using namespace Robotics;
 using namespace Robotics::GameTheory;
 
 ///
-IDSReal2D Conversions::Point2IDSReal2D(geometry_msgs::Point const& point_)
+Real2D Conversions::Point2Real2D(geometry_msgs::Point const& point_)
 {
-  IDSReal2D l_res(point_.x, point_.y);
+  Real2D l_res(point_.x, point_.y);
   return l_res;
 }
 
 ///
-geometry_msgs::Point Conversions::IDSReal2D2Point(IDSReal2D const& point_)
+geometry_msgs::Point Conversions::Real2D2Point(Real2D const& point_)
 {
   geometry_msgs::Point l_res;
   l_res.x = point_.v[0];

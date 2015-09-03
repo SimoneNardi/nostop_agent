@@ -19,8 +19,8 @@ namespace Robotics
 	{
 		class AreaCreator
 		{
-			std::vector<IDSReal2D> m_external;
-			std::vector< std::vector<IDSReal2D> > m_internal;
+			std::vector<Real2D> m_external;
+			std::vector< std::vector<Real2D> > m_internal;
 
 		public:
 			AreaCreator();

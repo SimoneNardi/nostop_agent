@@ -7,7 +7,7 @@
 
 #include "iLocalizer.h"
 
-#include "IDSMath.h"
+#include "Math.h"
 
 #include "Conversions.h"
 
@@ -24,9 +24,9 @@ using namespace std;
 // 	  geometry_msgs::Quaternion rhs_orientation = rhs.getOrientation();
 	  geometry_msgs::Point rhs_position = rhs.getPosition();
 	  
-	  return fabs(lhs_position.x - rhs_position.x) < IDSMath::TOLERANCE && 
-		 fabs(lhs_position.y - rhs_position.y) < IDSMath::TOLERANCE && 
-		 fabs(lhs_position.z - rhs_position.z) < IDSMath::TOLERANCE;
+	  return fabs(lhs_position.x - rhs_position.x) < Math::TOLERANCE && 
+		 fabs(lhs_position.y - rhs_position.y) < Math::TOLERANCE && 
+		 fabs(lhs_position.z - rhs_position.z) < Math::TOLERANCE;
 	}
 
 	////////////////////////////////////////////////////
@@ -234,15 +234,15 @@ using namespace std;
 	{
 	  Lock lock(m_mutex);
 	  
-	  IDSReal2D l_current = Conversions::Point2IDSReal2D(m_currentConfiguration.getPosition());
-	  IDSReal2D l_target = Conversions::Point2IDSReal2D(m_targetConfiguration.getPosition());
+	  Real2D l_current = Conversions::Point2Real2D(m_currentConfiguration.getPosition());
+	  Real2D l_target = Conversions::Point2Real2D(m_targetConfiguration.getPosition());
 	  
-	  IDSReal2D l_delta = l_target-l_current;
+	  Real2D l_delta = l_target-l_current;
 	  
-	  double l_phi = IDSMath::polarPhi2D(l_delta);
+	  double l_phi = Math::polarPhi2D(l_delta);
 	  
-	  double l_tolerance = 100.*IDSMath::TOLERANCE;
-	  if (fabs(l_phi) > l_tolerance || fabs(l_phi-IDSMath::Pi) > l_tolerance)
+	  double l_tolerance = 100.*Math::TOLERANCE;
+	  if (fabs(l_phi) > l_tolerance || fabs(l_phi-Math::Pi) > l_tolerance)
 	  // allineamento degli heading:
 	  {
 	    if (l_phi>0)
@@ -253,7 +253,7 @@ using namespace std;
 	  else
 	  // movimento lineare:
 	  {
-	    if(fabs(l_phi-IDSMath::Pi) > l_tolerance)
+	    if(fabs(l_phi-Math::Pi) > l_tolerance)
 	      this->goBackward();
 	    else
 	      this->goForward();

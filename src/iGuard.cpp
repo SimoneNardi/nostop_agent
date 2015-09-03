@@ -66,7 +66,7 @@ using namespace std;
 		
 		// TODO: first target position is determined by the learning algorithm.
 		AgentPosition l_targetPos = m_LGuard->getCurrentPosition(); 
-		this->setTargetConfigurationToCenterOfSquare( Conversions::IDSReal2D2Point( l_targetPos.getPoint2D() ) );
+		this->setTargetConfigurationToCenterOfSquare( Conversions::Real2D2Point( l_targetPos.getPoint2D() ) );
 	}
 	
 	////////////////////////////////////////////////////

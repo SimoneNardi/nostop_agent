@@ -75,7 +75,7 @@ bool GuardProcess::isReady()
       int l_id = l_learning->getID();
 
       geometry_msgs::Point l_geomPoint = l_guard->getCurrentConfigurationPosition();
-      IDSReal2D l_point = Conversions::Point2IDSReal2D(l_geomPoint);
+      Real2D l_point = Conversions::Point2Real2D(l_geomPoint);
       
       nostop_agent::GuardSensorCtrl l_guardSensorCtrl = l_guard->getCameraControl();
       CameraPosition l_cameraPos  = Conversions::GuardSensorCtrl2CameraPosition(l_guardSensorCtrl);

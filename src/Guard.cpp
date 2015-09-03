@@ -5,7 +5,7 @@
 #include "nostop_agent/PlayerConfigurationData.h"
 #include "nostop_agent/AreaData.h"
 
-#include "IDSReal2D.h"
+#include "Real2D.h"
 
 #include "AreaCreator.h"
 #include "GuardProcess.h"
