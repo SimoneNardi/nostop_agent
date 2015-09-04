@@ -1,0 +1,8 @@
+<launch>
+    
+  <node pkg="nostop_agent" type="Guard" name="$(anon Guard)" required="true" output="screen">
+    <param name="robot_name" value="$(optenv ROS_ROBOT_NAME green_red)" />
+    <param name="learning_name" value="$(optenv ROS_LEARNING_ALG DISL)" />
+  </node>
+
+</launch>
