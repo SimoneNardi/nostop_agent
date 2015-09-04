@@ -18,13 +18,14 @@ namespace Robotics
 		class LearningInitializer : public ThreadBase
 	  	{
 		  int m_id;
+		  std::string m_name;
 		  
 		  mutable Mutex m_mutex;
 		  
 		protected:
 			virtual void run();
 		public:
-			LearningInitializer();
+			LearningInitializer(std::string name_);
 			
 			~LearningInitializer();
 			

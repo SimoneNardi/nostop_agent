@@ -29,7 +29,7 @@ using namespace std;
 	, m_learningInit(nullptr)
 	, m_LGuard(nullptr)
 	{
-		m_learningInit = std::make_shared<LearningInitializer>();
+		m_learningInit = std::make_shared<LearningInitializer>(m_name);
 		m_learningInit->start();
 	}
 	

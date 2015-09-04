@@ -9,9 +9,10 @@ using namespace Robotics;
 using namespace Robotics::GameTheory;
 
   ///////////////////////////////////////////////
-  LearningInitializer::LearningInitializer() 
+  LearningInitializer::LearningInitializer(std::string name_) 
   : ThreadBase()
   , m_id(-1) 
+  , m_name(name_)
   {}
   
   ///////////////////////////////////////////////
@@ -33,6 +34,7 @@ using namespace Robotics::GameTheory;
       ros::NodeHandle l_nodeID;
       ros::ServiceClient l_clientID = l_nodeID.serviceClient<nostop_agent::PlayerIDData>("GuardID");
       nostop_agent::PlayerIDData l_srvID;
+      l_srvID.request.name = m_name;
       if (l_clientID.call(l_srvID))
       {
 	      ROS_INFO("Selected ID: %ld", (long int)l_srvID.response.id);

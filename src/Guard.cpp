@@ -33,7 +33,9 @@ int main(int argc, char **argv)
       }
       else
       {
-	l_name="red_blue";
+	std::cout << "Enter the name of the robot: ";
+	std::cin >> l_name;
+	//l_name="red_blue";
 	ROS_ERROR("Nome non ricevuto: %s", l_name.c_str());
       }
 	
@@ -88,10 +90,10 @@ int main(int argc, char **argv)
 	      l_area = l_areaCreator.getArea();
       }
 
-	while (!l_guard.isReady())
-	  ros::spinOnce();
+      while (!l_guard.isReady())
+	ros::spinOnce();
 	
-	l_guard.createLearningAlgorithm(l_area);
+      l_guard.createLearningAlgorithm(l_area);
 	
 	// publish agent configuration to simulator
 	

@@ -24,14 +24,15 @@ int main(int argc, char **argv)
 		ROS_ERROR("Failed to call service ThiefID");
 		return 1;
 	}
+
+	ros::spin();
 	
 	return 0;
 	
 	// create Logical object
 	
 	// send back to simulator ID, position, control and kind!
-	
-	//std::shared_ptr<Robotics::GameTheory::Agent> l_agent = std::make_shared<Guard>();
+	//std::shared_ptr<Robotics::GameTheory::Agent> l_agent = std::make_shared<Thief>(l_srvID.response.id);
 	
 	if (argc != 3)
 	{
