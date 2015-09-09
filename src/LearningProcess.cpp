@@ -71,3 +71,15 @@ void LearningProcess::run()
 	  ++count;
 	}
 }
+
+/////////////////////////////////////////////
+double LearningProcess::getTimeOFMonitor()
+{
+  return m_monitorReceiver->getTime().toSec();
+}
+
+/////////////////////////////////////////////
+double LearningProcess::getTimeOFNeighbours()
+{
+  return m_guardNeighbours->getTime().toSec();
+}

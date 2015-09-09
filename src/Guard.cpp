@@ -33,8 +33,8 @@ int main(int argc, char **argv)
       else
       {
 	std::cout << "Enter the name of the robot: ";
-	std::cin >> l_name;
-	//l_name="red_blue";
+	//std::cin >> l_name;
+	l_name="red_blue";
 	ROS_ERROR("Nome non ricevuto: %s", l_name.c_str());
       }
 	
@@ -94,26 +94,9 @@ int main(int argc, char **argv)
 	
       l_guard.createLearningAlgorithm(l_area);
 	
-	// publish agent configuration to simulator
-	
-	
-	// Info From Monitor Sensor (Learning Benefit and Neighbours)
-	
-	
-// 	l_guard.setID(l_srvID.response.id);
-	
-	//std::shared_ptr<Robotics::GameTheory::Agent> l_learningAgent = l_agent->getAgent();
-	//g_coverage = std::make_shared<Robotics::GameTheory::LearningWorld>(l_learningAgent, l_area->discretize(), Robotics::GameTheory::DISL);
-	
-	// l'agente deve poter scegliere se compiere un'azione oppure se proseguire la traiettoria assegnata, 
-	// inoltre deve poter inviare un messaggio al simulatore ogni volta che finisce di compiere l'azione
-	
-	/////////////////////////////////////////////////
-	// WAIT FOR ROS MESSAGES
-	ros::spin();
+      l_guard.spin();
+      
+      ROS_INFO("Ending agent %s.", l_name.c_str());
 
-	ROS_INFO("Ending agent %s.", l_name.c_str());
-
-
-	return 0;
+      return 0;
 }

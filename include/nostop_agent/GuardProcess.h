@@ -34,6 +34,12 @@ namespace Robotics
 			void setCamera(double max_dist);
 
 			void setRobotAlgorithm(std::string alg_);
+			
+			void spin();
+		protected:
+			void waitForNewsFromMonitor();
+		  
+			void forwardOneStep();
 		};
 
 	}

@@ -85,4 +85,38 @@ using namespace std;
 	  
 	}
 	
+	////////////////////////////////////////////////////
+	void iGuard::waitForNewsFromMonitor(ros::Time const& time_)
+	{
+	  // the new map (neighbours and probability) is updated? wait for new map:
+	  double l_currsecs = time_.toSec();
+	  double l_delta_monitor = 0;
+	  double l_delta_neighbour = 0;
+	  while (l_delta_monitor <= Math::TOLERANCE || l_delta_neighbour <= Math::TOLERANCE)
+	  {
+	    double l_monitor_secs = m_learning->getTimeOFMonitor();
+	    double l_neighbour_secs = m_learning->getTimeOFNeighbours();
+	    
+	    l_delta_monitor = l_monitor_secs - l_currsecs;
+	    l_delta_neighbour = l_neighbour_secs - l_currsecs;
+	    
+	    if (l_delta_monitor > Math::TOLERANCE && l_delta_neighbour > Math::TOLERANCE)
+	    {
+	      // update my world with the new map:
+	      // TODO
+	    }
+	    
+	    ros::spinOnce();
+	  }
+	}
+		  
+	////////////////////////////////////////////////////
+	void iGuard::forwardOneStep()
+	{
+	  // go forward in the learninig algorithm:
+	  
+	  // Compute benefit:
+	  
+	  // Select next target configuration:
+	}
 	

@@ -24,7 +24,10 @@ GuardNeighbours::~GuardNeighbours()
 /////////////////////////////////////////////
 void GuardNeighbours::UpdateNeighboursCallBack(const nav_msgs::OccupancyGrid::ConstPtr& msg)
 {
+	m_time = msg->info.map_load_time;
 	m_data->update(msg->data);
+	
+	// notify new data
 }
 
 /////////////////////////////////////////////

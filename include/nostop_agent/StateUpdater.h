@@ -26,12 +26,16 @@ namespace Robotics
 		
 			tf::TransformBroadcaster m_broadcaster;
 			
+			ros::Time m_time;
+			
 		protected:
 			virtual void run();
 		public:
 			StateUpdater(std::shared_ptr<iAgent> agent_);
 			
 			~StateUpdater();
+			
+			ros::Time getTime() {return m_time;}
 		};
 
 	}

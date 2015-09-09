@@ -37,6 +37,7 @@ find_package(catkin REQUIRED COMPONENTS roscpp std_msgs geometry_msgs nav_msgs m
    GuardBenefitData.srv
    GuardNeighboursData.srv
    PlayerConfigurationData.srv
+   PlayerNotifyStatus.srv
  )
 
 ## Generate actions in the 'action' folder

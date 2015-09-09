@@ -48,8 +48,9 @@ void StateUpdater::run()
 
     m_agent->setCurrentConfiguration( l_newConfig );
     
-    if ( m_agent->isArrived() )
+    if ( m_agent->isArrived() && m_agent->getStatus() != Agent::STANDBY )
     {
+      m_time = ros::Time::now();
       m_agent->setStandByStatus();
     }
     

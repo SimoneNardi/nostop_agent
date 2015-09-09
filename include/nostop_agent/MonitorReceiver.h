@@ -25,6 +25,8 @@ namespace Robotics
 		  	ros::Subscriber m_sub;
 			
 			std::shared_ptr<WorldMap> m_data;
+			
+			ros::Time m_time;
 		protected:
 		
 			void UpdateMonitorCallBack(const nav_msgs::OccupancyGrid::ConstPtr & msg);
@@ -35,6 +37,8 @@ namespace Robotics
 			~MonitorReceiver();
 			
 			std::shared_ptr<WorldMap> getData() const;
+			
+			ros::Time getTime() {return m_time;}
 		};
 
 	}

@@ -52,6 +52,9 @@ namespace Robotics
 			void init();
 			
 			void AgentCall_CallBack(const std_msgs::Bool::ConstPtr & msg_);
+			
+			double getTimeOFMonitor();
+			double getTimeOFNeighbours();
 		};
 
 	}

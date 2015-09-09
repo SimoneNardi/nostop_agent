@@ -59,6 +59,10 @@ namespace Robotics
 		  void setGuardPtr(std::shared_ptr<Guard> lGuard_);
 		  
 		  void setRobotAlgorithm(std::string alg_);
+		  
+		  void waitForNewsFromMonitor(ros::Time const& time_);
+		  
+		  void forwardOneStep();
 			
 		public:
 			iGuard();
