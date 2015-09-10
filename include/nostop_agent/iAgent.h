@@ -37,6 +37,10 @@ namespace Robotics
 			std::string m_name;
 			
 			Mutex m_mutex;
+			
+			ros::NodeHandle m_node;
+			ros::ServiceClient m_notifyStatus;
+
 		public:
 		  		
 			void computeConfigurationToTarget();
@@ -102,6 +106,9 @@ namespace Robotics
 			  void goBackward();
 			  void rotateLeft();
 			  void rotateRight();
+			  
+		protected:
+			  bool notifyStatus();
 		};
 		
 		typedef std::shared_ptr<iAgent> iAgentPtr;

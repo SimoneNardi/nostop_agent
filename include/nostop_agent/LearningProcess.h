@@ -33,7 +33,9 @@ namespace Robotics
 			ros::NodeHandle m_node;
 			ros::Subscriber m_sub;
 			
-			Mutex m_mutex;
+			mutable Mutex1 m_mutex;
+			Condition1 m_cond_var;
+			bool m_notified;
 			
 			Configuration m_nextConfiguration;
 			
@@ -41,6 +43,8 @@ namespace Robotics
 			
 			std::shared_ptr<MonitorReceiver> m_monitorReceiver;
 			std::shared_ptr<GuardNeighbours> m_guardNeighbours;
+			
+			
 			
 		protected:
 			virtual void run();

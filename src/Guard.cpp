@@ -94,7 +94,9 @@ int main(int argc, char **argv)
 	
       l_guard.createLearningAlgorithm(l_area);
 	
-      l_guard.spin();
+      /////////////////////////////////////////////////
+      // WAIT FOR ROS MESSAGES
+      ros::spin();
       
       ROS_INFO("Ending agent %s.", l_name.c_str());
 

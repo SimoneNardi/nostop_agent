@@ -32,14 +32,16 @@ LearningProcess::~LearningProcess()
 /////////////////////////////////////////////
 void LearningProcess::init()
 {
-  Lock lock(m_mutex);
-	m_sub = m_node.subscribe<std_msgs::Bool>("AgentCall", 1, &LearningProcess::AgentCall_CallBack, this);
+  Lock1 lock(m_mutex);
+  m_sub = m_node.subscribe<std_msgs::Bool>("AgentCall", 1, &LearningProcess::AgentCall_CallBack, this);
 }
 
 void LearningProcess::AgentCall_CallBack(const std_msgs::Bool::ConstPtr & msg_)
 {
-  Lock lock(m_mutex);
+  Lock1 lock(m_mutex);
   m_update = msg_->data;
+  m_cond_var.notify_one();
+  m_notified = true;
 }
 
 /////////////////////////////////////////////
@@ -47,10 +49,17 @@ void LearningProcess::run()
 {
 	ros::Rate loop_rate(1);
 	
+	Lock1 l_lock(m_mutex);
+	
 	int count = 0;
 	while (ros::ok())
 	{
-	  Lock lock(m_mutex);
+	  
+	  while (!m_notified) 
+	  {  // loop to avoid spurious wakeups
+                m_cond_var.wait(l_lock);
+          } 
+	  
 	  if (m_update)
 	  {
 		// Collect Monitor Data:

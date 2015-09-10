@@ -39,44 +39,6 @@ void GuardProcess::init()
 GuardProcess::~GuardProcess()
 {}
 
-void GuardProcess::spin()
-{
-  int count = 0;
-  while (ros::ok())
-  {
-    // move towards target configuration and at the end set status to STANDBY
-    this->reachTargetConfiguration();
-    
-    // send a broadcast message of unemployed agents
-    this->notifyStatus();
-    
-    std::shared_ptr<iGuard> l_guard = std::static_pointer_cast<iGuard>(m_agent);
-    // Info From Monitor Sensor (Learning Benefit and Neighbours) and update learning
-    l_guard->waitForNewsFromMonitor(m_stateUpdater->getTime());
-	  
-    // Perform next step
-    l_guard->forwardOneStep();
-    
-    /////////////////////////////////////////////////
-    // WAIT FOR ROS MESSAGES
-    ros::spinOnce();
-  }
-}
-
-//////////////////////////////////////////////////
-// Info From Monitor Sensor (Learning Benefit and Neighbours) and update learning
-void GuardProcess::waitForNewsFromMonitor()
-{
-  
-}
-    
-//////////////////////////////////////////////////
-// Perform next step
-void GuardProcess::forwardOneStep()
-{
-  // TODO
-}
-
 //////////////////////////////////////////////////
 void GuardProcess::setRobotAlgorithm(std::string alg_)
 {

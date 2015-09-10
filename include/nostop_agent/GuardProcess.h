@@ -36,10 +36,6 @@ namespace Robotics
 			void setRobotAlgorithm(std::string alg_);
 			
 			void spin();
-		protected:
-			void waitForNewsFromMonitor();
-		  
-			void forwardOneStep();
 		};
 
 	}

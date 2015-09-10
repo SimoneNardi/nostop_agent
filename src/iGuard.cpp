@@ -64,7 +64,7 @@ using namespace std;
 		std::shared_ptr<LearningWorld> l_learn = std::make_shared<LearningWorld>(l_agents, l_space, m_algorithmFLAG);
 		m_learning = std::make_shared<LearningProcess>(l_learn);
 		
-		// TODO: first target position is determined by the learning algorithm.
+		// TODO: first target position is determined by the localizer.
 		AgentPosition l_targetPos = m_LGuard->getCurrentPosition(); 
 		this->setTargetConfigurationToCenterOfSquare( Conversions::Real2D2Point( l_targetPos.getPoint2D() ) );
 	}
@@ -84,33 +84,9 @@ using namespace std;
 		iAgent::setAgentPtr(m_LGuard);
 	  
 	}
-	
-	////////////////////////////////////////////////////
-	void iGuard::waitForNewsFromMonitor(ros::Time const& time_)
-	{
-	  // the new map (neighbours and probability) is updated? wait for new map:
-	  double l_currsecs = time_.toSec();
-	  double l_delta_monitor = 0;
-	  double l_delta_neighbour = 0;
-	  while (l_delta_monitor <= Math::TOLERANCE || l_delta_neighbour <= Math::TOLERANCE)
-	  {
-	    double l_monitor_secs = m_learning->getTimeOFMonitor();
-	    double l_neighbour_secs = m_learning->getTimeOFNeighbours();
-	    
-	    l_delta_monitor = l_monitor_secs - l_currsecs;
-	    l_delta_neighbour = l_neighbour_secs - l_currsecs;
-	    
-	    if (l_delta_monitor > Math::TOLERANCE && l_delta_neighbour > Math::TOLERANCE)
-	    {
-	      // update my world with the new map:
-	      // TODO
-	    }
-	    
-	    ros::spinOnce();
-	  }
-	}
 		  
 	////////////////////////////////////////////////////
+	// Perform next step
 	void iGuard::forwardOneStep()
 	{
 	  // go forward in the learninig algorithm:

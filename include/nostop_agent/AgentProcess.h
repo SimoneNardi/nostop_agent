@@ -29,9 +29,6 @@ namespace Robotics
 		  std::shared_ptr<StatePublisher> m_statePublisher;
 		  std::shared_ptr<StateUpdater> m_stateUpdater;
 		  
-		  ros::NodeHandle m_node;
-		  ros::ServiceClient m_notifyStatus;
-		  
 		public:
 			AgentProcess() {};
 			
@@ -46,12 +43,6 @@ namespace Robotics
 			
 			void setKinectLocalizer();
 			void setSimulatorLocalizer();
-			
-		protected:
-			void reachTargetConfiguration();
-			
-			// Fail if simulator is not responding
-			bool notifyStatus();
 		};
 	}
 }

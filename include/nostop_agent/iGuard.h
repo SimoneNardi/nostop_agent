@@ -60,8 +60,10 @@ namespace Robotics
 		  
 		  void setRobotAlgorithm(std::string alg_);
 		  
+		  /// Info From Monitor Sensor (Learning Benefit and Neighbours) and update learning
 		  void waitForNewsFromMonitor(ros::Time const& time_);
 		  
+		  /// Perform next step
 		  void forwardOneStep();
 			
 		public:

@@ -5,6 +5,8 @@
 #include "geometry_msgs/Quaternion.h"
 #include "nav_msgs/Odometry.h"
 
+#include "nostop_agent/PlayerNotifyStatus.h"
+
 #include "iLocalizer.h"
 
 #include "Math.h"
@@ -126,6 +128,7 @@ using namespace std;
 	{
 	  Lock lock(m_mutex);
 	  m_LAgent = agent_;
+	  m_notifyStatus = m_node.serviceClient<nostop_agent::PlayerNotifyStatus>("NotifyStatus");
 	}
 	
 	////////////////////////////////////////////////////
@@ -166,6 +169,22 @@ using namespace std;
 	void iAgent::setStandByStatus()
 	{
 	  m_LAgent->setStatus(Agent::STANDBY);
+	  this->notifyStatus();
+	}
+	
+	//////////////////////////////////////////////////
+	// send a broadcast message of unemployed agents
+	bool iAgent::notifyStatus()
+	{
+	  nostop_agent::PlayerNotifyStatus l_srv;
+	  l_srv.request.id = this->getID();
+	  if ( !m_notifyStatus.call(l_srv) )
+	  {
+	      ROS_ERROR("Failed to call service Notify Status");
+	      return false;
+	  }
+
+	  return true;
 	}
 			
 	////////////////////////////////////////////////////
@@ -338,6 +357,4 @@ using namespace std;
 	  l_twist.angular.z = -1;
 	  
 	  m_currentConfiguration.setTwist(l_twist);
-	}
-
-	
+	}	
