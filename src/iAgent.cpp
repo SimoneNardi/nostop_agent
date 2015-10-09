@@ -160,6 +160,13 @@ using namespace std;
 	}
 	
 	////////////////////////////////////////////////////
+	geometry_msgs::Pose iAgent::getCurrentConfigurationPose()
+	{
+	  Lock lock(m_mutex);
+	  return m_currentConfiguration.getPose();
+	}
+	
+	////////////////////////////////////////////////////
 	bool iAgent::isArrived()
 	{
 	  return m_currentConfiguration.equals(m_targetConfiguration);

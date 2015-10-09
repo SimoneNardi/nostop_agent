@@ -52,6 +52,8 @@ namespace Robotics
 			geometry_msgs::Twist getCurrentConfigurationTwist();
 			
 			geometry_msgs::Point getCurrentConfigurationPosition();
+			
+			geometry_msgs::Pose getCurrentConfigurationPose();
 			//////////////////////////////
 		  
 			void updateCurrentOdometry( nav_msgs::Odometry & odometry_ );
