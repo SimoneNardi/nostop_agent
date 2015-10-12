@@ -7,9 +7,9 @@ using namespace std;
 	////////////////////////////////////////////////////
 	Configuration iLocalizer::getConfiguration() const
 	{
-		Lock lock(m_mutex);
-		m_updated = false;
-		return m_config;
+	    Lock lock(m_mutex);
+	    m_updated = false;
+	    return m_config;
 	}
 
 	////////////////////////////////////////////////////
