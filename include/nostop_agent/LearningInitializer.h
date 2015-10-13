@@ -25,13 +25,15 @@ namespace Robotics
 		protected:
 			virtual void run();
 		public:
-			LearningInitializer(std::string name_);
+			LearningInitializer(std::string const& name_ = "");
 			
 			~LearningInitializer();
 			
 			bool isInitialized() const;
 			
 			int getID() const;
+			
+			void setName(std::string const& name_);
 		};
 	}
 }

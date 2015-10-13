@@ -24,13 +24,21 @@ using namespace std;
 	}
 	
 	////////////////////////////////////////////////////
+	void iGuard::setName(std::string const& name_)
+	{
+		iAgent::setName(name_);
+		
+		m_learningInit->setName(name_);
+	  	m_learningInit->start();
+	}
+	
+	////////////////////////////////////////////////////
 	iGuard::iGuard() 
 	: m_learning(nullptr)
 	, m_learningInit(nullptr)
 	, m_LGuard(nullptr)
 	{
-		m_learningInit = std::make_shared<LearningInitializer>(m_name);
-		m_learningInit->start();
+		m_learningInit = std::make_shared<LearningInitializer>();
 	}
 	
 	//////////////////////////////////////////////////

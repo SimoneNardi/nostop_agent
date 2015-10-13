@@ -50,6 +50,8 @@ namespace Robotics
 
 		public:
 		  
+		  virtual void setName(std::string const& name_);
+		  
 		  void setCameraCtrl(nostop_agent::GuardSensorCtrl ctrl_);
 		  
 		  void createLearningAlgorithm( std::shared_ptr<Area>  area_ );

@@ -9,11 +9,17 @@ using namespace Robotics;
 using namespace Robotics::GameTheory;
 
   ///////////////////////////////////////////////
-  LearningInitializer::LearningInitializer(std::string name_) 
+  LearningInitializer::LearningInitializer(std::string const& name_) 
   : ThreadBase()
   , m_id(-1) 
   , m_name(name_)
   {}
+  
+  ///////////////////////////////////////////////
+  void LearningInitializer::setName(std::string const& name_)
+  {
+    m_name = name_;
+  }
   
   ///////////////////////////////////////////////
   LearningInitializer::~LearningInitializer()

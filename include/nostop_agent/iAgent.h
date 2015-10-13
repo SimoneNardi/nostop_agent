@@ -91,7 +91,7 @@ namespace Robotics
 			
 			void setActiveStatus();
 			
-			void setName(std::string name_);
+			virtual void setName(std::string const& name_);
 			
 			std::shared_ptr<iLocalizer> getLocalizer();
 			

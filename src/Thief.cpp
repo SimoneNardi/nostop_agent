@@ -15,6 +15,7 @@ int main(int argc, char **argv)
 	ros::NodeHandle l_nodeID;
 	ros::ServiceClient l_clientID = l_nodeID.serviceClient<nostop_agent::PlayerIDData>("ThiefID");
 	nostop_agent::PlayerIDData l_srvID;
+	l_srvID.request.name = "Thief";
 	if (l_clientID.call(l_srvID))
 	{
 		ROS_INFO("Selected ID: %ld", (long int)l_srvID.response.id);
