@@ -95,7 +95,7 @@ using namespace std;
 	SimulatorLocalizer::SimulatorLocalizer(std::string name_)
 	: iLocalizer(name_)
 	{
-	  std::string l_agentname = "SimulatorLocalizer_";
+	  std::string l_agentname = "/simulator/localizer/";
 	  l_agentname+=m_name;
 	  m_name = l_agentname;
 	}
@@ -108,7 +108,7 @@ using namespace std;
 	KinectLocalizer::KinectLocalizer(std::string name_) 
 	: iLocalizer(name_)
 	{
-	  std::string l_agentname = "KinectLocalizer_";
+	  std::string l_agentname = "/kinect/localizer/";
 	  l_agentname+=m_name;
 	  m_name = l_agentname;	  
 	}

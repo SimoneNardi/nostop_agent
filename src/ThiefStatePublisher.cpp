@@ -22,7 +22,7 @@ ThiefStatePublisher::ThiefStatePublisher(std::shared_ptr<iAgent> agent_)
      if(m_thief)
       {
 	std::stringstream l_guardName;
-	l_guardName << "StatePublisher_";
+	l_guardName << "/StatePublisher/";
 	l_guardName << m_thief->getName();
 	
 	m_statePub = m_node.advertise<nostop_agent::ThiefState>(l_guardName.str().c_str(), 10);

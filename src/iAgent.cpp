@@ -128,7 +128,10 @@ using namespace std;
 	{
 	  Lock lock(m_mutex);
 	  m_LAgent = agent_;
-	  m_notifyStatus = m_node.serviceClient<nostop_agent::PlayerNotifyStatus>("NotifyStatus");
+	  
+	  std::string  l_name = "/publisher/status";
+  
+	  m_notifyStatus = m_node.serviceClient<nostop_agent::PlayerNotifyStatus>(l_name.c_str());
 	}
 	
 	////////////////////////////////////////////////////
@@ -187,6 +190,8 @@ using namespace std;
 	{
 	  nostop_agent::PlayerNotifyStatus l_srv;
 	  l_srv.request.id = this->getID();
+	  l_srv.request.status = m_LAgent->getStatus();
+	  
 	  if ( !m_notifyStatus.call(l_srv) )
 	  {
 	      ROS_ERROR("Failed to call service Notify Status");

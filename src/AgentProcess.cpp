@@ -5,7 +5,6 @@
 
 
 #include "iAgent.h"
-#include "nostop_agent/GuardSensorCtrl.h"
 
 using namespace std;
 using namespace Robotics;

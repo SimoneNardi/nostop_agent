@@ -59,7 +59,7 @@ find_package(catkin REQUIRED COMPONENTS roscpp std_msgs geometry_msgs nav_msgs m
 ## catkin specific configuration ##
 ###################################
 catkin_package(
-  INCLUDE_DIRS include/${PROJECT_NAME}/
+  INCLUDE_DIRS include include/${PROJECT_NAME}/
   LIBRARIES ${PROJECT_NAME}
   DEPENDS base_math nostop_learning
 )
@@ -68,7 +68,7 @@ catkin_package(
 ## Build ##
 ###########
 
-include_directories(include/${PROJECT_NAME}/ ${catkin_INCLUDE_DIRS})
+include_directories(include include/${PROJECT_NAME}/ ${catkin_INCLUDE_DIRS})
 link_directories(${catkin_LIBRARY_DIRS})
 include_directories(src/)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/src)
@@ -121,11 +121,11 @@ set(agent_SOURCES
 
 add_executable(Guard ${guard_SOURCES})
 target_link_libraries(Guard ${catkin_LIBRARIES} nostop_learning base_math lemon)
-add_dependencies(Guard nostop_gencpp)
+add_dependencies(Guard ${PROJECT_NAME}_gencpp)
 
 add_executable(Thief ${thief_SOURCES})
 target_link_libraries(Thief ${catkin_LIBRARIES} nostop_learning base_math lemon)
-add_dependencies(Thief nostop_gencpp)
+add_dependencies(Thief ${PROJECT_NAME}_gencpp)
 
 add_library(${PROJECT_NAME} SHARED ${agent_SOURCES})
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} nostop_learning base_math lemon)

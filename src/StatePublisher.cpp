@@ -23,7 +23,7 @@ StatePublisher::StatePublisher(std::shared_ptr<iAgent> agent_)
   if(m_agent)
   {
     std::stringstream l_agentname;
-    l_agentname << "StatePublisher/";
+    l_agentname << "/publisher/state/";
     l_agentname << m_agent->getName();
     
     m_statePub = m_node.advertise<geometry_msgs::Pose>(l_agentname.str().c_str(), 10);

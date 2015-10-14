@@ -9,7 +9,7 @@
 
 #include "area.h"
 
-#include "nostop_agent/Shape.h"
+#include <nostop_agent/Shape.h>
 
 #include <vector>
 
