@@ -22,11 +22,12 @@ StatePublisher::StatePublisher(std::shared_ptr<iAgent> agent_)
 {
   if(m_agent)
   {
-    std::stringstream l_agentname;
-    l_agentname << "/publisher/state/";
-    l_agentname << m_agent->getName();
+    std::stringstream l_agentPose;
+    l_agentPose << "/publisher/pose/";
+    l_agentPose << m_agent->getName();
     
-    m_statePub = m_node.advertise<geometry_msgs::Pose>(l_agentname.str().c_str(), 10);
+    m_posePub = m_node.advertise<geometry_msgs::Pose>(l_agentPose.str().c_str(), 10);
+    
   }
 }
 
@@ -42,8 +43,8 @@ void StatePublisher::run()
   int count = 0;
   while (ros::ok())
   {
-    m_statePub.publish(m_agent->getCurrentConfigurationPose());
-
+    m_posePub.publish(m_agent->getCurrentConfigurationPose());
+    
     ros::spinOnce();
 
     loop_rate.sleep();

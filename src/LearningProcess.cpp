@@ -33,7 +33,7 @@ LearningProcess::~LearningProcess()
 void LearningProcess::init()
 {
   Lock1 lock(m_mutex);
-  m_sub = m_node.subscribe<std_msgs::Bool>("AgentCall", 1, &LearningProcess::AgentCall_CallBack, this);
+  m_sub = m_node.subscribe<std_msgs::Bool>("/simulator/agent_call", 1, &LearningProcess::AgentCall_CallBack, this);
 }
 
 void LearningProcess::AgentCall_CallBack(const std_msgs::Bool::ConstPtr & msg_)

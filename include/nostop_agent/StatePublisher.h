@@ -28,6 +28,7 @@ namespace Robotics
 
 			ros::NodeHandle m_node;
 		  	ros::Publisher m_statePub;
+			ros::Publisher m_posePub;
 			
 			ros::Subscriber m_subPose;
 		protected:

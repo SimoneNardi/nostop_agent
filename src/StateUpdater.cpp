@@ -6,6 +6,10 @@
 
 #include "iAgent.h"
 
+#include "geometry_msgs/Vector3.h"
+#include "geometry_msgs/Quaternion.h"
+#include "tf/transform_datatypes.h"
+
 using namespace std;
 using namespace Robotics;
 using namespace Robotics::GameTheory;
@@ -60,12 +64,14 @@ void StateUpdater::run()
       geometry_msgs::Pose l_pose = l_newConfig.getPose();
       tf::Transform l_transform;
       l_transform.setOrigin( tf::Vector3(l_pose.position.x, l_pose.position.y, l_pose.position.z) );
-      tf::Quaternion l_quaternion;
-      l_quaternion.setRPY(0, 0, l_pose.orientation.z);
-      l_transform.setRotation( l_quaternion );
+      
+      // the incoming geometry_msgs::Quaternion is transformed to a tf::Quaterion
+      tf::Quaternion l_quat;
+      tf::quaternionMsgToTF(l_pose.orientation, l_quat);
+      l_transform.setRotation( l_quat );
       m_broadcaster.sendTransform(tf::StampedTransform(l_transform, ros::Time::now(), "world", m_agent->getName()));
     }
-    
+
     ros::spinOnce();
 
     loop_rate.sleep();

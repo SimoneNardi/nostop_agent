@@ -16,10 +16,10 @@ AreaCreator::AreaCreator()
 	// Collect point from rviz or read configuration file if not available
 	std::vector<Real2D> l_points;
 
-	l_points.push_back(Real2D (-50.,-50.) );
-	l_points.push_back(Real2D (50.,-50.) );
-	l_points.push_back(Real2D (50.,50.) );
-	l_points.push_back(Real2D (-50.,50.) );
+	l_points.push_back(Real2D (-10.,-10.) );
+	l_points.push_back(Real2D (10.,-10.) );
+	l_points.push_back(Real2D (10.,10.) );
+	l_points.push_back(Real2D (-10.,10.) );
 
 	m_external = l_points;
 }

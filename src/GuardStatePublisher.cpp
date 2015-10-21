@@ -22,11 +22,11 @@ GuardStatePublisher::GuardStatePublisher(std::shared_ptr<iAgent> agent_)
      m_guard = std::static_pointer_cast<iGuard>(m_agent);
      if(m_guard)
       {
-	std::stringstream l_guardName;
-	l_guardName << "/publisher/state/";
-	l_guardName << m_guard->getName();
+	std::stringstream l_guardState;
+	l_guardState << "/publisher/state/guard/";
+	l_guardState << m_guard->getID();
 	
-	m_statePub = m_node.advertise<nostop_agent::GuardState>(l_guardName.str().c_str(), 10);
+	m_statePub = m_node.advertise<nostop_agent::GuardState>(l_guardState.str().c_str(), 10);
       }
   }
 }
@@ -52,6 +52,8 @@ void GuardStatePublisher::run()
     msg.sensor = m_guard->getCameraControl();
         
     m_statePub.publish(msg);
+    
+    m_posePub.publish(m_agent->getCurrentConfigurationPose());
 
     ros::spinOnce();
 

@@ -21,11 +21,11 @@ ThiefStatePublisher::ThiefStatePublisher(std::shared_ptr<iAgent> agent_)
      m_thief = std::static_pointer_cast<iThief>(m_agent);
      if(m_thief)
       {
-	std::stringstream l_guardName;
-	l_guardName << "/StatePublisher/";
-	l_guardName << m_thief->getName();
-	
-	m_statePub = m_node.advertise<nostop_agent::ThiefState>(l_guardName.str().c_str(), 10);
+	std::stringstream l_thiefName;
+	l_thiefName << "/publisher/state/thief";
+	l_thiefName << m_thief->getID();
+		
+	m_statePub = m_node.advertise<nostop_agent::ThiefState>(l_thiefName.str().c_str(), 10);
       }
   }
 }
@@ -49,6 +49,8 @@ void ThiefStatePublisher::run()
     msg.odometry = l_currentPose.getOdometry();
                 
     m_statePub.publish(msg);
+    
+    m_posePub.publish(m_agent->getCurrentConfigurationPose());
 
     ros::spinOnce();
 

@@ -63,23 +63,25 @@ bool GuardProcess::isReady()
   std::shared_ptr<iGuard> l_guard = std::static_pointer_cast<iGuard>(m_agent);
   
   std::shared_ptr<LearningInitializer> l_learning = l_guard->getLearningInitializer();
-  std::shared_ptr<iLocalizer> l_localizer = l_guard->getLocalizer();
-  
   // learning initialization:
   bool l_learning_is_ready = l_learning->isInitialized();
-  
+
+  iLocalizerPtr l_localizer = l_guard->getLocalizer();  
   // initial position:
   bool l_position_is_ready = l_localizer->isInitialized();
 
   if (l_learning_is_ready && l_position_is_ready)
   {
       int l_id = l_learning->getID();
-
-      geometry_msgs::Point l_geomPoint = l_guard->getCurrentConfigurationPosition();
-      Real2D l_point = Conversions::Point2Real2D(l_geomPoint);
       
-      nostop_agent::GuardSensorCtrl l_guardSensorCtrl = l_guard->getCameraControl();
+      // init della posizione del robot.
+      geometry_msgs::Pose l_geomPoint = l_localizer->getConfiguration().getPose();
+      l_guard->updateCurrentPose(l_geomPoint);
+      Real2D l_point = Conversions::Point2Real2D(l_geomPoint.position);
+      
+      nostop_agent::GuardSensorCtrl l_guardSensorCtrl = l_guard->getCameraControl(); // TODO aggiornamento del controllo del sensore!
       CameraPosition l_cameraPos  = Conversions::GuardSensorCtrl2CameraPosition(l_guardSensorCtrl);
+      
       AgentPosition l_agentPos (l_point, l_cameraPos);
       
       std::shared_ptr<Guard> l_LGuard = std::make_shared<Guard>(1, l_id, l_agentPos, 1, 2);

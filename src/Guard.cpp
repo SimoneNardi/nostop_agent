@@ -94,6 +94,8 @@ int main(int argc, char **argv)
 	
       l_guard.createLearningAlgorithm(l_area);
 	
+      l_guard.init();
+      
       /////////////////////////////////////////////////
       // WAIT FOR ROS MESSAGES
       ros::spin();
