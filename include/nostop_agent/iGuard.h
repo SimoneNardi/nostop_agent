@@ -67,6 +67,9 @@ namespace Robotics
 		  
 		  /// Perform next step
 		  void forwardOneStep();
+		  
+		  /// Start Learning Algorithm
+		  void startLearning();
 			
 		public:
 			iGuard();

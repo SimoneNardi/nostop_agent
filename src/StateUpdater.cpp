@@ -71,7 +71,7 @@ void StateUpdater::run()
       l_transform.setRotation( l_quat );
       m_broadcaster.sendTransform(tf::StampedTransform(l_transform, ros::Time::now(), "world", m_agent->getName()));
     }
-
+    
     ros::spinOnce();
 
     loop_rate.sleep();

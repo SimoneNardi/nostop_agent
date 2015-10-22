@@ -20,6 +20,7 @@ LearningProcess::LearningProcess(std::shared_ptr<LearningWorld> learning_)
   , m_update(false)
   , m_monitorReceiver(nullptr)
   , m_guardNeighbours(nullptr)
+  , m_notified(false)
 {
 	m_monitorReceiver = std::make_shared<MonitorReceiver>();
 	m_guardNeighbours = std::make_shared<GuardNeighbours>();
@@ -36,6 +37,7 @@ void LearningProcess::init()
   m_sub = m_node.subscribe<std_msgs::Bool>("/simulator/agent_call", 1, &LearningProcess::AgentCall_CallBack, this);
 }
 
+/////////////////////////////////////////////
 void LearningProcess::AgentCall_CallBack(const std_msgs::Bool::ConstPtr & msg_)
 {
   Lock1 lock(m_mutex);
@@ -58,7 +60,8 @@ void LearningProcess::run()
 	  while (!m_notified) 
 	  {  // loop to avoid spurious wakeups
                 m_cond_var.wait(l_lock);
-          } 
+          }
+          m_notified = false;
 	  
 	  if (m_update)
 	  {

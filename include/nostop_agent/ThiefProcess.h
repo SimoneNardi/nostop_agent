@@ -21,7 +21,7 @@ namespace Robotics
 			
 			~ThiefProcess();
 			
-			virtual void init();
+			virtual void start();
 			
 			virtual bool isReady() const;
 		};

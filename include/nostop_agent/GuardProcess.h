@@ -25,7 +25,7 @@ namespace Robotics
 			
 			~GuardProcess();
 			
-			virtual void init();
+			virtual void start();
 			
 			virtual bool isReady();
 			

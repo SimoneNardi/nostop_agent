@@ -26,9 +26,9 @@ using namespace std;
 // 	  geometry_msgs::Quaternion rhs_orientation = rhs.getOrientation();
 	  geometry_msgs::Point rhs_position = rhs.getPosition();
 	  
-	  return fabs(lhs_position.x - rhs_position.x) < Math::TOLERANCE && 
-		 fabs(lhs_position.y - rhs_position.y) < Math::TOLERANCE && 
-		 fabs(lhs_position.z - rhs_position.z) < Math::TOLERANCE;
+	  return fabs(lhs_position.x - rhs_position.x) < 0.3 /*Math::TOLERANCE*/ && 
+		 fabs(lhs_position.y - rhs_position.y) < 0.3 /*Math::TOLERANCE*/ && 
+		 fabs(lhs_position.z - rhs_position.z) < 0.3 /*Math::TOLERANCE*/;
 	}
 
 	////////////////////////////////////////////////////
@@ -130,8 +130,7 @@ using namespace std;
 	  m_LAgent = agent_;
 	  
 	  std::string  l_name = "/publisher/status";
-  
-	  m_notifyStatus = m_node.serviceClient<nostop_agent::PlayerNotifyStatus>(l_name.c_str());
+  	  m_notifyStatus = m_node.serviceClient<nostop_agent::PlayerNotifyStatus>(l_name.c_str());
 	}
 	
 	////////////////////////////////////////////////////
@@ -143,7 +142,7 @@ using namespace std;
 	}
 	
 	////////////////////////////////////////////////////
-	void iAgent::setSimulatorLocalizer() 
+	void iAgent::setSimulatorLocalizer()
 	{
 	  Lock lock(m_mutex);
 	  m_localizer = std::make_shared<SimulatorLocalizer>(m_name);
@@ -192,10 +191,17 @@ using namespace std;
 	  l_srv.request.id = this->getID();
 	  l_srv.request.status = m_LAgent->getStatus();
 	  
-	  if ( !m_notifyStatus.call(l_srv) )
+	  if(!m_notifyStatus.exists())
+	    m_notifyStatus.waitForExistence();
+	  	  
+	  if ( !m_notifyStatus.exists() || !m_notifyStatus.call(l_srv) )
 	  {
 	      ROS_ERROR("Failed to call service Notify Status");
 	      return false;
+	  }
+	  else
+	  {
+	      ROS_INFO("Notify Status of Agent %d: Status %d", l_srv.request.id, l_srv.request.status);
 	  }
 
 	  return true;

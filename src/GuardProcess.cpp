@@ -27,12 +27,15 @@ GuardProcess::GuardProcess(std::string name_)
 }
  
 /////////////////////////////////////////////
-void GuardProcess::init()
+void GuardProcess::start()
 {
-  AgentProcess::init();
+  AgentProcess::start();
   
   m_statePublisher = std::make_shared<GuardStatePublisher>( m_agent );
   m_statePublisher->start();
+  
+  std::shared_ptr<iGuard> l_guard = std::static_pointer_cast<iGuard>(m_agent);
+  l_guard->startLearning();
 }
 
 /////////////////////////////////////////////

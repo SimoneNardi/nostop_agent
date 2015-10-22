@@ -22,9 +22,9 @@ ThiefProcess::ThiefProcess(std::string name_)
 }
 
 /////////////////////////////////////////////
-void ThiefProcess::init()
+void ThiefProcess::start()
 {
-  AgentProcess::init();
+  AgentProcess::start();
   
   m_statePublisher = std::make_shared<ThiefStatePublisher>( m_agent );
   m_statePublisher->start();

@@ -94,7 +94,7 @@ int main(int argc, char **argv)
 	
       l_guard.createLearningAlgorithm(l_area);
 	
-      l_guard.init();
+      l_guard.start();
       
       /////////////////////////////////////////////////
       // WAIT FOR ROS MESSAGES

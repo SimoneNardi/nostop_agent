@@ -71,6 +71,7 @@ using namespace std;
 				
 		std::shared_ptr<LearningWorld> l_learn = std::make_shared<LearningWorld>(l_agents, l_space, m_algorithmFLAG);
 		m_learning = std::make_shared<LearningProcess>(l_learn);
+		m_learning->init();
 		
 		// TODO: first target position is determined by the localizer.
 		AgentPosition l_targetPos = m_LGuard->getCurrentPosition(); 
@@ -90,7 +91,12 @@ using namespace std;
 	  	Lock lock(m_mutex);
 		m_LGuard = lGuard_;
 		iAgent::setAgentPtr(m_LGuard);
-	  
+	}
+	
+	////////////////////////////////////////////////////
+	void iGuard::startLearning()
+	{
+	  m_learning->start();
 	}
 		  
 	////////////////////////////////////////////////////
@@ -98,7 +104,7 @@ using namespace std;
 	void iGuard::forwardOneStep()
 	{
 	  // go forward in the learninig algorithm:
-	  
+	  	  
 	  // Compute benefit:
 	  
 	  // Select next target configuration:

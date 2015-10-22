@@ -17,7 +17,7 @@ void AgentProcess::setRobotName(std::string name_)
 }
 
 /////////////////////////////////////////////
-void AgentProcess::init()
+void AgentProcess::start()
 {
   m_stateUpdater = std::make_shared<StateUpdater>( m_agent );
   m_stateUpdater->start();

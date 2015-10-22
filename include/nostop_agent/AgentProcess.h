@@ -37,7 +37,7 @@ namespace Robotics
 			void setRobotName(std::string name_);
 			void setRobotAlgorithm(std::string alg_);
 			
-			virtual void init();
+			virtual void start();
 			
 			virtual bool isReady() = 0;
 			
