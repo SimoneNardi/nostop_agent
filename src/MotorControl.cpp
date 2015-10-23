@@ -19,8 +19,9 @@ MotorControl::MotorControl(std::shared_ptr<iAgent> agent_)
   if(m_agent)
   {
     std::stringstream l_agentname;
-    l_agentname << "/publisher/twist/";
+    l_agentname << "/";
     l_agentname << m_agent->getName();
+    l_agentname << "/cmd_vel";
     
     m_controlPub = m_node.advertise<geometry_msgs::Twist>(l_agentname.str().c_str(), 10);
   }

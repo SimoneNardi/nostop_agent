@@ -53,7 +53,8 @@ void GuardStatePublisher::run()
         
     m_statePub.publish(msg);
     
-    m_posePub.publish(m_agent->getCurrentConfigurationPose());
+    if( m_agent->isReal() )
+      m_posePub.publish(m_agent->getCurrentConfigurationPose());
 
     ros::spinOnce();
 

@@ -62,19 +62,24 @@ void LearningProcess::run()
                 m_cond_var.wait(l_lock);
           }
           m_notified = false;
-	  
+          	  
 	  if (m_update)
 	  {
-		// Collect Monitor Data:
-		m_learning->updateMonitor(m_monitorReceiver->getData()->getMap());
+		if(m_monitorReceiver->isUpdated() && m_guardNeighbours->isUpdated())
+		{
+		  // Collect Monitor Data:
+		  m_learning->updateMonitor(m_monitorReceiver->getData()->getMap());
+		  m_monitorReceiver->setUsed();
 		
-		// Collect Neighbours Data:
-		m_learning->updateNeighbours(m_guardNeighbours->getData()->getMap());
+		  // Collect Neighbours Data:
+		  m_learning->updateNeighbours(m_guardNeighbours->getData()->getMap());
+		  m_guardNeighbours->setUsed();
 		
-		// Compute Benefit, Save current action and Select next position:
-		m_learning->forwardOneStep();
+		  // Compute Benefit, Save current action and Select next position:
+		  m_learning->forwardOneStep();
 
-		m_update = false;
+		  m_update = false;
+		}
 	  }
 	  
 	  ros::spinOnce();

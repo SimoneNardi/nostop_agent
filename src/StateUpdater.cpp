@@ -32,6 +32,7 @@ void StateUpdater::run()
   iLocalizerPtr l_localizer = m_agent->getLocalizer();
   
   int count = 0;
+  int standby_count = 0;
   while (ros::ok())
   {
     if (m_agent->getStatus() != Agent::STANDBY)
@@ -51,7 +52,7 @@ void StateUpdater::run()
       m_agent->computeConfigurationToTarget();
       
       Configuration l_newConfig = m_agent->getCurrentConfiguration();
-
+      //m_agent->setCurrentConfiguration( l_newConfig );
       m_agent->setCurrentConfiguration( l_newConfig );
       
       if ( m_agent->isArrived() )
@@ -59,6 +60,7 @@ void StateUpdater::run()
 	m_time = ros::Time::now();
 	// set status and notify to Simulator
 	m_agent->setStandByStatus();
+	standby_count=0;
       }
       
       geometry_msgs::Pose l_pose = l_newConfig.getPose();
@@ -70,6 +72,21 @@ void StateUpdater::run()
       tf::quaternionMsgToTF(l_pose.orientation, l_quat);
       l_transform.setRotation( l_quat );
       m_broadcaster.sendTransform(tf::StampedTransform(l_transform, ros::Time::now(), "world", m_agent->getName()));
+    }
+    else
+    {
+      ++standby_count;
+    }
+    
+    if (standby_count == 20)
+    {
+      if ( m_agent->isArrived() )
+      {
+	m_time = ros::Time::now();
+	// set status and notify to Simulator
+	m_agent->setStandByStatus();
+	standby_count=0;
+      }
     }
     
     ros::spinOnce();

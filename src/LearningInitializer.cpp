@@ -38,7 +38,7 @@ using namespace Robotics::GameTheory;
       ///////////////////////////////////////////////
       // get the ID from simulator
       ros::NodeHandle l_nodeID;
-      ros::ServiceClient l_clientID = l_nodeID.serviceClient<nostop_agent::PlayerIDData>("GuardID");
+      ros::ServiceClient l_clientID = l_nodeID.serviceClient<nostop_agent::PlayerIDData>("/simulator/guard/id");
       nostop_agent::PlayerIDData l_srvID;
       l_srvID.request.name = m_name;
       if (l_clientID.call(l_srvID))

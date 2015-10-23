@@ -19,8 +19,7 @@ using namespace std;
 	////////////////////////////////////////////////////
 	nostop_agent::GuardSensorCtrl iGuard::getCameraControl()
 	{
-	    nostop_agent::GuardSensorCtrl l_ctrl;
-	    return l_ctrl;
+	    return m_currentControl;
 	}
 	
 	////////////////////////////////////////////////////

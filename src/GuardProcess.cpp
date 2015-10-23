@@ -82,8 +82,13 @@ bool GuardProcess::isReady()
       l_guard->updateCurrentPose(l_geomPoint);
       Real2D l_point = Conversions::Point2Real2D(l_geomPoint.position);
       
-      nostop_agent::GuardSensorCtrl l_guardSensorCtrl = l_guard->getCameraControl(); // TODO aggiornamento del controllo del sensore!
-      CameraPosition l_cameraPos  = Conversions::GuardSensorCtrl2CameraPosition(l_guardSensorCtrl);
+      nostop_agent::GuardSensorCtrl l_initialConfiguration;
+      l_initialConfiguration.max_radius = 3;
+      l_initialConfiguration.min_radius = 0;
+      l_initialConfiguration.fov = 360;
+      l_initialConfiguration.heading = 0;
+
+      CameraPosition l_cameraPos  = Conversions::GuardSensorCtrl2CameraPosition(l_initialConfiguration);
       
       AgentPosition l_agentPos (l_point, l_cameraPos);
       

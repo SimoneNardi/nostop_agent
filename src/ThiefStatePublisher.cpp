@@ -22,7 +22,7 @@ ThiefStatePublisher::ThiefStatePublisher(std::shared_ptr<iAgent> agent_)
      if(m_thief)
       {
 	std::stringstream l_thiefName;
-	l_thiefName << "/publisher/state/thief";
+	l_thiefName << "/publisher/state/thief/";
 	l_thiefName << m_thief->getID();
 		
 	m_statePub = m_node.advertise<nostop_agent::ThiefState>(l_thiefName.str().c_str(), 10);
@@ -50,7 +50,8 @@ void ThiefStatePublisher::run()
                 
     m_statePub.publish(msg);
     
-    m_posePub.publish(m_agent->getCurrentConfigurationPose());
+    if( m_agent->isReal() )
+      m_posePub.publish(m_agent->getCurrentConfigurationPose());
 
     ros::spinOnce();
 

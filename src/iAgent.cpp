@@ -189,7 +189,7 @@ using namespace std;
 	{
 	  nostop_agent::PlayerNotifyStatus l_srv;
 	  l_srv.request.id = this->getID();
-	  l_srv.request.status = m_LAgent->getStatus();
+	  l_srv.request.status = this->getStatus();
 	  
 	  if(!m_notifyStatus.exists())
 	    m_notifyStatus.waitForExistence();
@@ -278,39 +278,47 @@ using namespace std;
 	  
 	  Real2D l_delta = l_target-l_current;
 	  
+	  if( l_delta.mod() < 100.*Math::TOLERANCE )
+	  {
+	    this->stop();
+	    return;
+	  }
+	  
 	  double l_phi = Math::polarPhi2D(l_delta);
 	  
 	  double l_tolerance = 100.*Math::TOLERANCE;
-	  if (fabs(l_phi) > l_tolerance || fabs(l_phi-Math::Pi) > l_tolerance)
-	  // allineamento degli heading:
+	  if ( fabs(l_phi) < l_tolerance || fabs(l_phi-Math::Pi) < l_tolerance)
+	    // movimento lineare:
+	  {
+	    if(fabs(l_phi-Math::Pi) > l_tolerance)
+	      this->goBackward();
+	    else
+	      this->goForward();
+	  
+	  }
+	  else
+	    // allineamento degli heading:
 	  {
 	    if (l_phi>0)
 	      this->rotateLeft();
 	    else
 	      this->rotateRight();
 	  }
-	  else
-	  // movimento lineare:
-	  {
-	    if(fabs(l_phi-Math::Pi) > l_tolerance)
-	      this->goBackward();
-	    else
-	      this->goForward();
-	  }
+	  return;
 	}
 	
 	////////////////////////////////////////////////////
 	int iAgent::getID()
 	{
 	  Lock lock(m_mutex);
-	  m_LAgent->getID();
+	  return m_LAgent->getID();
 	}
 	
 	////////////////////////////////////////////////////
 	Agent::Status iAgent::getStatus()
 	{
 	    Lock lock(m_mutex);
-	    m_LAgent->getStatus();
+	    return m_LAgent->getStatus();
 	}
 
 	////////////////////////////////////////////////////
@@ -378,3 +386,25 @@ using namespace std;
 	  
 	  m_currentConfiguration.setTwist(l_twist);
 	}	
+	
+	////////////////////////////////////////////////////
+	void iAgent::stop()
+	{
+	  geometry_msgs::Twist l_twist;
+	  l_twist.linear.x = 0;
+	  l_twist.linear.y = 0;
+	  l_twist.linear.z = 0;
+	  
+	  l_twist.angular.x = 0;
+	  l_twist.angular.y = 0;
+	  l_twist.angular.z = 0;
+	  
+	  m_currentConfiguration.setTwist(l_twist);
+	}
+	
+	////////////////////////////////////////////////////
+	bool iAgent::isReal()
+	{
+	  KinectLocalizerPtr l_localizer = std::static_pointer_cast<KinectLocalizer>(m_localizer);
+	  return l_localizer == nullptr;
+	}

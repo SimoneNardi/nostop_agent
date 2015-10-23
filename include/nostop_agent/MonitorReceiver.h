@@ -10,6 +10,8 @@
 #include "ros/ros.h"
 #include <nav_msgs/OccupancyGrid.h>
 
+#include "Threads.h"
+
 #include <memory>
 
 namespace Robotics 
@@ -27,6 +29,10 @@ namespace Robotics
 			std::shared_ptr<WorldMap> m_data;
 			
 			ros::Time m_time;
+			
+			bool m_isUpdated;
+			
+			mutable Mutex1 m_mutex;
 		protected:
 		
 			void UpdateMonitorCallBack(const nav_msgs::OccupancyGrid::ConstPtr & msg);
@@ -39,6 +45,11 @@ namespace Robotics
 			std::shared_ptr<WorldMap> getData() const;
 			
 			ros::Time getTime() {return m_time;}
+			
+			bool isUpdated() {return m_isUpdated;}
+			
+			bool setUsed() {m_isUpdated = false;}
+			bool setNew() {m_isUpdated = true;}
 		};
 
 	}

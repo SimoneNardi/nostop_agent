@@ -66,6 +66,8 @@ namespace Robotics
 			
 			void updateCurrentPosition(geometry_msgs::Point & currentPosition_);
 			
+			bool isReal();
+			
 		public:
 			iAgent() : m_localizer(nullptr), m_LAgent(nullptr) {};
 			
@@ -108,6 +110,7 @@ namespace Robotics
 			  void goBackward();
 			  void rotateLeft();
 			  void rotateRight();
+			  void stop();
 			  
 		protected:
 			  bool notifyStatus();
