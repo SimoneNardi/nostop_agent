@@ -29,13 +29,15 @@ namespace Robotics
 			
 			virtual bool isReady();
 			
-			void createLearningAlgorithm( std::shared_ptr<Area> area_ );
+			void createLearningAlgorithm( );
 			
 			void setCamera(double max_dist);
 
 			void setRobotAlgorithm(std::string alg_);
 			
 			void spin();
+			
+			void setAreaForInitialization( std::shared_ptr<Area> area_ );
 		};
 
 	}

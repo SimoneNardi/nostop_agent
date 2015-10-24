@@ -10,6 +10,7 @@
 #include "StateUpdater.h"
 
 #include "guard.h"
+#include "area.h"
 
 #include <sstream>
 #include <memory>
@@ -82,14 +83,7 @@ bool GuardProcess::isReady()
       l_guard->updateCurrentPose(l_geomPoint);
       Real2D l_point = Conversions::Point2Real2D(l_geomPoint.position);
       
-      nostop_agent::GuardSensorCtrl l_initialConfiguration;
-      l_initialConfiguration.max_radius = 3;
-      l_initialConfiguration.min_radius = 0;
-      l_initialConfiguration.fov = 360;
-      l_initialConfiguration.heading = 0;
-
-      CameraPosition l_cameraPos  = Conversions::GuardSensorCtrl2CameraPosition(l_initialConfiguration);
-      
+      CameraPosition l_cameraPos( l_learning->getSpace()->getDistance() / 10. );
       AgentPosition l_agentPos (l_point, l_cameraPos);
       
       std::shared_ptr<Guard> l_LGuard = std::make_shared<Guard>(1, l_id, l_agentPos, 1, 2);
@@ -102,7 +96,21 @@ bool GuardProcess::isReady()
 }
 
 //////////////////////////////////////////////////
-void GuardProcess::createLearningAlgorithm(std::shared_ptr<Area> area_)
+void GuardProcess::createLearningAlgorithm()
 {
-	std::static_pointer_cast<iGuard>(m_agent)->createLearningAlgorithm(area_);
+  std::shared_ptr<iGuard> l_guard = std::static_pointer_cast<iGuard>(m_agent);
+  if(l_guard)
+  	l_guard->createLearningAlgorithm();
+}
+
+//////////////////////////////////////////////////
+void GuardProcess::setAreaForInitialization(AreaPtr area_)
+{
+  std::shared_ptr<iGuard> l_guard = std::static_pointer_cast<iGuard>(m_agent);
+  if(l_guard)
+  {
+    std::shared_ptr<LearningInitializer> l_learning = l_guard->getLearningInitializer();
+    if (l_learning)
+      l_learning->setSpace(area_);
+  }
 }

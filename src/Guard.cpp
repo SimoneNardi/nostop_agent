@@ -88,11 +88,13 @@ int main(int argc, char **argv)
 	      Robotics::GameTheory::AreaCreator l_areaCreator;
 	      l_area = l_areaCreator.getArea();
       }
+      
+      l_guard.setAreaForInitialization(l_area);
 
       while (!l_guard.isReady())
 	ros::spinOnce();
 	
-      l_guard.createLearningAlgorithm(l_area);
+      l_guard.createLearningAlgorithm();
 	
       l_guard.start();
       

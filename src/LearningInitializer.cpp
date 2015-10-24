@@ -13,6 +13,7 @@ using namespace Robotics::GameTheory;
   : ThreadBase()
   , m_id(-1) 
   , m_name(name_)
+  , m_area(nullptr)
   {}
   
   ///////////////////////////////////////////////
@@ -66,3 +67,16 @@ using namespace Robotics::GameTheory;
   {
     return m_id;
   }
+  
+  ///////////////////////////////////////////////
+  void LearningInitializer::setSpace(std::shared_ptr<Area> area_)
+  {
+    m_area = area_;
+  }
+
+  ///////////////////////////////////////////////
+  std::shared_ptr<Area> LearningInitializer::getSpace() const
+  {
+    return m_area;
+  }
+  

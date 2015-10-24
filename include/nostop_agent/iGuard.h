@@ -54,7 +54,7 @@ namespace Robotics
 		  
 		  void setCameraCtrl(nostop_agent::GuardSensorCtrl ctrl_);
 		  
-		  void createLearningAlgorithm( std::shared_ptr<Area>  area_ );
+		  void createLearningAlgorithm( );
 		  
 		  void setTargetConfigurationToCenterOfSquare(geometry_msgs::Point const& target_);
 		  

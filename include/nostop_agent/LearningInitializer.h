@@ -14,11 +14,14 @@ namespace Robotics
 	namespace GameTheory
 	{	 
 	  class iAgent;
+	  class Area;
 	  
 		class LearningInitializer : public ThreadBase
 	  	{
 		  int m_id;
 		  std::string m_name;
+		  
+		  std::shared_ptr<Area> m_area;
 		  
 		  mutable Mutex m_mutex;
 		  
@@ -34,6 +37,10 @@ namespace Robotics
 			int getID() const;
 			
 			void setName(std::string const& name_);
+			
+			void setSpace(std::shared_ptr<Area>);
+			
+			std::shared_ptr<Area> getSpace() const;
 		};
 	}
 }

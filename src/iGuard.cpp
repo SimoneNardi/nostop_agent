@@ -60,8 +60,9 @@ using namespace std;
 	}
 
 	////////////////////////////////////////////////////
-	void iGuard::createLearningAlgorithm( AreaPtr l_area )
+	void iGuard::createLearningAlgorithm(  )
 	{
+		AreaPtr l_area = m_learningInit->getSpace();
 		std::shared_ptr<DiscretizedArea> l_space = l_area->discretize();
 	
 		Lock lock(m_mutex);
@@ -73,7 +74,7 @@ using namespace std;
 		m_learning->init();
 		
 		// TODO: first target position is determined by the localizer.
-		AgentPosition l_targetPos = m_LGuard->getCurrentPosition(); 
+		AgentPosition l_targetPos = m_LGuard->getCurrentPosition();
 		this->setTargetConfigurationToCenterOfSquare( Conversions::Real2D2Point( l_targetPos.getPoint2D() ) );
 	}
 	
