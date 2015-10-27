@@ -27,6 +27,7 @@ find_package(catkin REQUIRED COMPONENTS roscpp std_msgs geometry_msgs nav_msgs m
    GuardState.msg
    ThiefState.msg
    Shape.msg
+   Id_robot.msg
  )
 
 ## Generate services in the 'srv' folder
