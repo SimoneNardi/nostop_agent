@@ -40,7 +40,8 @@ namespace Robotics
 			
 			ros::NodeHandle m_node;
 			ros::ServiceClient m_notifyStatus;
-
+		public:
+			int m_motor_control_direction;
 		public:
 		  		
 			void computeConfigurationToTarget();
@@ -68,8 +69,14 @@ namespace Robotics
 			
 			bool isReal();
 			
+			geometry_msgs::Point getTargetPoint();
+			
+			bool isTargetUpdated();
+			
+			void MoveToNextPosition_LearningAgent();
+			
 		public:
-			iAgent() : m_localizer(nullptr), m_LAgent(nullptr) {};
+			iAgent() : m_localizer(nullptr), m_LAgent(nullptr), m_motor_control_direction(-3) {};
 			
 			~iAgent() {};
 		

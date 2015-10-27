@@ -42,8 +42,8 @@ void LearningProcess::AgentCall_CallBack(const std_msgs::Bool::ConstPtr & msg_)
 {
   Lock1 lock(m_mutex);
   m_update = msg_->data;
-  m_cond_var.notify_one();
   m_notified = true;
+  m_cond_var.notify_all();
 }
 
 /////////////////////////////////////////////
@@ -56,8 +56,7 @@ void LearningProcess::run()
 	int count = 0;
 	while (ros::ok())
 	{
-	  
-	  while (!m_notified) 
+	  while (!m_notified)
 	  {  // loop to avoid spurious wakeups
                 m_cond_var.wait(l_lock);
           }
@@ -77,7 +76,9 @@ void LearningProcess::run()
 		
 		  // Compute Benefit, Save current action and Select next position:
 		  m_learning->forwardOneStep();
-
+		  
+		  ROS_INFO("Learning Process Update!\n");
+		  
 		  m_update = false;
 		}
 	  }

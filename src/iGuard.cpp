@@ -73,7 +73,7 @@ using namespace std;
 		m_learning = std::make_shared<LearningProcess>(l_learn);
 		m_learning->init();
 		
-		// TODO: first target position is determined by the localizer.
+		// first target position is determined by the localizer.
 		AgentPosition l_targetPos = m_LGuard->getCurrentPosition();
 		this->setTargetConfigurationToCenterOfSquare( Conversions::Real2D2Point( l_targetPos.getPoint2D() ) );
 	}
@@ -83,6 +83,7 @@ using namespace std;
 	{
 		Lock lock(m_mutex);
 		m_targetConfiguration = Configuration(target_);
+		m_LGuard->setNextPosition( Real2D(target_.x, target_.y) );
 	}
 	
 	////////////////////////////////////////////////////
