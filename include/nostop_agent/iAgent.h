@@ -15,6 +15,7 @@
 #include "iLocalizer.h"
 
 #include <nav_msgs/Odometry.h>
+#include <std_msgs/Bool.h>
 
 #include <memory>
 #include <string>
@@ -40,6 +41,10 @@ namespace Robotics
 			
 			ros::NodeHandle m_node;
 			ros::ServiceClient m_notifyStatus;
+			
+			ros::Subscriber m_subForward;
+			ros::Subscriber m_subLocalizer;
+			ros::Publisher m_pubMotorControl;
 		public:
 			int m_motor_control_direction;
 		public:
@@ -118,6 +123,10 @@ namespace Robotics
 			  void rotateLeft();
 			  void rotateRight();
 			  void stop();
+			  
+		public:
+			  void updateTargetConfiguration_callback(const std_msgs::Bool::ConstPtr msg_);
+			  void computeConfigurationToTarget_callback(const geometry_msgs::Pose::ConstPtr msg_);
 			  
 		protected:
 			  bool notifyStatus();

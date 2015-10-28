@@ -29,16 +29,18 @@ namespace Robotics
 
 		  mutable Mutex m_mutex;
 		  
-		  std::string m_name;
+		  std::string m_sub_name;
+		  std::string m_pub_name;
 		  
 		  ros::NodeHandle m_node;
 		  ros::Subscriber m_sub;
+		  ros::Publisher m_pub;
 		  
 		  mutable bool m_initialized;
 		  mutable bool m_updated;
 
 		public:
-			iLocalizer(std::string name_) : m_name(name_), m_initialized(false), m_updated(false) {};
+			iLocalizer(std::string name_) : m_initialized(false), m_updated(false) {};
 			
 			~iLocalizer() {};
 			

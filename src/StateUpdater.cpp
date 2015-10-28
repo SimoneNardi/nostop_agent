@@ -27,7 +27,7 @@ StateUpdater::~StateUpdater()
 /////////////////////////////////////////////
 void StateUpdater::run()
 {
-  ros::Rate loop_rate(10);
+  ros::Rate loop_rate(50);
     
   iLocalizerPtr l_localizer = m_agent->getLocalizer();
   

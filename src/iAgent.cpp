@@ -2,6 +2,7 @@
 
 #include "geometry_msgs/Point.h"
 #include "geometry_msgs/Pose.h"
+#include "std_msgs/Bool.h"
 #include "geometry_msgs/Quaternion.h"
 #include "nav_msgs/Odometry.h"
 
@@ -10,6 +11,7 @@
 #include "iLocalizer.h"
 
 #include "Math.h"
+#include <math.h>       /* atan2 */
 
 #include "Conversions.h"
 
@@ -206,7 +208,7 @@ using namespace std;
 	  }
 	  else
 	  {
-	      ROS_INFO("Notify Status of Agent %d: Status %d", l_srv.request.id, l_srv.request.status);
+	      ROS_DEBUG("Notify Status of Agent %d: Status %d", l_srv.request.id, l_srv.request.status);
 	  }
 
 	  return true;
@@ -219,10 +221,116 @@ using namespace std;
 	  this->notifyStatus();
 	}
 	
+	const double MAX_TWIST_LINEAR = 0.7;
+	const double MAX_TWIST_ANGULAR = 1;
+	
+	////////////////////////////////////////////////////
+	double ErrorAngle(geometry_msgs::Pose::ConstPtr cur, Real2D ref)
+	{
+	    tf::Quaternion q(cur->orientation.x, cur->orientation.y, cur->orientation.z, cur->orientation.w);    
+	    tf::Matrix3x3 m(q);
+	    double roll, pitch, yaw;
+	    m.getRPY(roll, pitch, yaw);
+	      
+	    double Ex = ref[0] - cur->position.x;   //errore lungo x
+	    double Ey = ref[1] - cur->position.y;   //errore lungo y  
+	    double ref_theta = atan2(Ey, Ex);   //stima dell'angolo desiderato
+	    double Et = ref_theta-yaw;   //errore su theta
+	    return Et;
+	}
+
+	////////////////////////////////////////////////////
+	double ErrorLinear(geometry_msgs::Pose::ConstPtr cur, Real2D ref)
+	{
+	    double Ex = ref[0] - cur->position.x; //errore lungo x
+	    double Ey = ref[1] - cur->position.y;           //errore lungo y
+	    double Etx = pow(pow(Ex,2)+pow(Ey,2),0.5);
+	    return Etx;
+	}
+	
+	////////////////////////////////////////////////////
+	void iAgent::updateTargetConfiguration_callback(const std_msgs::Bool::ConstPtr msg_)
+	// Update target configuration:
+	{
+	  Lock lock(m_mutex);
+	  geometry_msgs::Point l_tgt_point = this->getTargetPoint();
+	  this->updateTargetConfiguration( l_tgt_point );
+	  
+	  this->m_motor_control_direction = -3;
+	
+	  return;
+	}
+	
+	////////////////////////////////////////////////////
+	void iAgent::computeConfigurationToTarget_callback(const geometry_msgs::Pose::ConstPtr msg_)
+	{
+	  Lock lock(m_mutex);
+	  Real2D l_current = Conversions::Point2Real2D( msg_->position );
+	  Real2D l_target = Conversions::Point2Real2D( m_targetConfiguration.getPosition() );
+	  
+	  Real2D l_delta = l_target-l_current;
+	  
+	  if( l_delta.mod() < 0.3 )
+	  {
+	    if (m_motor_control_direction  != -1)
+	      ROS_INFO("Stop Moving!\nTarget %.2f, %.2f reached!\n", l_target[0], l_target[1]);
+	    this->stop();
+	    m_motor_control_direction  = -1;
+	    return;
+	  }
+	  	  	  
+	  geometry_msgs::Twist l_twist;
+	  
+	  double kp1 = -.5;
+	  double kp2 = 1.;
+	  
+	  double error_lin = ErrorLinear(msg_, l_target);
+	  double error_ang = ErrorAngle(msg_, l_target);
+	  
+	  l_twist.linear.x = kp1*error_lin; 
+	  l_twist.linear.y = 0;
+	  l_twist.linear.z = 0;
+	  
+	  l_twist.angular.x = 0;
+	  l_twist.angular.y = 0;
+	  l_twist.angular.z = kp2*sin(error_ang);
+	  
+	  // Saturazione sul twist comandato
+	  if(fabs(l_twist.linear.x) > MAX_TWIST_LINEAR)
+	      l_twist.linear.x = MAX_TWIST_LINEAR * (l_twist.linear.x>0?1.:-1.);
+	      
+	  if(fabs(l_twist.angular.z) > MAX_TWIST_ANGULAR)
+	      l_twist.angular.z = MAX_TWIST_ANGULAR* (l_twist.angular.z>0?1.:-1.);
+	  
+	  if(m_motor_control_direction != -2)
+	    ROS_INFO("Go to %.2f, %.2f\n", l_target[0], l_target[1]);
+	  m_motor_control_direction=-2;
+	  
+	  //m_currentConfiguration.setTwist(l_twist);
+	  
+	  m_pubMotorControl.publish(l_twist);
+	  return;
+	}
+	
 	////////////////////////////////////////////////////
 	void iAgent::setName(std::string const& name_)
 	{
 	    m_name = name_;
+	    
+	    std::string l_name = "/";
+	    l_name += m_name;
+	    
+	    std::string l_learning_name = l_name;
+	    l_learning_name += "/update";
+	    m_subForward = m_node.subscribe<std_msgs::Bool::ConstPtr>(l_learning_name.c_str(), 1, &iAgent::updateTargetConfiguration_callback, this);
+	    
+	    std::string l_localizer_name = l_name;
+	    l_localizer_name += "/localizer/pose";
+	    m_subLocalizer = m_node.subscribe<geometry_msgs::Pose::ConstPtr>(l_localizer_name.c_str(), 1, &iAgent::computeConfigurationToTarget_callback, this);
+	    
+	    std::string l_motor_ctrl_name = l_name;
+	    l_motor_ctrl_name += "/cmd_vel";
+	    m_pubMotorControl = m_node.advertise<geometry_msgs::Twist>(l_motor_ctrl_name.c_str(), 1);
 	}
 	
 	////////////////////////////////////////////////////
@@ -274,34 +382,6 @@ using namespace std;
 	  m_targetConfiguration.setPosition(newTarget_);
 	}
 	
-	const double MAX_TWIST_LINEAR = 0.5;
-	const double MAX_TWIST_ANGULAR = 0.5;
-	
-	////////////////////////////////////////////////////
-	double ErrorAngle(nav_msgs::Odometry cur, Real2D ref)
-	{
-	    tf::Quaternion q(cur.pose.pose.orientation.x, cur.pose.pose.orientation.y, cur.pose.pose.orientation.z, cur.pose.pose.orientation.w);    
-	    tf::Matrix3x3 m(q);
-	    double roll, pitch, yaw;
-	    m.getRPY(roll, pitch, yaw);
-	      
-	    double Ex = ref[0] - cur.pose.pose.position.x;   //errore lungo x
-	    double Ey = ref[1] - cur.pose.pose.position.y;   //errore lungo y  
-	    double ref_theta = atan2(Ey, Ex);   //stima dell'angolo desiderato
-	    double cur_theta = yaw;
-	    double Et = ref_theta-cur_theta;   //errore su theta
-	    return Et;
-	}
-
-	////////////////////////////////////////////////////
-	double ErrorLinear(nav_msgs::Odometry cur, Real2D ref)
-	{
-	    double Ex = ref[0] - cur.pose.pose.position.x;           //errore lungo x
-	    double Ey = ref[1] - cur.pose.pose.position.y;           //errore lungo y
-	    double Etx = pow(pow(Ex,2)+pow(Ey,2),0.5);
-	    return Etx;
-	}
-		
 	////////////////////////////////////////////////////
 	void iAgent::computeConfigurationToTarget()
 	{
@@ -320,33 +400,36 @@ using namespace std;
 	    return;
 	  }
 	  
-	  double l_phi = Math::polarPhi2D(l_delta);
-	  
-	  auto l_quat_orient = m_currentConfiguration.getOrientation();
-	  
-	  double roll  = atan2(2*l_quat_orient.y*l_quat_orient.w - 2*l_quat_orient.x*l_quat_orient.z, 1 - 2*l_quat_orient.y*l_quat_orient.y - 2*l_quat_orient.z*l_quat_orient.z);
-	  double pitch = atan2(2*l_quat_orient.x*l_quat_orient.w - 2*l_quat_orient.y*l_quat_orient.z, 1 - 2*l_quat_orient.x*l_quat_orient.x - 2*l_quat_orient.z*l_quat_orient.z);
-	  double yaw   = asin(2*l_quat_orient.x*l_quat_orient.y + 2*l_quat_orient.z*l_quat_orient.w);
-	  
-	  double rho = l_delta.mod();
-	  double phi = atan(l_delta[1]/l_delta[0]) + Math::Pi;
-	  double alpha = phi - yaw;
-	  
-	  double k1 = 1., k2 = 1.;
-	  double lambda2 = .5;
-	  
-	  double w = k1 * cos(alpha);
-	  double omega = k1 * sin(alpha) / alpha * cos( alpha*alpha + alpha*phi * lambda2 ) + k2 * alpha;
+// 	  double l_phi = Math::polarPhi2D(l_delta);
+// 	  
+// 	  auto l_quat_orient = m_currentConfiguration.getOrientation();
+// 	  
+// 	  double roll  = atan2(2*l_quat_orient.y*l_quat_orient.w - 2*l_quat_orient.x*l_quat_orient.z, 1 - 2*l_quat_orient.y*l_quat_orient.y - 2*l_quat_orient.z*l_quat_orient.z);
+// 	  double pitch = atan2(2*l_quat_orient.x*l_quat_orient.w - 2*l_quat_orient.y*l_quat_orient.z, 1 - 2*l_quat_orient.x*l_quat_orient.x - 2*l_quat_orient.z*l_quat_orient.z);
+// 	  double yaw   = asin(2*l_quat_orient.x*l_quat_orient.y + 2*l_quat_orient.z*l_quat_orient.w);
+// 	  
+// 	  double rho = l_delta.mod();
+// 	  double phi = atan(l_delta[1]/l_delta[0]) + Math::Pi;
+// 	  double alpha = phi - yaw;
+// 	  
+// 	  double k1 = 1., k2 = 1.;
+// 	  double lambda2 = .5;
+// 	  
+// 	  double w = k1 * cos(alpha);
+// 	  double omega = k1 * sin(alpha) / alpha * cos( alpha*alpha + alpha*phi * lambda2 ) + k2 * alpha;
 	  	  
 	  geometry_msgs::Twist l_twist;
 	  
-	  double kp1 = .5;
-	  double kp2 = .5;
+	  double kp1 = -.5;
+	  double kp2 = 1.;
 	  
-	  nav_msgs::Odometry l_current_odom = m_currentConfiguration.getOdometry();
+	  geometry_msgs::Pose l_current_pose = m_currentConfiguration.getPose();
+	  geometry_msgs::PosePtr l_current_pose_ptr = boost::make_shared<geometry_msgs::Pose>();
+	  l_current_pose_ptr->orientation = l_current_pose.orientation;
+	  l_current_pose_ptr->position = l_current_pose.position;
 	  
-	  double error_lin = ErrorLinear(l_current_odom, l_target);
-	  double error_ang = ErrorAngle(l_current_odom, l_target);
+	  double error_lin = ErrorLinear(l_current_pose_ptr, l_target);
+	  double error_ang = ErrorAngle(l_current_pose_ptr, l_target);
 	  
 	  l_twist.linear.x = kp1*error_lin; 
 	  l_twist.linear.y = 0;
@@ -357,11 +440,11 @@ using namespace std;
 	  l_twist.angular.z = kp2*sin(error_ang);
 	  
 	  // Saturazione sul twist comandato
-	  if(l_twist.linear.x > MAX_TWIST_LINEAR)
-	      l_twist.linear.x = MAX_TWIST_LINEAR;
+	  if(fabs(l_twist.linear.x) > MAX_TWIST_LINEAR)
+	      l_twist.linear.x = MAX_TWIST_LINEAR * (l_twist.linear.x>0?1.:-1.);
 	      
-	  if(l_twist.angular.z > MAX_TWIST_ANGULAR)
-	      l_twist.angular.z = MAX_TWIST_ANGULAR;
+	  if(fabs(l_twist.angular.z) > MAX_TWIST_ANGULAR)
+	      l_twist.angular.z = MAX_TWIST_ANGULAR* (l_twist.angular.z>0?1.:-1.);
 	  
 	  if(m_motor_control_direction != -2)
 	    ROS_INFO("Go to %.2f, %.2f\n", l_target[0], l_target[1]);
@@ -370,44 +453,44 @@ using namespace std;
 	  m_currentConfiguration.setTwist(l_twist);
 	  return;
 	  
-	  double l_tolerance = 0.1;//100.*Math::TOLERANCE;
-	  if ( fabs(l_phi-yaw) < l_tolerance || fabs(l_phi-yaw-Math::Pi) < l_tolerance)
-	    // movimento lineare:
-	  {
-	    if(fabs(l_phi-yaw) > l_tolerance)
-	    {
-	      if (m_motor_control_direction != 0)
-		ROS_INFO("Go Backward!\nGo to %.2f, %.2f\n", l_target[0], l_target[1]);
-	      this->goBackward();
-	      m_motor_control_direction  = 0;
-	    }
-	    else
-	    {
-	      if (m_motor_control_direction  != 1)
-		ROS_INFO("Go Forward!\nGo to %.2f, %.2f\n", l_target[0], l_target[1]);
-	      this->goForward();
-	      m_motor_control_direction  = 1;
-	    }
-	  
-	  }
-	  else
-	    // allineamento degli heading:
-	  {
-	    if (l_phi-yaw>0)
-	    {
-	      if (m_motor_control_direction  != 2)
-		ROS_INFO("Rotate left!\nGo to %.2f, %.2f\n", l_target[0], l_target[1]);
-	      this->rotateLeft();
-	      m_motor_control_direction  = 2;
-	    }
-	    else
-	    {
-	      if (m_motor_control_direction  != 3)
-		ROS_INFO("Rotate right!\nGo to %.2f, %.2f\n", l_target[0], l_target[1]);
-	      this->rotateRight();
-	      m_motor_control_direction  = 3;
-	    }
-	  }
+// 	  double l_tolerance = 0.1;//100.*Math::TOLERANCE;
+// 	  if ( fabs(l_phi-yaw) < l_tolerance || fabs(l_phi-yaw-Math::Pi) < l_tolerance)
+// 	    // movimento lineare:
+// 	  {
+// 	    if(fabs(l_phi-yaw) > l_tolerance)
+// 	    {
+// 	      if (m_motor_control_direction != 0)
+// 		ROS_INFO("Go Backward!\nGo to %.2f, %.2f\n", l_target[0], l_target[1]);
+// 	      this->goBackward();
+// 	      m_motor_control_direction  = 0;
+// 	    }
+// 	    else
+// 	    {
+// 	      if (m_motor_control_direction  != 1)
+// 		ROS_INFO("Go Forward!\nGo to %.2f, %.2f\n", l_target[0], l_target[1]);
+// 	      this->goForward();
+// 	      m_motor_control_direction  = 1;
+// 	    }
+// 	  
+// 	  }
+// 	  else
+// 	    // allineamento degli heading:
+// 	  {
+// 	    if (l_phi-yaw>0)
+// 	    {
+// 	      if (m_motor_control_direction  != 2)
+// 		ROS_INFO("Rotate left!\nGo to %.2f, %.2f\n", l_target[0], l_target[1]);
+// 	      this->rotateLeft();
+// 	      m_motor_control_direction  = 2;
+// 	    }
+// 	    else
+// 	    {
+// 	      if (m_motor_control_direction  != 3)
+// 		ROS_INFO("Rotate right!\nGo to %.2f, %.2f\n", l_target[0], l_target[1]);
+// 	      this->rotateRight();
+// 	      m_motor_control_direction  = 3;
+// 	    }
+// 	  }
 	  return;
 	}
 	

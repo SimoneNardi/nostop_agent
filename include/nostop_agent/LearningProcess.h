@@ -31,7 +31,8 @@ namespace Robotics
 			bool m_update;
 			
 			ros::NodeHandle m_node;
-			ros::Subscriber m_sub;
+			ros::Subscriber m_subAgentCall;
+			ros::Publisher m_pubForward;
 			
 			mutable Mutex1 m_mutex;
 			Condition1 m_cond_var;
@@ -44,12 +45,12 @@ namespace Robotics
 			std::shared_ptr<MonitorReceiver> m_monitorReceiver;
 			std::shared_ptr<GuardNeighbours> m_guardNeighbours;
 			
-			
+			std::string m_name;
 			
 		protected:
 			virtual void run();
 		public:
-			LearningProcess(std::shared_ptr<LearningWorld> learning_);
+			LearningProcess(std::shared_ptr<LearningWorld> learning_, std::string const& name_);
 			
 			~LearningProcess();
 			

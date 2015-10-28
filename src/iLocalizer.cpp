@@ -1,5 +1,7 @@
 #include "iLocalizer.h"
 
+#include <nostop_agent/Id_robot.h>
+
 using namespace Robotics;
 using namespace Robotics::GameTheory;
 using namespace std;
@@ -65,13 +67,16 @@ using namespace std;
  	  m_config.setPose(l_pose);
 	  
 	  m_initialized = true;
+	  
+	  m_pub.publish(pose_);
 	}
 	
 	////////////////////////////////////////////////////
 	void iLocalizer::subscribeTopic()
 	{
-	  m_sub = m_node.subscribe<geometry_msgs::Pose>(m_name.c_str(), 10, &iLocalizer::updatePose, this);
-	}
+	  m_sub = m_node.subscribe<geometry_msgs::Pose>(m_sub_name.c_str(), 1, &iLocalizer::updatePose, this);
+	  m_pub = m_node.advertise<geometry_msgs::Pose>(m_pub_name.c_str(), 1);
+	 }
 	
 	////////////////////////////////////////////////////
 	bool iLocalizer::isInitialized() const
@@ -97,8 +102,13 @@ using namespace std;
 	{
 	  std::string l_agentname = "/";
 	  l_agentname += name_;
-	  l_agentname += "/gazebo/localizer";
-	  m_name = l_agentname;
+	  l_agentname += "/localizer/gazebo/pose";
+	  m_sub_name = l_agentname;
+	  
+	  l_agentname = "/";
+	  l_agentname += name_;
+	  l_agentname += "/localizer/pose";
+	  m_pub_name = l_agentname;
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -111,6 +121,16 @@ using namespace std;
 	{
 	  std::string l_agentname = "/";
 	  l_agentname += name_;
-	  l_agentname += "/kinect/localizer";
-	  m_name = l_agentname;	  
+	  l_agentname += "/localizer/kinect/pose";
+	  m_sub_name = l_agentname;	  
+	  
+	  l_agentname = "/";
+	  l_agentname += name_;
+	  l_agentname += "/localizer/pose";
+	  m_pub_name = l_agentname;
+	 
+	  ros::Publisher l_pub = m_node.advertise<geometry_msgs::Pose>("/localizer/kinect/add_robot", 1);
+	  nostop_agent::Id_robot l_msg;
+	  l_msg.name = name_;
+	  l_pub.publish(l_msg);
 	}

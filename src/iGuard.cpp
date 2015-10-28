@@ -70,7 +70,7 @@ using namespace std;
 		l_agents.insert(m_LGuard);
 				
 		std::shared_ptr<LearningWorld> l_learn = std::make_shared<LearningWorld>(l_agents, l_space, m_algorithmFLAG);
-		m_learning = std::make_shared<LearningProcess>(l_learn);
+		m_learning = std::make_shared<LearningProcess>(l_learn, m_name);
 		m_learning->init();
 		
 		// first target position is determined by the localizer.

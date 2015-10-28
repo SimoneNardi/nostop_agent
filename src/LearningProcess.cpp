@@ -14,13 +14,14 @@ using namespace Robotics;
 using namespace Robotics::GameTheory;
 
 /////////////////////////////////////////////
-LearningProcess::LearningProcess(std::shared_ptr<LearningWorld> learning_) 
+LearningProcess::LearningProcess(std::shared_ptr<LearningWorld> learning_, std::string const& name_) 
   : ThreadBase()
   , m_learning(learning_)
   , m_update(false)
   , m_monitorReceiver(nullptr)
   , m_guardNeighbours(nullptr)
   , m_notified(false)
+  , m_name(name_)
 {
 	m_monitorReceiver = std::make_shared<MonitorReceiver>();
 	m_guardNeighbours = std::make_shared<GuardNeighbours>();
@@ -34,7 +35,12 @@ LearningProcess::~LearningProcess()
 void LearningProcess::init()
 {
   Lock1 lock(m_mutex);
-  m_sub = m_node.subscribe<std_msgs::Bool>("/simulator/agent_call", 1, &LearningProcess::AgentCall_CallBack, this);
+  m_subAgentCall = m_node.subscribe<std_msgs::Bool>("/simulator/agent_call", 1, &LearningProcess::AgentCall_CallBack, this);
+  
+  std::string l_name = "/";
+  l_name += m_name;
+  l_name += "/update";
+  m_pubForward = m_node.advertise<std_msgs::Bool>(l_name.c_str(), 1);
 }
 
 /////////////////////////////////////////////
@@ -76,6 +82,10 @@ void LearningProcess::run()
 		
 		  // Compute Benefit, Save current action and Select next position:
 		  m_learning->forwardOneStep();
+		  
+		  std_msgs::Bool l_msg;
+		  l_msg.data = true;
+		  m_pubForward.publish(l_msg);
 		  
 		  ROS_INFO("Learning Process Update!\n");
 		  
