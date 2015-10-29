@@ -23,7 +23,7 @@ void AgentProcess::start()
   m_stateUpdater->start();
     
   m_motorControl = std::make_shared<MotorControl>( m_agent );
-  m_motorControl->start();
+  //m_motorControl->start();
 }
 
 /////////////////////////////////////////////

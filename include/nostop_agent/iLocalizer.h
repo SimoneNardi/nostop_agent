@@ -44,25 +44,25 @@ namespace Robotics
 			
 			~iLocalizer() {};
 			
-			geometry_msgs::Point getPosition() const; 
+			geometry_msgs::Point getPosition(); 
 			
-			geometry_msgs::Quaternion getOrientation() const;
+			geometry_msgs::Quaternion getOrientation();
 			
-			geometry_msgs::Twist getTwist() const; 
+			geometry_msgs::Twist getTwist(); 
 			
-			geometry_msgs::Pose getPose() const;
+			geometry_msgs::Pose getPose();
 			
-			nav_msgs::Odometry getOdometry() const;
+			nav_msgs::Odometry getOdometry();
 			
-			Configuration getConfiguration() const;
+			Configuration getConfiguration();
 			
 			void updatePose(const geometry_msgs::Pose::ConstPtr  & pose_);
 			
 			void subscribeTopic();
 			
-			bool isInitialized() const;
+			bool isInitialized();
 			
-			bool isUpdated() const;
+			bool isUpdated();
 		};
 		
 		typedef std::shared_ptr<iLocalizer> iLocalizerPtr;

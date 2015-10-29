@@ -7,7 +7,7 @@ using namespace Robotics::GameTheory;
 using namespace std;
 
 	////////////////////////////////////////////////////
-	Configuration iLocalizer::getConfiguration() const
+	Configuration iLocalizer::getConfiguration()
 	{
 	    Lock lock(m_mutex);
 	    m_updated = false;
@@ -15,7 +15,7 @@ using namespace std;
 	}
 
 	////////////////////////////////////////////////////
-	geometry_msgs::Point iLocalizer::getPosition() const
+	geometry_msgs::Point iLocalizer::getPosition()
 	{
 	  Lock lock(m_mutex);
 	  m_updated = false;
@@ -23,7 +23,7 @@ using namespace std;
 	}
 	
 	////////////////////////////////////////////////////
-	geometry_msgs::Quaternion iLocalizer::getOrientation() const
+	geometry_msgs::Quaternion iLocalizer::getOrientation()
 	{
 	  Lock lock(m_mutex);
 	  m_updated = false;
@@ -31,7 +31,7 @@ using namespace std;
 	}
 	
 	////////////////////////////////////////////////////
-	geometry_msgs::Twist iLocalizer::getTwist() const
+	geometry_msgs::Twist iLocalizer::getTwist()
 	{
 	  Lock lock(m_mutex);
 	  m_updated = false;
@@ -39,7 +39,7 @@ using namespace std;
 	}
 	
 	////////////////////////////////////////////////////
-	geometry_msgs::Pose iLocalizer::getPose() const
+	geometry_msgs::Pose iLocalizer::getPose()
 	{
 	  Lock lock(m_mutex);
 	  m_updated = false;
@@ -47,7 +47,7 @@ using namespace std;
 	}
 	
 	////////////////////////////////////////////////////
-	nav_msgs::Odometry iLocalizer::getOdometry() const
+	nav_msgs::Odometry iLocalizer::getOdometry()
 	{
 	  Lock lock(m_mutex);
 	  m_updated = false;
@@ -79,14 +79,14 @@ using namespace std;
 	 }
 	
 	////////////////////////////////////////////////////
-	bool iLocalizer::isInitialized() const
+	bool iLocalizer::isInitialized()
 	{
 	  Lock l_lock(m_mutex);
 	  return m_initialized;
 	}
 	
 	////////////////////////////////////////////////////
-	bool iLocalizer::isUpdated() const
+	bool iLocalizer::isUpdated()
 	{
 	  Lock l_lock(m_mutex);
 	  return m_updated;

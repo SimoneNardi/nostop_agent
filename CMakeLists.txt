@@ -78,6 +78,7 @@ include_directories(${CMAKE_INSTALL_PREFIX}/include) # this line is to find lemo
 set(guard_SOURCES
         src/AgentProcess.cpp
         src/AreaCreator.cpp
+        src/Configuration.cpp
         src/Conversions.cpp
         src/Guard.cpp
         src/GuardNeighbours.cpp
@@ -104,6 +105,7 @@ set(thief_SOURCES
 set(agent_SOURCES
 	src/AgentProcess.cpp
         src/AreaCreator.cpp
+        src/Configuration.cpp
         src/Conversions.cpp
         src/GuardNeighbours.cpp
         src/GuardProcess.cpp

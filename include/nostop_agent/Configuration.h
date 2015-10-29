@@ -24,12 +24,12 @@ namespace Robotics
 		  Configuration (nav_msgs::Odometry const& odom_);
 		  Configuration (geometry_msgs::Point const& point_);
 		  
-		  void setPosition(geometry_msgs::Point & position_);
-		  void setOrientation(geometry_msgs::Quaternion & orientation_);
-		  void setPose(geometry_msgs::Pose & pose_);
-		  void setTwist(geometry_msgs::Twist & twist_);
-		  void setOdometry(nav_msgs::Odometry & odometry_);
-		  void setConfiguration(Configuration & config_);
+		  void setPosition(const geometry_msgs::Point & position_);
+		  void setOrientation(const geometry_msgs::Quaternion & orientation_);
+		  void setPose(const geometry_msgs::Pose & pose_);
+		  void setTwist(const geometry_msgs::Twist & twist_);
+		  void setOdometry(const nav_msgs::Odometry & odometry_);
+		  void setConfiguration(const Configuration & config_);
 		  
 		  geometry_msgs::Point getPosition() const;
 		  geometry_msgs::Quaternion getOrientation() const;
@@ -45,4 +45,4 @@ namespace Robotics
 }
 
 
-#endif // I_AGENT_H
+#endif // CONFIGURATION_H

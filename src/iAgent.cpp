@@ -14,118 +14,15 @@
 #include <math.h>       /* atan2 */
 
 #include "Conversions.h"
+#include "Configuration.h"
 
 #include <tf/tf.h>
+#include <boost/pointer_cast.hpp>
 
 using namespace Robotics;
 using namespace Robotics::GameTheory;
 using namespace std;
 
-	////////////////////////////////////////////////////
-	bool Configuration::equals( const Configuration& rhs ) const
-	{
-	  bool l_equals;
-// 	  geometry_msgs::Quaternion lhs_orientation = lhs.getOrientation();
-	  geometry_msgs::Point lhs_position = this->getPosition();
-	  
-// 	  geometry_msgs::Quaternion rhs_orientation = rhs.getOrientation();
-	  geometry_msgs::Point rhs_position = rhs.getPosition();
-	  
-	  l_equals = fabs(lhs_position.x - rhs_position.x) < 0.3 /*Math::TOLERANCE*/ && 
-		 fabs(lhs_position.y - rhs_position.y) < 0.3 /*Math::TOLERANCE*/ && 
-		 fabs(lhs_position.z - rhs_position.z) < 0.3 /*Math::TOLERANCE*/;
-	  
-	  return l_equals;
-	}
-
-	////////////////////////////////////////////////////
-	Configuration::Configuration ()
-	{}
-	
-	////////////////////////////////////////////////////
-	Configuration::Configuration (nav_msgs::Odometry const& odom_)
-	{
-	  m_odom = odom_;
-	}
-	
-	////////////////////////////////////////////////////
-	Configuration::Configuration (geometry_msgs::Pose const& pose_)
-	{
-	  m_odom.pose.pose = pose_;
-	}
-	
-	////////////////////////////////////////////////////
-	Configuration::Configuration (geometry_msgs::Point const& point_)
-	{
-	  m_odom.pose.pose.position = point_;
-	}
-	
-	////////////////////////////////////////////////////
-	void Configuration::setPosition(geometry_msgs::Point & position_)
-	{
-	  m_odom.pose.pose.position = position_;
-	}
-	
-	////////////////////////////////////////////////////
-	void Configuration::setOrientation(geometry_msgs::Quaternion & orientation_)
-	{
-	  m_odom.pose.pose.orientation = orientation_;
-	}
-	
-	////////////////////////////////////////////////////
-	void Configuration::setPose(geometry_msgs::Pose & pose_)
-	{
-	  m_odom.pose.pose = pose_;
-	}
-	
-	////////////////////////////////////////////////////
-	void Configuration::setTwist(geometry_msgs::Twist & twist_)
-	{
-	  m_odom.twist.twist = twist_;
-	}
-	
-	////////////////////////////////////////////////////
-	void Configuration::setOdometry(nav_msgs::Odometry & odometry_)
-	{
-	  m_odom = odometry_;
-	}
-	
-	////////////////////////////////////////////////////
-	void Configuration::setConfiguration(Configuration & config_)
-	{
-	  m_odom = config_.getOdometry();
-	}
-	
-	////////////////////////////////////////////////////
-	geometry_msgs::Point Configuration::getPosition() const
-	{
-	  return m_odom.pose.pose.position;
-	}
-	
-	////////////////////////////////////////////////////
-	geometry_msgs::Quaternion Configuration::getOrientation() const
-	{
-	  return m_odom.pose.pose.orientation;
-	}
-	
-	////////////////////////////////////////////////////
-	geometry_msgs::Pose Configuration::getPose() const
-	{
-	  return m_odom.pose.pose;
-	}
-
-	////////////////////////////////////////////////////
-	geometry_msgs::Twist Configuration::getTwist() const
-	{
-	  return m_odom.twist.twist;
-	}
-		  
-	////////////////////////////////////////////////////
-	nav_msgs::Odometry Configuration::getOdometry() const
-	{
-	  return m_odom;
-	}
-	
 	////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////
@@ -181,6 +78,20 @@ using namespace std;
 	bool iAgent::isArrived()
 	{
 	  return m_currentConfiguration.equals(m_targetConfiguration);
+	  
+	  Real2D l_current = Conversions::Point2Real2D( m_currentConfiguration.getPosition() );
+	  Real2D l_target = Conversions::Point2Real2D( m_targetConfiguration.getPosition() );
+	  
+	  Real2D l_delta = l_target-l_current;
+	  
+	  if( l_delta.mod() < 0.15 )
+	  {
+	    return true;
+	  }
+	  
+	  return false;
+	  	  
+	  //return m_currentConfiguration.equals(m_targetConfiguration);
 	}
 	
 	////////////////////////////////////////////////////
@@ -249,10 +160,12 @@ using namespace std;
 	}
 	
 	////////////////////////////////////////////////////
-	void iAgent::updateTargetConfiguration_callback(const std_msgs::Bool::ConstPtr msg_)
+	void iAgent::updateTargetConfiguration_callback( const std_msgs::Bool::ConstPtr msg_)
 	// Update target configuration:
 	{
 	  Lock lock(m_mutex);
+	  this->setActiveStatus();
+	  
 	  geometry_msgs::Point l_tgt_point = this->getTargetPoint();
 	  this->updateTargetConfiguration( l_tgt_point );
 	  
@@ -262,15 +175,18 @@ using namespace std;
 	}
 	
 	////////////////////////////////////////////////////
-	void iAgent::computeConfigurationToTarget_callback(const geometry_msgs::Pose::ConstPtr msg_)
+	void iAgent::computeConfigurationToTarget_callback( const geometry_msgs::Pose::ConstPtr msg_)
 	{
 	  Lock lock(m_mutex);
-	  Real2D l_current = Conversions::Point2Real2D( msg_->position );
+	  geometry_msgs::Pose l_pose;
+	  l_pose.orientation = msg_->orientation;
+	  l_pose.position = msg_->position;
+	  
+	  this->updateCurrentPosition( l_pose.position );
+	  this->updateCurrentOrientation( l_pose.orientation );
+	  	  
 	  Real2D l_target = Conversions::Point2Real2D( m_targetConfiguration.getPosition() );
-	  
-	  Real2D l_delta = l_target-l_current;
-	  
-	  if( l_delta.mod() < 0.3 )
+	  if( this->isArrived() )
 	  {
 	    if (m_motor_control_direction  != -1)
 	      ROS_INFO("Stop Moving!\nTarget %.2f, %.2f reached!\n", l_target[0], l_target[1]);
@@ -278,11 +194,11 @@ using namespace std;
 	    m_motor_control_direction  = -1;
 	    return;
 	  }
-	  	  	  
+	  
 	  geometry_msgs::Twist l_twist;
 	  
-	  double kp1 = -.5;
-	  double kp2 = 1.;
+	  double kp1 = -1;
+	  double kp2 = 2.;
 	  
 	  double error_lin = ErrorLinear(msg_, l_target);
 	  double error_ang = ErrorAngle(msg_, l_target);
@@ -306,9 +222,9 @@ using namespace std;
 	    ROS_INFO("Go to %.2f, %.2f\n", l_target[0], l_target[1]);
 	  m_motor_control_direction=-2;
 	  
-	  //m_currentConfiguration.setTwist(l_twist);
-	  
+	  m_currentConfiguration.setTwist(l_twist);
 	  m_pubMotorControl.publish(l_twist);
+	  
 	  return;
 	}
 	
@@ -530,6 +446,7 @@ using namespace std;
 	  l_twist.angular.z = 0;
 	  
 	  m_currentConfiguration.setTwist(l_twist);
+	  m_pubMotorControl.publish(l_twist);
 	}
 	
 	////////////////////////////////////////////////////
@@ -545,6 +462,7 @@ using namespace std;
 	  l_twist.angular.z = 0;
 	  
 	  m_currentConfiguration.setTwist(l_twist);
+	  m_pubMotorControl.publish(l_twist);
 	}
 	
 	////////////////////////////////////////////////////
@@ -560,6 +478,7 @@ using namespace std;
 	  l_twist.angular.z = g_value_angular;
 	  
 	  m_currentConfiguration.setTwist(l_twist);
+	  m_pubMotorControl.publish(l_twist);
 	}
 	
 	////////////////////////////////////////////////////
@@ -575,6 +494,7 @@ using namespace std;
 	  l_twist.angular.z = -g_value_angular;
 	  
 	  m_currentConfiguration.setTwist(l_twist);
+	  m_pubMotorControl.publish(l_twist);
 	}	
 	
 	////////////////////////////////////////////////////
@@ -590,6 +510,7 @@ using namespace std;
 	  l_twist.angular.z = 0;
 	  
 	  m_currentConfiguration.setTwist(l_twist);
+	  m_pubMotorControl.publish(l_twist);
 	}
 	
 	////////////////////////////////////////////////////

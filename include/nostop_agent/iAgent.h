@@ -37,7 +37,7 @@ namespace Robotics
 			
 			std::string m_name;
 			
-			Mutex m_mutex;
+			mutable Mutex m_mutex;
 			
 			ros::NodeHandle m_node;
 			ros::ServiceClient m_notifyStatus;
@@ -68,9 +68,9 @@ namespace Robotics
 			
 			void updateCurrentTwist( geometry_msgs::Twist & twist_ );
 			
-			void updateCurrentOrientation(geometry_msgs::Quaternion & orientation_);
+			void updateCurrentOrientation( geometry_msgs::Quaternion & orientation_);
 			
-			void updateCurrentPosition(geometry_msgs::Point & currentPosition_);
+			void updateCurrentPosition( geometry_msgs::Point & currentPosition_);
 			
 			bool isReal();
 			
@@ -125,8 +125,8 @@ namespace Robotics
 			  void stop();
 			  
 		public:
-			  void updateTargetConfiguration_callback(const std_msgs::Bool::ConstPtr msg_);
-			  void computeConfigurationToTarget_callback(const geometry_msgs::Pose::ConstPtr msg_);
+			  void updateTargetConfiguration_callback( const std_msgs::Bool::ConstPtr msg_);
+			  void computeConfigurationToTarget_callback( const geometry_msgs::Pose::ConstPtr msg_);
 			  
 		protected:
 			  bool notifyStatus();

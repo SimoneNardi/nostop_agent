@@ -79,9 +79,10 @@ bool GuardProcess::isReady()
       int l_id = l_learning->getID();
       
       // init della posizione del robot.
-      geometry_msgs::Pose l_geomPoint = l_localizer->getConfiguration().getPose();
-      l_guard->updateCurrentPose(l_geomPoint);
-      Real2D l_point = Conversions::Point2Real2D(l_geomPoint.position);
+      Configuration l_conf = l_localizer->getConfiguration();
+      geometry_msgs::Pose l_geomPose = l_conf.getPose();
+      l_guard->updateCurrentPose( l_geomPose );
+      Real2D l_point = Conversions::Point2Real2D( l_geomPose.position );
       
       CameraPosition l_cameraPos( l_learning->getSpace()->getDistance() / 10. );
       AgentPosition l_agentPos (l_point, l_cameraPos);
