@@ -45,6 +45,9 @@ namespace Robotics
 			ros::Subscriber m_subForward;
 			ros::Subscriber m_subLocalizer;
 			ros::Publisher m_pubMotorControl;
+			
+			double m_error_lin_cumulative;
+			double m_error_ang_cumulative;
 		public:
 			int m_motor_control_direction;
 		public:
@@ -81,7 +84,7 @@ namespace Robotics
 			void MoveToNextPosition_LearningAgent();
 			
 		public:
-			iAgent() : m_localizer(nullptr), m_LAgent(nullptr), m_motor_control_direction(-3) {};
+			iAgent() : m_localizer(nullptr), m_LAgent(nullptr), m_motor_control_direction(-3), m_error_lin_cumulative(0), m_error_ang_cumulative(0) {};
 			
 			~iAgent() {};
 		
@@ -99,7 +102,7 @@ namespace Robotics
 			/// Get the robot name
 			std::string getName() {return m_name;}
 			
-			bool isArrived();
+			bool isArrived( double tolerance = Math::TOLERANCE);
 			
 			void setStandByStatus();
 			

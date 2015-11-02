@@ -75,16 +75,16 @@ using namespace std;
 	}
 	
 	////////////////////////////////////////////////////
-	bool iAgent::isArrived()
+	bool iAgent::isArrived(double tolerance)
 	{
-	  return m_currentConfiguration.equals(m_targetConfiguration);
+	  return m_currentConfiguration.equals(m_targetConfiguration, tolerance);
 	  
 	  Real2D l_current = Conversions::Point2Real2D( m_currentConfiguration.getPosition() );
 	  Real2D l_target = Conversions::Point2Real2D( m_targetConfiguration.getPosition() );
 	  
 	  Real2D l_delta = l_target-l_current;
 	  
-	  if( l_delta.mod() < 0.15 )
+	  if( l_delta.mod() < tolerance )
 	  {
 	    return true;
 	  }
@@ -133,7 +133,7 @@ using namespace std;
 	}
 	
 	const double MAX_TWIST_LINEAR = 0.7;
-	const double MAX_TWIST_ANGULAR = 1;
+	const double MAX_TWIST_ANGULAR = 2;
 	
 	////////////////////////////////////////////////////
 	double ErrorAngle(geometry_msgs::Pose::ConstPtr cur, Real2D ref)
@@ -186,10 +186,13 @@ using namespace std;
 	  this->updateCurrentOrientation( l_pose.orientation );
 	  	  
 	  Real2D l_target = Conversions::Point2Real2D( m_targetConfiguration.getPosition() );
-	  if( this->isArrived() )
+	  double l_arrived_tolerance = m_motor_control_direction  != -1 ? 0.1 : 0.5;
+	  if( this->isArrived(l_arrived_tolerance) )
 	  {
+	    m_error_ang_cumulative = 0;
+	    m_error_lin_cumulative = 0;
 	    if (m_motor_control_direction  != -1)
-	      ROS_INFO("Stop Moving!\nTarget %.2f, %.2f reached!\n", l_target[0], l_target[1]);
+	      ROS_INFO("Agent %s is stopping on %.2f, %.2f!\n", m_name.c_str(), l_pose.position.x, l_pose.position.y);
 	    this->stop();
 	    m_motor_control_direction  = -1;
 	    return;
@@ -197,29 +200,45 @@ using namespace std;
 	  
 	  geometry_msgs::Twist l_twist;
 	  
-	  double kp1 = -1;
-	  double kp2 = 2.;
+	  double kp1 = .5;
+	  double kp2 = -2.;
+	  double ki2 = .01;
 	  
 	  double error_lin = ErrorLinear(msg_, l_target);
 	  double error_ang = ErrorAngle(msg_, l_target);
 	  
-	  l_twist.linear.x = kp1*error_lin; 
+	  //m_error_lin_cumulative += error_lin;
+	  //m_error_ang_cumulative += error_ang;
+	  
+	  if(fabs(error_lin) < 0.5 && fabs(error_ang) > .1)
+	    l_twist.linear.x = 0;
+	  else
+	    l_twist.linear.x = kp1*error_lin;
+	  
 	  l_twist.linear.y = 0;
 	  l_twist.linear.z = 0;
 	  
 	  l_twist.angular.x = 0;
 	  l_twist.angular.y = 0;
-	  l_twist.angular.z = kp2*sin(error_ang);
+	  l_twist.angular.z = kp2*sin(error_ang) + ki2*sin(m_error_ang_cumulative);
 	  
 	  // Saturazione sul twist comandato
 	  if(fabs(l_twist.linear.x) > MAX_TWIST_LINEAR)
-	      l_twist.linear.x = MAX_TWIST_LINEAR * (l_twist.linear.x>0?1.:-1.);
+	  {
+	    if(m_motor_control_direction != -2)
+	      ROS_INFO("Agent %s, to much linear speed!\n", m_name.c_str());
+	    l_twist.linear.x = MAX_TWIST_LINEAR * (l_twist.linear.x>0?1.:-1.);
+	  }
 	      
 	  if(fabs(l_twist.angular.z) > MAX_TWIST_ANGULAR)
-	      l_twist.angular.z = MAX_TWIST_ANGULAR* (l_twist.angular.z>0?1.:-1.);
+	  {
+	    if(m_motor_control_direction != -2)
+	      ROS_INFO("Agent %s, to much angular speed!\n", m_name.c_str());
+	    l_twist.angular.z = MAX_TWIST_ANGULAR* (l_twist.angular.z>0?1.:-1.);
+	  }
 	  
 	  if(m_motor_control_direction != -2)
-	    ROS_INFO("Go to %.2f, %.2f\n", l_target[0], l_target[1]);
+	    ROS_INFO("Agent %s is going to %.2f, %.2f\n", m_name.c_str(), l_target[0], l_target[1]);
 	  m_motor_control_direction=-2;
 	  
 	  m_currentConfiguration.setTwist(l_twist);

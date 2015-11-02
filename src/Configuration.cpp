@@ -10,10 +10,8 @@ using namespace Robotics;
 using namespace Robotics::GameTheory;
 using namespace std;
 
-	const double g_tolerance = 0.15;
-
 	////////////////////////////////////////////////////
-	bool Configuration::equals( const Configuration& rhs ) const
+	bool Configuration::equals( const Configuration& rhs, double tolerance ) const
 	{
 	  bool l_equals;
 // 	  geometry_msgs::Quaternion lhs_orientation = lhs.getOrientation();
@@ -22,9 +20,9 @@ using namespace std;
 // 	  geometry_msgs::Quaternion rhs_orientation = rhs.getOrientation();
 	  geometry_msgs::Point rhs_position = rhs.getPosition();
 	  
-	  l_equals = fabs(lhs_position.x - rhs_position.x) < g_tolerance /*Math::TOLERANCE*/ && 
-		 fabs(lhs_position.y - rhs_position.y) < g_tolerance /*Math::TOLERANCE*/ && 
-		 fabs(lhs_position.z - rhs_position.z) < g_tolerance /*Math::TOLERANCE*/;
+	  l_equals = fabs(lhs_position.x - rhs_position.x) < tolerance /*Math::TOLERANCE*/ && 
+		 fabs(lhs_position.y - rhs_position.y) < tolerance /*Math::TOLERANCE*/ && 
+		 fabs(lhs_position.z - rhs_position.z) < tolerance /*Math::TOLERANCE*/;
 	  
 	  return l_equals;
 	}

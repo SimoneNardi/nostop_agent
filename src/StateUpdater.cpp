@@ -29,15 +29,13 @@ void StateUpdater::run()
 {
   ros::Rate loop_rate(10);
     
-  iLocalizerPtr l_localizer = m_agent->getLocalizer();
-  
   int count = 0;
   int standby_count = 0;
   while (ros::ok())
   {
     if (m_agent->getStatus() != Agent::STANDBY)
     {
-      if ( m_agent->isArrived() )
+      if ( m_agent->isArrived(0.4) )
       {
 	m_agent->MoveToNextPosition_LearningAgent();
 	
@@ -67,7 +65,7 @@ void StateUpdater::run()
     
     if (standby_count == 20)
     {
-      if ( m_agent->isArrived() )
+      if ( m_agent->isArrived(0.4) )
       {
 	// set status and notify to Simulator
 	m_agent->setStandByStatus();

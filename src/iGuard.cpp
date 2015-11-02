@@ -10,6 +10,8 @@
 #include "discretizedArea.h"
 #include "learningWorld.h"
 
+#include "Box.h"
+
 #include "Conversions.h"
 
 using namespace Robotics;
@@ -75,7 +77,12 @@ using namespace std;
 		
 		// first target position is determined by the localizer.
 		AgentPosition l_targetPos = m_LGuard->getCurrentPosition();
-		this->setTargetConfigurationToCenterOfSquare( Conversions::Real2D2Point( l_targetPos.getPoint2D() ) );
+		//this->setTargetConfigurationToCenterOfSquare( Conversions::Real2D2Point( l_targetPos.getPoint2D() ) );
+		
+		SquarePtr l_square = l_space->getSquare(l_targetPos.getPoint2D());
+		Real3D l_target3D = l_square->getBoundingBox().center();
+		Real2D l_target2D ( l_target3D[0], l_target3D[1] );
+		this->setTargetConfigurationToCenterOfSquare( Conversions::Real2D2Point( l_target2D ) );
 	}
 	
 	////////////////////////////////////////////////////

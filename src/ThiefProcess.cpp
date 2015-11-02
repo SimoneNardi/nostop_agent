@@ -38,8 +38,8 @@ ThiefProcess::~ThiefProcess()
 void ThiefProcess::setCamera(nostop_agent::GuardSensorCtrl & camera_)
 {
   // TODO
-  std::shared_ptr<iThief> l_guard = std::static_pointer_cast<iThief>(m_agent);
-  if (l_guard)
+  std::shared_ptr<iThief> l_thief = std::static_pointer_cast<iThief>(m_agent);
+  if (l_thief)
   {
     
   }

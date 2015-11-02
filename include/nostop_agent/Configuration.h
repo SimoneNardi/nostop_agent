@@ -9,6 +9,8 @@
 
 #include <nav_msgs/Odometry.h>
 
+#include "Math.h"
+
 namespace Robotics
 {
 	namespace GameTheory
@@ -39,7 +41,7 @@ namespace Robotics
 		  
 		  nav_msgs::Odometry getOdometry() const;
 		  
-		  bool equals(const Configuration& other_) const;
+		  bool equals(const Configuration& other_, double tolerance = Math::TOLERANCE) const;
 		};
 	}
 }
