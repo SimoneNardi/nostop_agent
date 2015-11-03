@@ -5,6 +5,7 @@
 #include "std_msgs/Bool.h"
 #include "geometry_msgs/Quaternion.h"
 #include "nav_msgs/Odometry.h"
+#include "sensor_msgs/LaserScan.h"
 
 #include "nostop_agent/PlayerNotifyStatus.h"
 
@@ -136,25 +137,25 @@ using namespace std;
 	const double MAX_TWIST_ANGULAR = 2;
 	
 	////////////////////////////////////////////////////
-	double ErrorAngle(geometry_msgs::Pose::ConstPtr cur, Real2D ref)
+	double ErrorAngle(geometry_msgs::Pose const& cur, Real2D ref)
 	{
-	    tf::Quaternion q(cur->orientation.x, cur->orientation.y, cur->orientation.z, cur->orientation.w);    
+	    tf::Quaternion q(cur.orientation.x, cur.orientation.y, cur.orientation.z, cur.orientation.w);    
 	    tf::Matrix3x3 m(q);
 	    double roll, pitch, yaw;
 	    m.getRPY(roll, pitch, yaw);
 	      
-	    double Ex = ref[0] - cur->position.x;   //errore lungo x
-	    double Ey = ref[1] - cur->position.y;   //errore lungo y  
+	    double Ex = ref[0] - cur.position.x;   //errore lungo x
+	    double Ey = ref[1] - cur.position.y;   //errore lungo y  
 	    double ref_theta = atan2(Ey, Ex);   //stima dell'angolo desiderato
 	    double Et = ref_theta-yaw;   //errore su theta
 	    return Et;
 	}
 
 	////////////////////////////////////////////////////
-	double ErrorLinear(geometry_msgs::Pose::ConstPtr cur, Real2D ref)
+	double ErrorLinear(geometry_msgs::Pose const& cur, Real2D ref)
 	{
-	    double Ex = ref[0] - cur->position.x; //errore lungo x
-	    double Ey = ref[1] - cur->position.y;           //errore lungo y
+	    double Ex = ref[0] - cur.position.x; //errore lungo x
+	    double Ey = ref[1] - cur.position.y;           //errore lungo y
 	    double Etx = pow(pow(Ex,2)+pow(Ey,2),0.5);
 	    return Etx;
 	}
@@ -170,32 +171,36 @@ using namespace std;
 	  this->updateTargetConfiguration( l_tgt_point );
 	  
 	  this->m_motor_control_direction = -3;
-	
-	  return;
 	}
 	
 	////////////////////////////////////////////////////
-	void iAgent::computeConfigurationToTarget_callback( const geometry_msgs::Pose::ConstPtr msg_)
+	void iAgent::notifyPositionToTF(const geometry_msgs::Pose & pose_)
 	{
-	  Lock lock(m_mutex);
-	  geometry_msgs::Pose l_pose;
-	  l_pose.orientation = msg_->orientation;
-	  l_pose.position = msg_->position;
+	  /// Broadcast new position
+	  tf::Transform l_transform;
+	  l_transform.setOrigin( tf::Vector3(pose_.position.x, pose_.position.y, pose_.position.z) );
 	  
-	  this->updateCurrentPosition( l_pose.position );
-	  this->updateCurrentOrientation( l_pose.orientation );
-	  	  
-	  Real2D l_target = Conversions::Point2Real2D( m_targetConfiguration.getPosition() );
+	  // the incoming geometry_msgs::Quaternion is transformed to a tf::Quaterion
+	  tf::Quaternion l_orientation;
+	  tf::quaternionMsgToTF(pose_.orientation, l_orientation);
+	  l_transform.setRotation( l_orientation );
+	  m_broadcaster.sendTransform( tf::StampedTransform( l_transform, ros::Time::now(), "world", m_name.c_str() ) );
+	}
+	
+	////////////////////////////////////////////////////
+	void iAgent::computeConfigurationToPoint(const geometry_msgs::Pose & pose_, Real2D const& point_)
+	{
 	  double l_arrived_tolerance = m_motor_control_direction  != -1 ? 0.1 : 0.5;
 	  if( this->isArrived(l_arrived_tolerance) )
 	  {
-	    m_error_ang_cumulative = 0;
-	    m_error_lin_cumulative = 0;
-	    if (m_motor_control_direction  != -1)
-	      ROS_INFO("Agent %s is stopping on %.2f, %.2f!\n", m_name.c_str(), l_pose.position.x, l_pose.position.y);
-	    this->stop();
-	    m_motor_control_direction  = -1;
-	    return;
+	      m_error_ang_cumulative = 0;
+	      m_error_lin_cumulative = 0;
+	      if (m_motor_control_direction  != -1)
+		  ROS_INFO("Agent %s is stopping on %.2f, %.2f!\n", m_name.c_str(), pose_.position.x, pose_.position.y);
+	      
+	      this->stop();
+	      m_motor_control_direction  = -1;
+	      return;
 	  }
 	  
 	  geometry_msgs::Twist l_twist;
@@ -204,8 +209,8 @@ using namespace std;
 	  double kp2 = -2.;
 	  double ki2 = .01;
 	  
-	  double error_lin = ErrorLinear(msg_, l_target);
-	  double error_ang = ErrorAngle(msg_, l_target);
+	  double error_lin = ErrorLinear(pose_, point_);
+	  double error_ang = ErrorAngle(pose_, point_);
 	  
 	  //m_error_lin_cumulative += error_lin;
 	  //m_error_ang_cumulative += error_ang;
@@ -221,6 +226,19 @@ using namespace std;
 	  l_twist.angular.x = 0;
 	  l_twist.angular.y = 0;
 	  l_twist.angular.z = kp2*sin(error_ang) + ki2*sin(m_error_ang_cumulative);
+	  
+	  tf::Quaternion q(pose_.orientation.x, pose_.orientation.y, pose_.orientation.z, pose_.orientation.w);    
+	  tf::Matrix3x3 m(q);
+	  double roll, pitch, yaw;
+	  m.getRPY(roll, pitch, yaw);
+	  
+	  if ( !this->isGoodDirection (yaw, 0.01, 0.3) )
+	  {
+	    ROS_INFO("Agent %s, Not good direction!\n", m_name.c_str());
+	    
+	    l_twist.linear.x = 0;
+	    l_twist.angular.z += 0.001;
+	  }
 	  
 	  // Saturazione sul twist comandato
 	  if(fabs(l_twist.linear.x) > MAX_TWIST_LINEAR)
@@ -238,18 +256,83 @@ using namespace std;
 	  }
 	  
 	  if(m_motor_control_direction != -2)
-	    ROS_INFO("Agent %s is going to %.2f, %.2f\n", m_name.c_str(), l_target[0], l_target[1]);
+	    ROS_INFO("Agent %s is going to %.2f, %.2f\n", m_name.c_str(), point_[0], point_[1]);
 	  m_motor_control_direction=-2;
 	  
 	  m_currentConfiguration.setTwist(l_twist);
 	  m_pubMotorControl.publish(l_twist);
+	}
+	
+	////////////////////////////////////////////////////
+	void iAgent::computeConfigurationToTarget_callback( const geometry_msgs::Pose::ConstPtr msg_)
+	{
+	  Lock lock(m_mutex);
+	  geometry_msgs::Pose l_pose;
+	  l_pose.orientation = msg_->orientation;
+	  l_pose.position = msg_->position;
 	  
-	  return;
+	  this->updateCurrentPosition( l_pose.position );
+	  this->updateCurrentOrientation( l_pose.orientation );
+	  
+	  this->notifyPositionToTF(l_pose);
+	  
+	  Real2D l_target = Conversions::Point2Real2D( m_targetConfiguration.getPosition() );
+	  return this->computeConfigurationToPoint(l_pose, l_target);
+	}
+	
+	////////////////////////////////////////////////////
+	bool iAgent::isGoodDirection( double orientation_, double tolerance, double min_range)
+	{
+	  Lock lock(m_mutex);
+	  
+	  if ( !(m_scan.header.seq > 0) )
+	    return true;
+	  
+	  auto laser_frame_ = m_scan.header.frame_id;
+	  
+	  size_t l_gsp_laser_beam_count = m_scan.ranges.size();
+	  double l_angle_center = (m_scan.angle_min + m_scan.angle_max)/2;
+	  
+	  // Compute the angles of the laser from -x to x, basically symmetric and in increasing order
+	   std::vector<double> l_laser_angles_;
+	   l_laser_angles_.resize(l_gsp_laser_beam_count);
+	   
+	  // Make sure angles are started so that they are centered
+	  double l_theta = - std::fabs(m_scan.angle_min - m_scan.angle_max)/2;
+	  int l_index = (orientation_-m_scan.angle_min) / m_scan.angle_increment;
+	  
+	  int l_tolerance_index = floor( (tolerance / m_scan.angle_increment) + .5);
+	  
+	  for(int i = -l_tolerance_index; i <= l_tolerance_index; ++i)
+	  {
+	    double l_range = m_scan.ranges[ (l_gsp_laser_beam_count+i) % l_gsp_laser_beam_count ];
+	    if (m_scan.ranges[ (l_gsp_laser_beam_count+i) % l_gsp_laser_beam_count ] < min_range)
+	      return false;
+	  }
+	  
+	  return true;
+	}
+	
+	////////////////////////////////////////////////////
+	void iAgent::updateLaserScan_callback(const sensor_msgs::LaserScan::ConstPtr msg_)
+	{
+	  Lock lock(m_mutex);
+	  m_scan.angle_increment = msg_->angle_increment;
+	  m_scan.angle_max = msg_->angle_max;
+	  m_scan.angle_min = msg_->angle_min;
+	  m_scan.header = msg_->header;
+	  m_scan.intensities = msg_->intensities;
+	  m_scan.range_max = msg_->range_max;
+	  m_scan.range_min = msg_->range_min;
+	  m_scan.ranges = msg_->ranges;
+	  m_scan.scan_time = msg_->scan_time;
+	  m_scan.time_increment = msg_->time_increment;
 	}
 	
 	////////////////////////////////////////////////////
 	void iAgent::setName(std::string const& name_)
 	{
+	    Lock lock(m_mutex);
 	    m_name = name_;
 	    
 	    std::string l_name = "/";
@@ -266,6 +349,10 @@ using namespace std;
 	    std::string l_motor_ctrl_name = l_name;
 	    l_motor_ctrl_name += "/cmd_vel";
 	    m_pubMotorControl = m_node.advertise<geometry_msgs::Twist>(l_motor_ctrl_name.c_str(), 1);
+	    
+	    std::string l_laser_scan_name = l_name;
+	    l_laser_scan_name += "/laser_scan";
+	    m_subLaserScan = m_node.subscribe<sensor_msgs::LaserScan::ConstPtr>(l_laser_scan_name.c_str(), 1, &iAgent::updateLaserScan_callback, this);
 	}
 	
 	////////////////////////////////////////////////////
@@ -359,12 +446,8 @@ using namespace std;
 	  double kp2 = 1.;
 	  
 	  geometry_msgs::Pose l_current_pose = m_currentConfiguration.getPose();
-	  geometry_msgs::PosePtr l_current_pose_ptr = boost::make_shared<geometry_msgs::Pose>();
-	  l_current_pose_ptr->orientation = l_current_pose.orientation;
-	  l_current_pose_ptr->position = l_current_pose.position;
-	  
-	  double error_lin = ErrorLinear(l_current_pose_ptr, l_target);
-	  double error_ang = ErrorAngle(l_current_pose_ptr, l_target);
+	  double error_lin = ErrorLinear(l_current_pose, l_target);
+	  double error_ang = ErrorAngle(l_current_pose, l_target);
 	  
 	  l_twist.linear.x = kp1*error_lin; 
 	  l_twist.linear.y = 0;

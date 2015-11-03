@@ -38,23 +38,10 @@ void StateUpdater::run()
       if ( m_agent->isArrived(0.4) )
       {
 	m_agent->MoveToNextPosition_LearningAgent();
-	
-	m_time = ros::Time::now();
+
 	// set status and notify to Simulator
 	m_agent->setStandByStatus();
       }
-      
-      /// Broadcast new position
-      Configuration l_newConfig = m_agent->getCurrentConfiguration();
-      geometry_msgs::Pose l_pose = l_newConfig.getPose();
-      tf::Transform l_transform;
-      l_transform.setOrigin( tf::Vector3(l_pose.position.x, l_pose.position.y, l_pose.position.z) );
-      
-      // the incoming geometry_msgs::Quaternion is transformed to a tf::Quaterion
-      tf::Quaternion l_quat;
-      tf::quaternionMsgToTF(l_pose.orientation, l_quat);
-      l_transform.setRotation( l_quat );
-      m_broadcaster.sendTransform(tf::StampedTransform(l_transform, ros::Time::now(), "world", m_agent->getName()));
       
       standby_count = 0;
     }

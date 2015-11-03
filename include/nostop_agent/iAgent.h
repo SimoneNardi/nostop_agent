@@ -16,6 +16,9 @@
 
 #include <nav_msgs/Odometry.h>
 #include <std_msgs/Bool.h>
+#include <sensor_msgs/LaserScan.h>
+
+#include <tf/transform_broadcaster.h>
 
 #include <memory>
 #include <string>
@@ -48,6 +51,11 @@ namespace Robotics
 			
 			double m_error_lin_cumulative;
 			double m_error_ang_cumulative;
+			
+			tf::TransformBroadcaster m_broadcaster;
+			
+			ros::Subscriber m_subLaserScan;
+			sensor_msgs::LaserScan m_scan;
 		public:
 			int m_motor_control_direction;
 		public:
@@ -130,9 +138,12 @@ namespace Robotics
 		public:
 			  void updateTargetConfiguration_callback( const std_msgs::Bool::ConstPtr msg_);
 			  void computeConfigurationToTarget_callback( const geometry_msgs::Pose::ConstPtr msg_);
-			  
+			  void updateLaserScan_callback(const sensor_msgs::LaserScan::ConstPtr msg_);
 		protected:
+			  void notifyPositionToTF(const geometry_msgs::Pose & pose_);
+			  void computeConfigurationToPoint(const geometry_msgs::Pose & pose_, Real2D const& point_);
 			  bool notifyStatus();
+			  bool isGoodDirection( double orientation, double tolerance, double min_range);
 		};
 		
 		typedef std::shared_ptr<iAgent> iAgentPtr;
