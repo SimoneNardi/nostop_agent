@@ -1,0 +1,73 @@
+<launch>
+  
+  <!--> First Guard <!-->
+  <node pkg="nostop_gazebo_sensor" type="nostop_gazebo_sensor_node" name="$(anon GazeboLocalizer1)" required="true" output="screen">
+    <param name="robot_name" value="$(optenv ROS_ROBOT_NAME red_blue)" />
+  </node>
+    
+  <!--> Second Guard <!-->
+    <node pkg="nostop_gazebo_sensor" type="nostop_gazebo_sensor_node" name="$(anon GazeboLocalizer2)" required="true" output="screen">
+    <param name="robot_name" value="$(optenv ROS_ROBOT_NAME green_red)" />
+  </node>
+    
+  <node pkg="nostop_agent" type="Guard" name="$(anon Guard2)" required="true" output="screen">
+    <param name="robot_name" value="$(optenv ROS_ROBOT_NAME green_red)" />
+    <param name="learning_name" value="$(optenv ROS_LEARNING_ALG DISL)" />
+  </node>
+  
+  <!--> Third Guard <!-->
+    <node pkg="nostop_gazebo_sensor" type="nostop_gazebo_sensor_node" name="$(anon GazeboLocalizer3)" required="true" output="screen">
+    <param name="robot_name" value="$(optenv ROS_ROBOT_NAME yellow_blue)" />
+  </node>  
+    
+  <node pkg="nostop_agent" type="Guard" name="$(anon Guard3)" required="true" output="screen">
+    <param name="robot_name" value="$(optenv ROS_ROBOT_NAME yellow_blue)" />
+    <param name="learning_name" value="$(optenv ROS_LEARNING_ALG DISL)" />
+  </node>
+  
+  <!--> 4 Guard <!-->
+  <node pkg="nostop_gazebo_sensor" type="nostop_gazebo_sensor_node" name="$(anon GazeboLocalizer4)" required="true" output="screen">
+    <param name="robot_name" value="$(optenv ROS_ROBOT_NAME pippo)" />
+  </node>
+    
+  <node pkg="nostop_agent" type="Guard" name="$(anon Guard4)" required="true" output="screen">
+    <param name="robot_name" value="$(optenv ROS_ROBOT_NAME pippo)" />
+    <param name="learning_name" value="$(optenv ROS_LEARNING_ALG DISL)" />
+  </node>
+  
+  <!--> 5 Guard <!-->
+  <node pkg="nostop_gazebo_sensor" type="nostop_gazebo_sensor_node" name="$(anon GazeboLocalizer5)" required="true" output="screen">
+    <param name="robot_name" value="$(optenv ROS_ROBOT_NAME pluto)" />
+  </node>
+    
+  <node pkg="nostop_agent" type="Guard" name="$(anon Guard5)" required="true" output="screen">
+    <param name="robot_name" value="$(optenv ROS_ROBOT_NAME pluto)" />
+    <param name="learning_name" value="$(optenv ROS_LEARNING_ALG DISL)" />
+  </node>
+  
+  <!--> 6 Guard <!-->
+  <node pkg="nostop_gazebo_sensor" type="nostop_gazebo_sensor_node" name="$(anon GazeboLocalizer6)" required="true" output="screen">
+    <param name="robot_name" value="$(optenv ROS_ROBOT_NAME minni)" />
+  </node>
+    
+  <node pkg="nostop_agent" type="Guard" name="$(anon Guard6)" required="true" output="screen">
+    <param name="robot_name" value="$(optenv ROS_ROBOT_NAME minni)" />
+    <param name="learning_name" value="$(optenv ROS_LEARNING_ALG DISL)" />
+  </node>
+  
+  <!--> 7 Guard <!-->
+  <node pkg="nostop_gazebo_sensor" type="nostop_gazebo_sensor_node" name="$(anon GazeboLocalizer7)" required="true" output="screen">
+    <param name="robot_name" value="$(optenv ROS_ROBOT_NAME topolino)" />
+  </node>
+    
+  <node pkg="nostop_agent" type="Guard" name="$(anon Guard7)" required="true" output="screen">
+    <param name="robot_name" value="$(optenv ROS_ROBOT_NAME topolino)" />
+    <param name="learning_name" value="$(optenv ROS_LEARNING_ALG DISL)" />
+  </node>
+  
+  
+  
+  <!--> Thief <!-->
+  <node pkg="nostop_agent" type="Thief" name="$(anon Thief)" required="true" output="screen" />
+  
+</launch>
