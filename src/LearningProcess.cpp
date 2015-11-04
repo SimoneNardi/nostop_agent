@@ -73,11 +73,11 @@ void LearningProcess::run()
 		if(m_monitorReceiver->isUpdated() && m_guardNeighbours->isUpdated())
 		{
 		  // Collect Monitor Data:
-		  m_learning->updateMonitor(m_monitorReceiver->getData()->getMap());
+		  m_learning->updateMonitor( m_monitorReceiver->getData()->getMap() );
 		  m_monitorReceiver->setUsed();
 		
 		  // Collect Neighbours Data:
-		  m_learning->updateNeighbours(m_guardNeighbours->getData()->getMap());
+		  m_learning->updateNeighbours( m_guardNeighbours->getData()->getMap() );
 		  m_guardNeighbours->setUsed();
 		
 		  // Compute Benefit, Save current action and Select next position:
