@@ -30,9 +30,9 @@ namespace Robotics
 		  std::shared_ptr<StateUpdater> m_stateUpdater;
 		  
 		public:
-			AgentProcess() {};
+			AgentProcess();
 			
-			~AgentProcess() {};
+			~AgentProcess();
 			
 			void setRobotName(std::string name_);
 			void setRobotAlgorithm(std::string alg_);

@@ -87,7 +87,7 @@ void LearningProcess::run()
 		  l_msg.data = true;
 		  m_pubForward.publish(l_msg);
 		  
-		  ROS_INFO("Learning Process Update!\n");
+		  ROS_DEBUG("Learning Process Update!\n");
 		  
 		  m_update = false;
 		}

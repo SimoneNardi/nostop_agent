@@ -46,6 +46,7 @@ namespace Robotics
 			ros::ServiceClient m_notifyStatus;
 			
 			ros::Subscriber m_subForward;
+			ros::Subscriber m_subTargetPoint;
 			ros::Subscriber m_subLocalizer;
 			ros::Publisher m_pubMotorControl;
 			
@@ -62,7 +63,7 @@ namespace Robotics
 		  		
 			void computeConfigurationToTarget();
 		  
-		  	void updateTargetConfiguration(geometry_msgs::Point & newTarget_);
+		  	void updateTargetConfiguration(geometry_msgs::Point const& newTarget_);
 			
 			void setCurrentConfiguration( Configuration & config_ );
 			
@@ -139,7 +140,11 @@ namespace Robotics
 			  void updateTargetConfiguration_callback( const std_msgs::Bool::ConstPtr msg_);
 			  void computeConfigurationToTarget_callback( const geometry_msgs::Pose::ConstPtr msg_);
 			  void updateLaserScan_callback(const sensor_msgs::LaserScan::ConstPtr msg_);
+			  void updateTargetPoint_callback( const geometry_msgs::Point::ConstPtr msg_);
+	
 		protected:
+		  
+			  void updateTargetPoint( geometry_msgs::Point const& point_);
 			  void notifyPositionToTF(const geometry_msgs::Pose & pose_);
 			  void computeConfigurationToPoint(const geometry_msgs::Pose & pose_, Real2D const& point_);
 			  bool notifyStatus();

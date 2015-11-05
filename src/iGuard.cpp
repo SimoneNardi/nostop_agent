@@ -21,12 +21,14 @@ using namespace std;
 	////////////////////////////////////////////////////
 	nostop_agent::GuardSensorCtrl iGuard::getCameraControl()
 	{
+	  Lock lock(m_mutex);
 	    return m_currentControl;
 	}
 	
 	////////////////////////////////////////////////////
 	void iGuard::setName(std::string const& name_)
 	{
+	  Lock lock(m_mutex);
 		iAgent::setName(name_);
 		
 		m_learningInit->setName(name_);
@@ -45,6 +47,7 @@ using namespace std;
 	//////////////////////////////////////////////////
 	void iGuard::setRobotAlgorithm(std::string alg_)
 	{
+	  Lock lock(m_mutex);
 		if (alg_=="PIPIP")
 		    m_algorithmFLAG = Robotics::GameTheory::PIPIP;
 		else if (alg_=="PARETO")
@@ -58,7 +61,18 @@ using namespace std;
 	////////////////////////////////////////////////////
 	void iGuard::setCameraCtrl(nostop_agent::GuardSensorCtrl l_ctrl)
 	{
+	  Lock lock(m_mutex);
 		m_currentControl = l_ctrl;
+	}
+	
+	////////////////////////////////////////////////////
+	void iGuard::setCameraCtrl(CameraPosition const& l_ctrl)
+	{
+	    Lock lock(m_mutex);
+		m_currentControl.fov = l_ctrl.getAngleOfView();
+		m_currentControl.heading = l_ctrl.getOrientation();
+		m_currentControl.max_radius = l_ctrl.getFarRadius();
+		m_currentControl.min_radius = l_ctrl.getNearRadius();
 	}
 
 	////////////////////////////////////////////////////
@@ -77,6 +91,10 @@ using namespace std;
 		
 		// first target position is determined by the localizer.
 		AgentPosition l_targetPos = m_LGuard->getCurrentPosition();
+		
+		CameraPosition l_cameraCtrl = l_targetPos.getCameraControl();
+		this->setCameraCtrl(l_cameraCtrl);
+		
 		//this->setTargetConfigurationToCenterOfSquare( Conversions::Real2D2Point( l_targetPos.getPoint2D() ) );
 		
 		SquarePtr l_square = l_space->getSquare(l_targetPos.getPoint2D());
@@ -104,17 +122,6 @@ using namespace std;
 	////////////////////////////////////////////////////
 	void iGuard::startLearning()
 	{
+	  Lock lock(m_mutex);
 	  m_learning->start();
-	}
-		  
-	////////////////////////////////////////////////////
-	// Perform next step
-	void iGuard::forwardOneStep()
-	{
-	  // go forward in the learninig algorithm:
-	  	  
-	  // Compute benefit:
-	  
-	  // Select next target configuration:
-	}
-	
+	}	

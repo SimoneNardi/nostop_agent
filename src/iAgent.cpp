@@ -164,12 +164,27 @@ using namespace std;
 	void iAgent::updateTargetConfiguration_callback( const std_msgs::Bool::ConstPtr msg_)
 	// Update target configuration:
 	{
-	  Lock lock(m_mutex);
-	  this->setActiveStatus();
-	  
 	  geometry_msgs::Point l_tgt_point = this->getTargetPoint();
-	  this->updateTargetConfiguration( l_tgt_point );
+	  this->updateTargetPoint(l_tgt_point);
+	}
+	
+	////////////////////////////////////////////////////
+	void iAgent::updateTargetPoint_callback( const geometry_msgs::Point::ConstPtr msg_)
+	{
+	  geometry_msgs::Point l_point;
+	  l_point.x = msg_->x;
+	  l_point.y = msg_->y;
+	  l_point.z = msg_->z;
+	  this->updateTargetPoint(l_point);
+	}
 	  
+	////////////////////////////////////////////////////
+	void iAgent::updateTargetPoint( geometry_msgs::Point const& point_)
+	{
+	  Lock lock(m_mutex);
+	  
+	  this->setActiveStatus();
+	  this->updateTargetConfiguration( point_ );
 	  this->m_motor_control_direction = -3;
 	}
 	
@@ -205,9 +220,9 @@ using namespace std;
 	  
 	  geometry_msgs::Twist l_twist;
 	  
-	  double kp1 = .5;
-	  double kp2 = -2.;
-	  double ki2 = .01;
+	  const double kp1 = .5;
+	  const double kp2 = -1.;
+	  const double ki2 = .01;
 	  
 	  double error_lin = ErrorLinear(pose_, point_);
 	  double error_ang = ErrorAngle(pose_, point_);
@@ -342,6 +357,10 @@ using namespace std;
 	    l_learning_name += "/update";
 	    m_subForward = m_node.subscribe<std_msgs::Bool::ConstPtr>(l_learning_name.c_str(), 1, &iAgent::updateTargetConfiguration_callback, this);
 	    
+	    std::string l_point_name = l_name;
+	    l_point_name += "/update/point";
+	    m_subTargetPoint = m_node.subscribe<geometry_msgs::Point::ConstPtr>(l_point_name.c_str(), 1, &iAgent::updateTargetPoint_callback, this);
+	    
 	    std::string l_localizer_name = l_name;
 	    l_localizer_name += "/localizer/pose";
 	    m_subLocalizer = m_node.subscribe<geometry_msgs::Pose::ConstPtr>(l_localizer_name.c_str(), 1, &iAgent::computeConfigurationToTarget_callback, this);
@@ -398,7 +417,7 @@ using namespace std;
 	}
 	
 	////////////////////////////////////////////////////
-	void iAgent::updateTargetConfiguration(geometry_msgs::Point & newTarget_)
+	void iAgent::updateTargetConfiguration(geometry_msgs::Point const& newTarget_)
 	{
 	  Lock lock(m_mutex);
 	  m_targetConfiguration.setPosition(newTarget_);

@@ -32,6 +32,10 @@ using namespace std;
 	{}
 	
 	////////////////////////////////////////////////////
+	Configuration::~Configuration()
+	{}
+	
+	////////////////////////////////////////////////////
 	Configuration::Configuration (nav_msgs::Odometry const& odom_)
 	{
 	  m_odom = odom_;

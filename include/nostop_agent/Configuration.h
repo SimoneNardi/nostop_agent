@@ -22,6 +22,7 @@ namespace Robotics
 						
 		public:
 		  Configuration();
+		  ~Configuration();
 		  Configuration (geometry_msgs::Pose const& pose_);
 		  Configuration (nav_msgs::Odometry const& odom_);
 		  Configuration (geometry_msgs::Point const& point_);

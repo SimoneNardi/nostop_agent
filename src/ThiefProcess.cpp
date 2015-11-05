@@ -1,13 +1,10 @@
 #include "ThiefProcess.h"
-#include "StateUpdater.h"
 #include "ThiefStatePublisher.h"
-#include "MotorControl.h"
+#include "iThief.h"
+
+#include "AgentProcess.h"
 
 #include "ros/ros.h"
-#include <sstream>
-
-#include "iThief.h"
-#include <memory>
 
 using namespace std;
 using namespace Robotics;
@@ -35,18 +32,7 @@ ThiefProcess::~ThiefProcess()
 {}
 
 //////////////////////////////////////////////////
-void ThiefProcess::setCamera(nostop_agent::GuardSensorCtrl & camera_)
-{
-  // TODO
-  std::shared_ptr<iThief> l_thief = std::static_pointer_cast<iThief>(m_agent);
-  if (l_thief)
-  {
-    
-  }
-}
-
-//////////////////////////////////////////////////
-bool ThiefProcess::isReady() const
+bool ThiefProcess::isReady()
 {
   return true;
 }

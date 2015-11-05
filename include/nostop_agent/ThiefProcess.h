@@ -23,7 +23,7 @@ namespace Robotics
 			
 			virtual void start();
 			
-			virtual bool isReady() const;
+			virtual bool isReady();
 		};
 
 	}

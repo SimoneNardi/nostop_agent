@@ -54,6 +54,8 @@ namespace Robotics
 		  
 		  void setCameraCtrl(nostop_agent::GuardSensorCtrl ctrl_);
 		  
+		  void setCameraCtrl(CameraPosition const& l_ctrl);
+		  
 		  void createLearningAlgorithm( );
 		  
 		  void setTargetConfigurationToCenterOfSquare(geometry_msgs::Point const& target_);
@@ -64,10 +66,7 @@ namespace Robotics
 		  
 		  /// Info From Monitor Sensor (Learning Benefit and Neighbours) and update learning
 		  void waitForNewsFromMonitor(ros::Time const& time_);
-		  
-		  /// Perform next step
-		  void forwardOneStep();
-		  
+		  		  
 		  /// Start Learning Algorithm
 		  void startLearning();
 			

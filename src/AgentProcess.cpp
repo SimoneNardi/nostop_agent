@@ -2,13 +2,19 @@
 
 #include "StateUpdater.h"
 #include "MotorControl.h"
-
-
 #include "iAgent.h"
 
 using namespace std;
 using namespace Robotics;
 using namespace Robotics::GameTheory;
+
+/////////////////////////////////////////////
+AgentProcess::AgentProcess() 
+{}
+
+/////////////////////////////////////////////
+AgentProcess::~AgentProcess()
+{}
 
 //////////////////////////////////////////////////
 void AgentProcess::setRobotName(std::string name_)
