@@ -97,9 +97,21 @@ set(guard_SOURCES
 )
 
 set(thief_SOURCES
-        src/Thief.cpp
+	src/AgentProcess.cpp
         src/AreaCreator.cpp
-        #Agent/ThiefInterface.cpp
+        src/Configuration.cpp
+        src/Conversions.cpp
+        src/iAgent.cpp
+        src/iLocalizer.cpp
+        src/iThief.cpp
+        src/LearningInitializer.cpp
+        src/MotorControl.cpp
+        src/StatePublisher.cpp
+        src/StateUpdater.cpp
+        src/WorldMap.cpp
+        src/Thief.cpp
+        src/ThiefProcess.cpp
+        src/ThiefStatePublisher.cpp
 )
 
 set(agent_SOURCES
@@ -113,12 +125,15 @@ set(agent_SOURCES
         src/iAgent.cpp
         src/iGuard.cpp
         src/iLocalizer.cpp
+        src/iThief.cpp
         src/LearningInitializer.cpp
         src/LearningProcess.cpp
         src/MonitorReceiver.cpp
         src/MotorControl.cpp
         src/StatePublisher.cpp
         src/StateUpdater.cpp
+        src/ThiefProcess.cpp
+        src/ThiefStatePublisher.cpp
         src/WorldMap.cpp
 )
 
