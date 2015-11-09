@@ -16,8 +16,10 @@ namespace Robotics
 	{
 		class ThiefProcess : public AgentProcess
 	  	{
+		  int m_id;
+		  
 		public:
-			ThiefProcess(std::string name_);
+			ThiefProcess(std::string const& name_, int id_);
 			
 			~ThiefProcess();
 			
