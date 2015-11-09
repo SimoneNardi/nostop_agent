@@ -53,7 +53,6 @@ void GuardProcess::setRobotAlgorithm(std::string alg_)
 //////////////////////////////////////////////////
 void GuardProcess::setCamera(nostop_agent::GuardSensorCtrl & camera_)
 {
-  // TODO
   std::shared_ptr<iGuard> l_guard = std::static_pointer_cast<iGuard>(m_agent);
   if (l_guard)
   {

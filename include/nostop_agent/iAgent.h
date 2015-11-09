@@ -45,18 +45,17 @@ namespace Robotics
 			ros::NodeHandle m_node;
 			ros::ServiceClient m_notifyStatus;
 			
+			ros::Publisher m_pubMotorControl;
 			ros::Subscriber m_subForward;
 			ros::Subscriber m_subTargetPoint;
 			ros::Subscriber m_subLocalizer;
-			ros::Publisher m_pubMotorControl;
+			ros::Subscriber m_subLaserScan;
+			sensor_msgs::LaserScan m_scan;
 			
 			double m_error_lin_cumulative;
 			double m_error_ang_cumulative;
 			
 			tf::TransformBroadcaster m_broadcaster;
-			
-			ros::Subscriber m_subLaserScan;
-			sensor_msgs::LaserScan m_scan;
 		public:
 			int m_motor_control_direction;
 		public:
@@ -121,13 +120,11 @@ namespace Robotics
 			
 			std::shared_ptr<iLocalizer> getLocalizer();
 			
-			/// Wrapper Agent:
-			
-			void setLearnAgent(std::shared_ptr<Agent> lAgent_);
-			
 			int getID();
 			
 			Agent::Status getStatus();
+			
+			void setTargetConfiguration(Configuration const& target_);
 			
 		protected:
 			  void goForward();

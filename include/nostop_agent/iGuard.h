@@ -42,7 +42,6 @@ namespace Robotics
 			LEARNING m_algorithmFLAG;
 			
 			nostop_agent::GuardSensorCtrl m_currentControl;
-			
 		public:
 			nostop_agent::GuardSensorCtrl getCameraControl();
 			

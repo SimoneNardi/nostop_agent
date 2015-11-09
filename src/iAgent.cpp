@@ -353,6 +353,10 @@ using namespace std;
 	    std::string l_name = "/";
 	    l_name += m_name;
 	    
+	    std::string l_motor_ctrl_name = name_;
+	    l_motor_ctrl_name += "/cmd_vel";
+	    m_pubMotorControl = m_node.advertise<geometry_msgs::Twist>(l_motor_ctrl_name.c_str(), 1);	    
+	    
 	    std::string l_learning_name = l_name;
 	    l_learning_name += "/update";
 	    m_subForward = m_node.subscribe<std_msgs::Bool::ConstPtr>(l_learning_name.c_str(), 1, &iAgent::updateTargetConfiguration_callback, this);
@@ -364,10 +368,6 @@ using namespace std;
 	    std::string l_localizer_name = l_name;
 	    l_localizer_name += "/localizer/pose";
 	    m_subLocalizer = m_node.subscribe<geometry_msgs::Pose::ConstPtr>(l_localizer_name.c_str(), 1, &iAgent::computeConfigurationToTarget_callback, this);
-	    
-	    std::string l_motor_ctrl_name = l_name;
-	    l_motor_ctrl_name += "/cmd_vel";
-	    m_pubMotorControl = m_node.advertise<geometry_msgs::Twist>(l_motor_ctrl_name.c_str(), 1);
 	    
 	    std::string l_laser_scan_name = l_name;
 	    l_laser_scan_name += "/laser_scan";
@@ -662,4 +662,11 @@ using namespace std;
 	void iAgent::MoveToNextPosition_LearningAgent()
 	{
 	  m_LAgent->moveToNextPosition();
+	}
+	
+	////////////////////////////////////////////////////	
+	void iAgent::setTargetConfiguration(Configuration const& target_)
+	{
+	  Lock lock(m_mutex);
+	  m_targetConfiguration = target_;
 	}

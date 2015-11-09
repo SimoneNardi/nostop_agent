@@ -29,10 +29,10 @@ using namespace std;
 	void iGuard::setName(std::string const& name_)
 	{
 	  Lock lock(m_mutex);
-		iAgent::setName(name_);
-		
-		m_learningInit->setName(name_);
-	  	m_learningInit->start();
+	  iAgent::setName(name_);
+	  
+	  m_learningInit->setName(name_);
+	  m_learningInit->start();
 	}
 	
 	////////////////////////////////////////////////////
@@ -107,7 +107,7 @@ using namespace std;
 	void iGuard::setTargetConfigurationToCenterOfSquare(geometry_msgs::Point const& target_)
 	{
 		Lock lock(m_mutex);
-		m_targetConfiguration = Configuration(target_);
+		this->setTargetConfiguration( Configuration(target_) );
 		m_LGuard->setNextPosition( Real2D(target_.x, target_.y) );
 	}
 	

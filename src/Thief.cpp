@@ -23,13 +23,18 @@ int main(int argc, char **argv)
 	else
 	{
 		ROS_ERROR("Failed to call service ThiefID");
-		return 1;
+		//return 1;
+		
+		l_srvID.response.id = 1;
 	}
 	
-	Robotics::GameTheory::ThiefProcess l_thief(l_name);
+	Robotics::GameTheory::ThiefProcess l_thief(l_name, l_srvID.response.id);
 	
 	l_thief.setSimulatorLocalizer();
 	ROS_INFO("Thief Simulator Localizer.");
+	
+	while (!l_thief.isReady())
+	  ros::spinOnce();
 	
 	l_thief.start();
 

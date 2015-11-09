@@ -35,6 +35,8 @@ namespace Robotics
 			~iThief() {};
 			
 			virtual void setName(std::string const& name_);
+			
+			void setThiefPtr(std::shared_ptr<Thief> lThief_);
 		};
 		
 		typedef std::shared_ptr<iThief> iThiefPtr;
