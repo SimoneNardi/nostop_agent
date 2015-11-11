@@ -43,8 +43,7 @@ namespace Robotics
 			mutable Mutex m_mutex;
 			
 			ros::NodeHandle m_node;
-			ros::ServiceClient m_notifyStatus;
-			
+						
 			ros::Publisher m_pubMotorControl;
 			ros::Subscriber m_subForward;
 			ros::Subscriber m_subTargetPoint;
@@ -144,8 +143,11 @@ namespace Robotics
 			  void updateTargetPoint( geometry_msgs::Point const& point_);
 			  void notifyPositionToTF(const geometry_msgs::Pose & pose_);
 			  void computeConfigurationToPoint(const geometry_msgs::Pose & pose_, Real2D const& point_);
-			  bool notifyStatus();
+			  virtual bool notifyStatus() = 0;
 			  bool isGoodDirection( double orientation, double tolerance, double min_range);
+			  
+			  void checkCollisonAvoidance(geometry_msgs::Twist & twist_, double tolerance_);
+			  
 		};
 		
 		typedef std::shared_ptr<iAgent> iAgentPtr;

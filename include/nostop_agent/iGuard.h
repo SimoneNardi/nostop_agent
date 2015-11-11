@@ -41,6 +41,8 @@ namespace Robotics
 			
 			LEARNING m_algorithmFLAG;
 			
+			ros::ServiceClient m_notifyStatus;
+			
 			nostop_agent::GuardSensorCtrl m_currentControl;
 		public:
 			nostop_agent::GuardSensorCtrl getCameraControl();
@@ -74,6 +76,8 @@ namespace Robotics
 			
 			~iGuard() {};
 			
+		protected: 
+			virtual bool notifyStatus();
 		};
 		
 		typedef std::shared_ptr<iGuard> iGuardPtr;

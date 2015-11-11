@@ -12,6 +12,8 @@
 
 #include "Box.h"
 
+#include "nostop_agent/PlayerNotifyStatus.h"
+
 #include "Conversions.h"
 
 using namespace Robotics;
@@ -116,6 +118,10 @@ using namespace std;
 	{
 	  	Lock lock(m_mutex);
 		m_LGuard = lGuard_;
+		
+		std::string  l_name = "/publisher/status";
+		m_notifyStatus = m_node.serviceClient<nostop_agent::PlayerNotifyStatus>(l_name.c_str());
+		
 		iAgent::setAgentPtr(m_LGuard);
 	}
 	
@@ -125,3 +131,27 @@ using namespace std;
 	  Lock lock(m_mutex);
 	  m_learning->start();
 	}	
+	
+	//////////////////////////////////////////////////
+	// send a broadcast message of unemployed agents
+	bool iGuard::notifyStatus()
+	{
+	  nostop_agent::PlayerNotifyStatus l_srv;
+	  l_srv.request.id = this->getID();
+	  l_srv.request.status = this->getStatus();
+	  
+	  if(!m_notifyStatus.exists())
+	    m_notifyStatus.waitForExistence();
+	  	  
+	  if ( !m_notifyStatus.exists() || !m_notifyStatus.call(l_srv) )
+	  {
+	      ROS_ERROR("Failed to call service Notify Status");
+	      return false;
+	  }
+	  else
+	  {
+	      ROS_DEBUG("Notify Status of Agent %d: Status %d", l_srv.request.id, l_srv.request.status);
+	  }
+
+	  return true;
+	}

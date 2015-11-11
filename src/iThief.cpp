@@ -27,3 +27,8 @@ void iThief::setThiefPtr(std::shared_ptr<Thief> lThief_)
   iAgent::setAgentPtr(m_LThief);
 }
 	
+////////////////////////////////////////////////////
+bool iThief::notifyStatus()
+{
+  return true;
+}

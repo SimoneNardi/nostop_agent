@@ -7,8 +7,6 @@
 #include "nav_msgs/Odometry.h"
 #include "sensor_msgs/LaserScan.h"
 
-#include "nostop_agent/PlayerNotifyStatus.h"
-
 #include "iLocalizer.h"
 
 #include "Math.h"
@@ -33,9 +31,6 @@ using namespace std;
 	{
 	  Lock lock(m_mutex);
 	  m_LAgent = agent_;
-	  
-	  std::string  l_name = "/publisher/status";
-  	  m_notifyStatus = m_node.serviceClient<nostop_agent::PlayerNotifyStatus>(l_name.c_str());
 	}
 	
 	////////////////////////////////////////////////////
@@ -102,30 +97,6 @@ using namespace std;
 	  this->notifyStatus();
 	}
 	
-	//////////////////////////////////////////////////
-	// send a broadcast message of unemployed agents
-	bool iAgent::notifyStatus()
-	{
-	  nostop_agent::PlayerNotifyStatus l_srv;
-	  l_srv.request.id = this->getID();
-	  l_srv.request.status = this->getStatus();
-	  
-	  if(!m_notifyStatus.exists())
-	    m_notifyStatus.waitForExistence();
-	  	  
-	  if ( !m_notifyStatus.exists() || !m_notifyStatus.call(l_srv) )
-	  {
-	      ROS_ERROR("Failed to call service Notify Status");
-	      return false;
-	  }
-	  else
-	  {
-	      ROS_DEBUG("Notify Status of Agent %d: Status %d", l_srv.request.id, l_srv.request.status);
-	  }
-
-	  return true;
-	}
-			
 	////////////////////////////////////////////////////
 	void iAgent::setActiveStatus()
 	{
@@ -241,20 +212,7 @@ using namespace std;
 	  l_twist.angular.x = 0;
 	  l_twist.angular.y = 0;
 	  l_twist.angular.z = kp2*sin(error_ang) + ki2*sin(m_error_ang_cumulative);
-	  
-	  tf::Quaternion q(pose_.orientation.x, pose_.orientation.y, pose_.orientation.z, pose_.orientation.w);    
-	  tf::Matrix3x3 m(q);
-	  double roll, pitch, yaw;
-	  m.getRPY(roll, pitch, yaw);
-	  
-	  if ( !this->isGoodDirection (yaw, 0.01, 0.3) )
-	  {
-	    ROS_INFO("Agent %s, Not good direction!\n", m_name.c_str());
-	    
-	    l_twist.linear.x = 0;
-	    l_twist.angular.z += 0.001;
-	  }
-	  
+	   
 	  // Saturazione sul twist comandato
 	  if(fabs(l_twist.linear.x) > MAX_TWIST_LINEAR)
 	  {
@@ -270,12 +228,44 @@ using namespace std;
 	    l_twist.angular.z = MAX_TWIST_ANGULAR* (l_twist.angular.z>0?1.:-1.);
 	  }
 	  
+	  this->checkCollisonAvoidance(l_twist, 0.08);
+	  
 	  if(m_motor_control_direction != -2)
 	    ROS_INFO("Agent %s is going to %.2f, %.2f\n", m_name.c_str(), point_[0], point_[1]);
 	  m_motor_control_direction=-2;
 	  
 	  m_currentConfiguration.setTwist(l_twist);
 	  m_pubMotorControl.publish(l_twist);
+	}
+	
+	////////////////////////////////////////////////////
+	void iAgent::checkCollisonAvoidance(geometry_msgs::Twist & twist_, double tolerance)
+	{
+	  Lock lock(m_mutex);
+	  
+	  const double k = 1.;
+	  
+	  if ( !(m_scan.header.seq > 0) )
+	    return ;
+	  
+	  size_t l_gsp_laser_beam_count = m_scan.ranges.size();
+	  int l_tolerance_index = floor( (tolerance / m_scan.angle_increment) + .5);
+	  
+	  double l_range = m_scan.range_max;
+	  int sign = 0;
+	  for(int i = -l_tolerance_index; i <= l_tolerance_index; ++i)
+	  {
+	    int l_index = (l_gsp_laser_beam_count+i) % l_gsp_laser_beam_count;
+	    
+	    if ( m_scan.ranges[ l_index ] < l_range)
+	    {
+	      l_range = m_scan.ranges[ l_index ];
+	      sign = i;
+	    }
+	  }
+	  
+	  twist_.angular.z += ((sign>0?1:-1) * (m_scan.range_max - l_range)) * MAX_TWIST_ANGULAR * k;
+	  //ROS_INFO("Correction %.3f!\n", m_scan.range_max - l_range );
 	}
 	
 	////////////////////////////////////////////////////
@@ -303,25 +293,14 @@ using namespace std;
 	  if ( !(m_scan.header.seq > 0) )
 	    return true;
 	  
-	  auto laser_frame_ = m_scan.header.frame_id;
-	  
 	  size_t l_gsp_laser_beam_count = m_scan.ranges.size();
-	  double l_angle_center = (m_scan.angle_min + m_scan.angle_max)/2;
-	  
-	  // Compute the angles of the laser from -x to x, basically symmetric and in increasing order
-	   std::vector<double> l_laser_angles_;
-	   l_laser_angles_.resize(l_gsp_laser_beam_count);
-	   
-	  // Make sure angles are started so that they are centered
-	  double l_theta = - std::fabs(m_scan.angle_min - m_scan.angle_max)/2;
-	  int l_index = (orientation_-m_scan.angle_min) / m_scan.angle_increment;
-	  
 	  int l_tolerance_index = floor( (tolerance / m_scan.angle_increment) + .5);
 	  
 	  for(int i = -l_tolerance_index; i <= l_tolerance_index; ++i)
 	  {
-	    double l_range = m_scan.ranges[ (l_gsp_laser_beam_count+i) % l_gsp_laser_beam_count ];
-	    if (m_scan.ranges[ (l_gsp_laser_beam_count+i) % l_gsp_laser_beam_count ] < min_range)
+	    int l_index = (l_gsp_laser_beam_count+i) % l_gsp_laser_beam_count;
+	    double l_range = m_scan.ranges[ l_index ];
+	    if (l_range < min_range)
 	      return false;
 	  }
 	  
