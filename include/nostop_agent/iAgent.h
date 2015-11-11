@@ -18,7 +18,7 @@
 #include <std_msgs/Bool.h>
 #include <sensor_msgs/LaserScan.h>
 
-#include <tf/transform_broadcaster.h>
+// #include <tf/transform_broadcaster.h>
 
 #include <memory>
 #include <string>
@@ -54,7 +54,7 @@ namespace Robotics
 			double m_error_lin_cumulative;
 			double m_error_ang_cumulative;
 			
-			tf::TransformBroadcaster m_broadcaster;
+// 			tf::TransformBroadcaster m_broadcaster;
 		public:
 			int m_motor_control_direction;
 		public:

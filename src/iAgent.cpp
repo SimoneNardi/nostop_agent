@@ -15,7 +15,7 @@
 #include "Conversions.h"
 #include "Configuration.h"
 
-#include <tf/tf.h>
+// #include <tf/tf.h>
 #include <boost/pointer_cast.hpp>
 
 using namespace Robotics;
@@ -110,11 +110,16 @@ using namespace std;
 	////////////////////////////////////////////////////
 	double ErrorAngle(geometry_msgs::Pose const& cur, Real2D ref)
 	{
-	    tf::Quaternion q(cur.orientation.x, cur.orientation.y, cur.orientation.z, cur.orientation.w);    
-	    tf::Matrix3x3 m(q);
-	    double roll, pitch, yaw;
-	    m.getRPY(roll, pitch, yaw);
-	      
+// 	    tf::Quaternion q(cur.orientation.x, cur.orientation.y, cur.orientation.z, cur.orientation.w);    
+// 	    tf::Matrix3x3 m(q);
+// 	    double roll, pitch, yaw;
+// 	    m.getRPY(roll, pitch, yaw);
+
+	    double roll  = atan2(2*cur.orientation.y*cur.orientation.w - 2*cur.orientation.x*cur.orientation.z, 1 - 2*cur.orientation.y*cur.orientation.y - 2*cur.orientation.z*cur.orientation.z);
+	    double pitch = atan2(2*cur.orientation.x*cur.orientation.w - 2*cur.orientation.y*cur.orientation.z, 1 - 2*cur.orientation.x*cur.orientation.x - 2*cur.orientation.z*cur.orientation.z);
+	    double yaw   = asin(2*cur.orientation.x*cur.orientation.y + 2*cur.orientation.z*cur.orientation.w);
+	  
+	    
 	    double Ex = ref[0] - cur.position.x;   //errore lungo x
 	    double Ey = ref[1] - cur.position.y;   //errore lungo y  
 	    double ref_theta = atan2(Ey, Ex);   //stima dell'angolo desiderato
@@ -162,15 +167,15 @@ using namespace std;
 	////////////////////////////////////////////////////
 	void iAgent::notifyPositionToTF(const geometry_msgs::Pose & pose_)
 	{
-	  /// Broadcast new position
-	  tf::Transform l_transform;
-	  l_transform.setOrigin( tf::Vector3(pose_.position.x, pose_.position.y, pose_.position.z) );
-	  
-	  // the incoming geometry_msgs::Quaternion is transformed to a tf::Quaterion
-	  tf::Quaternion l_orientation;
-	  tf::quaternionMsgToTF(pose_.orientation, l_orientation);
-	  l_transform.setRotation( l_orientation );
-	  m_broadcaster.sendTransform( tf::StampedTransform( l_transform, ros::Time::now(), "world", m_name.c_str() ) );
+// 	  /// Broadcast new position
+// 	  tf::Transform l_transform;
+// 	  l_transform.setOrigin( tf::Vector3(pose_.position.x, pose_.position.y, pose_.position.z) );
+// 	  
+// 	  // the incoming geometry_msgs::Quaternion is transformed to a tf::Quaterion
+// 	  tf::Quaternion l_orientation;
+// 	  tf::quaternionMsgToTF(pose_.orientation, l_orientation);
+// 	  l_transform.setRotation( l_orientation );
+// 	  m_broadcaster.sendTransform( tf::StampedTransform( l_transform, ros::Time::now(), "world", m_name.c_str() ) );
 	}
 	
 	////////////////////////////////////////////////////

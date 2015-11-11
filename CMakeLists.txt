@@ -14,7 +14,7 @@ else()
     message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
-find_package(catkin REQUIRED COMPONENTS roscpp std_msgs geometry_msgs nav_msgs message_generation base_math nostop_learning tf)
+find_package(catkin REQUIRED COMPONENTS roscpp std_msgs geometry_msgs nav_msgs message_generation base_math nostop_learning)
 
 ################################################
 ## Declare ROS messages, services and actions ##
