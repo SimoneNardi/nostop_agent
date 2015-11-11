@@ -31,7 +31,12 @@
     <param name="learning_name" value="$(optenv ROS_LEARNING_ALG DISL)" />
   </node>
   
-  <!--> Thief <!-->
-  <node pkg="nostop_agent" type="Thief" name="$(anon Thief)" required="true" output="screen" />
+ <node pkg="nostop_gazebo_sensor" type="nostop_gazebo_sensor_node" name="$(anon GazeboLocalizer_Thief)" required="true" output="screen">
+    <param name="robot_name" value="$(optenv ROS_ROBOT_NAME Thief)" />
+  </node>
+  
+  <node pkg="nostop_agent" type="Thief" name="$(anon Thief)" required="true" output="screen">
+  <param name="robot_name" value="$(optenv ROS_ROBOT_NAME Thief)" />
+  </node>
   
 </launch>
