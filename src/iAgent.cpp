@@ -112,18 +112,23 @@ using namespace std;
 	{
 // 	    tf::Quaternion q(cur.orientation.x, cur.orientation.y, cur.orientation.z, cur.orientation.w);    
 // 	    tf::Matrix3x3 m(q);
-// 	    double roll, pitch, yaw;
-// 	    m.getRPY(roll, pitch, yaw);
-
-	    double roll  = atan2(2*cur.orientation.y*cur.orientation.w - 2*cur.orientation.x*cur.orientation.z, 1 - 2*cur.orientation.y*cur.orientation.y - 2*cur.orientation.z*cur.orientation.z);
-	    double pitch = atan2(2*cur.orientation.x*cur.orientation.w - 2*cur.orientation.y*cur.orientation.z, 1 - 2*cur.orientation.x*cur.orientation.x - 2*cur.orientation.z*cur.orientation.z);
-	    double yaw   = asin(2*cur.orientation.x*cur.orientation.y + 2*cur.orientation.z*cur.orientation.w);
-	  
+// 	    double lroll, lpitch, lyaw;
+// 	    m.getRPY(lroll, lpitch, lyaw);
+// 	    
+// // 	    double roll  = atan2(2*cur.orientation.y*cur.orientation.w - 2*cur.orientation.x*cur.orientation.z, 1 - 2*cur.orientation.y*cur.orientation.y - 2*cur.orientation.z*cur.orientation.z);
+// // 	    double pitch = atan2(2*cur.orientation.x*cur.orientation.w - 2*cur.orientation.y*cur.orientation.z, 1 - 2*cur.orientation.x*cur.orientation.x - 2*cur.orientation.z*cur.orientation.z);
+// 	    double yaw   = asin(2*cur.orientation.x*cur.orientation.y + 2*cur.orientation.z*cur.orientation.w);
+// 	    
+// 	    double theta   = asin(2*cur.orientation.x*cur.orientation.z - 2*cur.orientation.w*cur.orientation.y);
+	    double phi   = atan2(2*cur.orientation.y*cur.orientation.x + 2*cur.orientation.w*cur.orientation.z, 1 - 2*cur.orientation.y*cur.orientation.y - 2*cur.orientation.z*cur.orientation.z);
+// 	    double psi   = atan2(2*cur.orientation.w*cur.orientation.x + 2*cur.orientation.y*cur.orientation.z, 1 - 2*cur.orientation.w*cur.orientation.w - 2*cur.orientation.z*cur.orientation.z);
+	    
+// 	    ROS_INFO("TF yaw: %.4f, Yaw: %.4f, Theta: %.4f, Phi: %.4f, Psi: %.4f", lyaw, yaw, theta, phi, psi);
 	    
 	    double Ex = ref[0] - cur.position.x;   //errore lungo x
 	    double Ey = ref[1] - cur.position.y;   //errore lungo y  
 	    double ref_theta = atan2(Ey, Ex);   //stima dell'angolo desiderato
-	    double Et = ref_theta-yaw;   //errore su theta
+	    double Et = ref_theta-phi;   //errore su theta
 	    return Et;
 	}
 

@@ -11,8 +11,6 @@
 
 #include <memory>
 
-#include <tf/transform_broadcaster.h>
-
 namespace Robotics 
 {
 	namespace GameTheory

@@ -8,7 +8,6 @@
 
 #include "geometry_msgs/Vector3.h"
 #include "geometry_msgs/Quaternion.h"
-#include "tf/transform_datatypes.h"
 
 using namespace std;
 using namespace Robotics;
