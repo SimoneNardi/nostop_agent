@@ -1,14 +1,10 @@
 <launch>
 
+  <!--> First Guard <!-->
   <include file="$(find dfrobot2wd_ros)/launch/dfrobot2wd_ros.launch">
     <param name="robot_name" value="$(optenv ROS_ROBOT_NAME red_blue)" />
   </include>
 
-  <!--> First Guard <!-->
-  <node pkg="nostop_gazebo_sensor" type="nostop_gazebo_sensor_node" name="$(anon GazeboLocalizer_red_blue)" required="true" output="screen">
-    <param name="robot_name" value="$(optenv ROS_ROBOT_NAME red_blue)" />
-  </node>
-  
   <node pkg="nostop_agent" type="Guard" name="$(anon Guard_red_blue)" required="true" output="screen">
     <param name="robot_name" value="$(optenv ROS_ROBOT_NAME red_blue)" />
     <param name="learning_name" value="$(optenv ROS_LEARNING_ALG DISL)" />
