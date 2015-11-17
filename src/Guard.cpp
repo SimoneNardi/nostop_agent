@@ -91,8 +91,12 @@ int main(int argc, char **argv)
       
       l_guard.setAreaForInitialization(l_area);
 
+      ros::Rate loop_rate(5);
       while (!l_guard.isReady())
+      {
 	ros::spinOnce();
+	loop_rate.sleep();
+      }
 	
       l_guard.createLearningAlgorithm();
 	
