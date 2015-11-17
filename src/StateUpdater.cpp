@@ -28,7 +28,6 @@ void StateUpdater::run()
 {
   ros::Rate loop_rate(10);
     
-  int count = 0;
   int standby_count = 0;
   while (ros::ok())
   {
@@ -62,7 +61,6 @@ void StateUpdater::run()
     ros::spinOnce();
 
     loop_rate.sleep();
-    ++count;
   }
 
 }

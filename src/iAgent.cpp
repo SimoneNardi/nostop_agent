@@ -104,9 +104,6 @@ using namespace std;
 	  this->notifyStatus();
 	}
 	
-	const double MAX_TWIST_LINEAR = 0.7;
-	const double MAX_TWIST_ANGULAR = 2;
-	
 	////////////////////////////////////////////////////
 	double ErrorAngle(geometry_msgs::Pose const& cur, Real2D ref)
 	{
@@ -114,16 +111,8 @@ using namespace std;
 // 	    tf::Matrix3x3 m(q);
 // 	    double lroll, lpitch, lyaw;
 // 	    m.getRPY(lroll, lpitch, lyaw);
-// 	    
-// // 	    double roll  = atan2(2*cur.orientation.y*cur.orientation.w - 2*cur.orientation.x*cur.orientation.z, 1 - 2*cur.orientation.y*cur.orientation.y - 2*cur.orientation.z*cur.orientation.z);
-// // 	    double pitch = atan2(2*cur.orientation.x*cur.orientation.w - 2*cur.orientation.y*cur.orientation.z, 1 - 2*cur.orientation.x*cur.orientation.x - 2*cur.orientation.z*cur.orientation.z);
-// 	    double yaw   = asin(2*cur.orientation.x*cur.orientation.y + 2*cur.orientation.z*cur.orientation.w);
-// 	    
-// 	    double theta   = asin(2*cur.orientation.x*cur.orientation.z - 2*cur.orientation.w*cur.orientation.y);
+
 	    double phi   = atan2(2*cur.orientation.y*cur.orientation.x + 2*cur.orientation.w*cur.orientation.z, 1 - 2*cur.orientation.y*cur.orientation.y - 2*cur.orientation.z*cur.orientation.z);
-// 	    double psi   = atan2(2*cur.orientation.w*cur.orientation.x + 2*cur.orientation.y*cur.orientation.z, 1 - 2*cur.orientation.w*cur.orientation.w - 2*cur.orientation.z*cur.orientation.z);
-	    
-// 	    ROS_INFO("TF yaw: %.4f, Yaw: %.4f, Theta: %.4f, Phi: %.4f, Psi: %.4f", lyaw, yaw, theta, phi, psi);
 	    
 	    double Ex = ref[0] - cur.position.x;   //errore lungo x
 	    double Ey = ref[1] - cur.position.y;   //errore lungo y  
@@ -183,6 +172,9 @@ using namespace std;
 // 	  m_broadcaster.sendTransform( tf::StampedTransform( l_transform, ros::Time::now(), "world", m_name.c_str() ) );
 	}
 	
+	const double MAX_TWIST_LINEAR = 0.7;
+	const double MAX_TWIST_ANGULAR = 2;
+	
 	////////////////////////////////////////////////////
 	void iAgent::computeConfigurationToPoint(const geometry_msgs::Pose & pose_, Real2D const& point_)
 	{
@@ -208,8 +200,8 @@ using namespace std;
 	  double error_lin = ErrorLinear(pose_, point_);
 	  double error_ang = ErrorAngle(pose_, point_);
 	  
-	  //m_error_lin_cumulative += error_lin;
-	  //m_error_ang_cumulative += error_ang;
+	  m_error_lin_cumulative += error_lin;
+	  m_error_ang_cumulative += error_ang;
 	  
 	  if(fabs(error_lin) < 0.5 && fabs(error_ang) > .1)
 	    l_twist.linear.x = 0;

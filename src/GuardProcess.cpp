@@ -86,26 +86,26 @@ bool GuardProcess::isReady()
       CameraPosition l_cameraPos( l_learning->getSpace()->getDistance() / 10. );
       AgentPosition l_agentPos (l_point, l_cameraPos);
       
-      std::shared_ptr<Guard> l_LGuard = std::make_shared<Guard>(1, l_id, l_agentPos, 1, 2);
+     std::shared_ptr<Guard> l_LGuard = std::make_shared<Guard>(1, l_id, l_agentPos, 1, 2);
       
       l_guard->setGuardPtr(l_LGuard);
       return true;
   } 
-//   else if(!l_learning_is_ready)
-//   {
-//     if(!l_position_is_ready)
-//     {
-//       ROS_INFO("Not Learning and NOT position received!");
-//     }
-//     else
-//     {
-//       ROS_INFO("Not Learning received!");
-//     }
-//   }
-//   else if(!l_position_is_ready)
-//   {
-//     ROS_INFO("NOT position received!");
-//   } 
+   else if(!l_learning_is_ready)
+  {
+    if(!l_position_is_ready)
+    {
+      ROS_DEBUG("Not Learning and NOT position received!");
+    }
+    else
+    {
+      ROS_DEBUG("Not Learning received!");
+    }
+  }
+  else if(!l_position_is_ready)
+  {
+    ROS_DEBUG("NOT position received!");
+  } 
   
   return false;
 }
