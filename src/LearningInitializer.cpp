@@ -29,7 +29,7 @@ using namespace Robotics::GameTheory;
   ///////////////////////////////////////////////
   void LearningInitializer::run()
   {
-    ros::Rate loop_rate(1);
+    ros::Rate loop_rate(5);
     
     ROS_INFO("Waiting for Monitor Simulator.");
     
