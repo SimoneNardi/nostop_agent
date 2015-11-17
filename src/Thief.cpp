@@ -22,7 +22,7 @@ int main(int argc, char **argv)
 	}
 	else
 	{
-		ROS_ERROR("Failed to call service ThiefID");
+		ROS_ERROR("Failed to call service Thief ID");
 		//return 1;
 		
 		l_srvID.response.id = 1;

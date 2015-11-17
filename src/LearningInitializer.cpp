@@ -48,6 +48,10 @@ using namespace Robotics::GameTheory;
 	      Lock l_lock(m_mutex);
 	      m_id = (long int)l_srvID.response.id;
       }
+      else
+      {
+	ROS_ERROR("Failed to call service Guard ID");
+      }
       
       ros::spinOnce();
 
