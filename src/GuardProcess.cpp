@@ -90,7 +90,22 @@ bool GuardProcess::isReady()
       
       l_guard->setGuardPtr(l_LGuard);
       return true;
+  } 
+  else if(!l_learning_is_ready)
+  {
+    if(!l_position_is_ready)
+    {
+      ROS_INFO("Not Learning and NOT position received!");
+    }
+    else
+    {
+      ROS_INFO("Not Learning received!");
+    }
   }
+  else if(!l_position_is_ready)
+  {
+    ROS_INFO("NOT position received!");
+  } 
   
   return false;
 }
