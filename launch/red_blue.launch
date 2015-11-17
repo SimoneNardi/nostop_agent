@@ -1,9 +1,9 @@
 <launch>
 
   <!--> First Guard <!-->
-  <include file="$(find dfrobot2wd_ros)/launch/dfrobot2wd_ros.launch">
+  <node pkg="dfrobot_2wd" type="dfrobot_2wd_node" name="$(anon dfrobot_2wd_node_red_blue)" required="true" output="screen">
     <param name="robot_name" value="$(optenv ROS_ROBOT_NAME red_blue)" />
-  </include>
+  </node>
 
   <node pkg="nostop_agent" type="Guard" name="$(anon Guard_red_blue)" required="true" output="screen">
     <param name="robot_name" value="$(optenv ROS_ROBOT_NAME red_blue)" />
