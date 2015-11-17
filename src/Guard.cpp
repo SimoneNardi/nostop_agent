@@ -90,6 +90,7 @@ int main(int argc, char **argv)
       }
       
       l_guard.setAreaForInitialization(l_area);
+      ROS_INFO("Area Assigned!");
 
       ros::Rate loop_rate(5);
       while (!l_guard.isReady())
@@ -98,8 +99,10 @@ int main(int argc, char **argv)
 	loop_rate.sleep();
       }
 	
+      ROS_INFO("Guard Ready!");
       l_guard.createLearningAlgorithm();
 	
+      ROS_INFO("Guard Started!");
       l_guard.start();
       
       /////////////////////////////////////////////////

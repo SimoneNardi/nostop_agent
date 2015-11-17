@@ -95,16 +95,16 @@ bool GuardProcess::isReady()
   {
     if(!l_position_is_ready)
     {
-      ROS_DEBUG("Not Learning and NOT position received!");
+      ROS_DEBUG("No Learning and No Position received!");
     }
     else
     {
-      ROS_DEBUG("Not Learning received!");
+      ROS_DEBUG("No Learning received!");
     }
   }
   else if(!l_position_is_ready)
   {
-    ROS_DEBUG("NOT position received!");
+    ROS_DEBUG("No Position received!");
   } 
   
   return false;
