@@ -71,7 +71,7 @@ void GuardNeighbours::UpdateNeighboursCallBack(const nav_msgs::OccupancyGrid::Co
 	m_time = msg->info.map_load_time;
 	m_data->update(msg->data);
 	
-	plot("/home/simone/debug/test_neighbours.tga", msg);
+	//plot("/home/simone/debug/test_neighbours.tga", msg);
 	
 	this->setNew();
 	// notify new data
