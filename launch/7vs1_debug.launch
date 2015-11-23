@@ -67,12 +67,12 @@
   
   
   
-  <node pkg="nostop_gazebo_sensor" type="nostop_gazebo_sensor_node" name="$(anon GazeboLocalizer_Thief)" required="true" output="screen">
-    <param name="robot_name" value="$(optenv ROS_ROBOT_NAME Thief)" />
+  <node pkg="nostop_gazebo_sensor" type="nostop_gazebo_sensor_node" name="$(anon GazeboLocalizer_thief)" required="true" output="screen">
+    <param name="robot_name" value="$(optenv ROS_ROBOT_NAME thief)" />
   </node>
   
-  <node pkg="nostop_agent" type="Thief" name="$(anon Thief)" required="true" output="screen">
-  <param name="robot_name" value="$(optenv ROS_ROBOT_NAME Thief)" />
+  <node pkg="nostop_agent" type="Thief" name="$(anon thief)" required="true" output="screen">
+  <param name="robot_name" value="$(optenv ROS_ROBOT_NAME thief)" />
   </node>
   
 </launch>
