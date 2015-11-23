@@ -92,6 +92,17 @@ using namespace std;
 	  return m_updated;
 	}
 	
+	iLocalizer::iLocalizer(std::string name_) 
+	: m_initialized(false)
+	, m_updated(false) 
+	{
+	  std::string l_agentname = "/";
+	  l_agentname = "/";
+	  l_agentname += name_;
+	  l_agentname += "/localizer/pose";
+	  m_pub_name = l_agentname; 
+	};
+	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -104,11 +115,6 @@ using namespace std;
 	  l_agentname += name_;
 	  l_agentname += "/localizer/gazebo/pose";
 	  m_sub_name = l_agentname;
-	  
-	  l_agentname = "/";
-	  l_agentname += name_;
-	  l_agentname += "/localizer/pose";
-	  m_pub_name = l_agentname;
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -124,11 +130,7 @@ using namespace std;
 	  l_agentname += "/localizer/kinect/pose";
 	  m_sub_name = l_agentname;	  
 	  
-	  l_agentname = "/";
-	  l_agentname += name_;
-	  l_agentname += "/localizer/pose";
-	  m_pub_name = l_agentname;
-	 
+	  // Add robot to sensor localizer
 	  ros::Publisher l_pub = m_node.advertise<geometry_msgs::Pose>("/localizer/kinect/add_robot", 1);
 	  nostop_agent::Id_robot l_msg;
 	  l_msg.name = name_;
