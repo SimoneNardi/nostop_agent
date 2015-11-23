@@ -9,7 +9,7 @@ int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "Thief"); 
 	
-	std::string l_name = "Thief";
+	std::string l_name = "thief";
 	
 	// get the ID from Simulator:
 	ros::NodeHandle l_nodeID;
