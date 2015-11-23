@@ -40,7 +40,7 @@ namespace Robotics
 		  mutable bool m_updated;
 
 		public:
-			iLocalizer(std::string name_) : m_initialized(false), m_updated(false) {};
+			iLocalizer(std::string name_);
 			
 			~iLocalizer() {};
 			
