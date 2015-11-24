@@ -174,6 +174,7 @@ using namespace std;
 	
 	const double MAX_TWIST_LINEAR = 0.7;
 	const double MAX_TWIST_ANGULAR = 2;
+	const double CONE_FREE_FOV = .1;
 	
 	////////////////////////////////////////////////////
 	void iAgent::computeConfigurationToPoint(const geometry_msgs::Pose & pose_, Real2D const& point_)
@@ -194,27 +195,28 @@ using namespace std;
 	  geometry_msgs::Twist l_twist;
 	  
 	  const double kp1 = .5;
+	  const double ki1 = .01;
 	  const double kp2 = -1.;
 	  const double ki2 = .01;
 	  
 	  double error_lin = ErrorLinear(pose_, point_);
 	  double error_ang = ErrorAngle(pose_, point_);
-	  
-	  m_error_lin_cumulative += error_lin;
-	  m_error_ang_cumulative += error_ang;
-	  
+	  	  	  
 	  if(fabs(error_lin) < 0.5 && fabs(error_ang) > .1)
 	    l_twist.linear.x = 0;
 	  else
-	    l_twist.linear.x = kp1*error_lin;
+	    l_twist.linear.x = kp1*error_lin + ki1 * m_error_lin_cumulative - kp1 * sin(error_ang);
 	  
 	  l_twist.linear.y = 0;
 	  l_twist.linear.z = 0;
 	  
 	  l_twist.angular.x = 0;
 	  l_twist.angular.y = 0;
-	  l_twist.angular.z = kp2*sin(error_ang) + ki2*sin(m_error_ang_cumulative);
-	   
+	  l_twist.angular.z = kp2*sin(error_ang) + ki2 * sin(m_error_ang_cumulative);
+	  
+	  m_error_lin_cumulative += error_lin;
+	  m_error_ang_cumulative += error_ang;
+	  
 	  // Saturazione sul twist comandato
 	  if(fabs(l_twist.linear.x) > MAX_TWIST_LINEAR)
 	  {
@@ -230,7 +232,7 @@ using namespace std;
 	    l_twist.angular.z = MAX_TWIST_ANGULAR* (l_twist.angular.z>0?1.:-1.);
 	  }
 	  
-	  this->checkCollisonAvoidance(l_twist, 0.08);
+	  this->checkCollisonAvoidance(l_twist, CONE_FREE_FOV);
 	  
 	  if(m_motor_control_direction != -2)
 	    ROS_INFO("Agent %s is going to %.2f, %.2f\n", m_name.c_str(), point_[0], point_[1]);
@@ -266,7 +268,8 @@ using namespace std;
 	    }
 	  }
 	  
-	  twist_.angular.z += ((sign>0?1:-1) * (m_scan.range_max - l_range)) * MAX_TWIST_ANGULAR * k;
+	  double l_correction = ( (sign>0?1:-1) * (m_scan.range_max - l_range) ) * MAX_TWIST_ANGULAR * k;
+	  twist_.angular.z += l_correction;
 	  //ROS_INFO("Correction %.3f!\n", m_scan.range_max - l_range );
 	}
 	
