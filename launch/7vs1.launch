@@ -69,8 +69,7 @@
     <param name="robot_name" value="$(optenv ROS_ROBOT_NAME topolino)" />
     <param name="learning_name" value="$(optenv ROS_LEARNING_ALG DISL)" />
   </node>
-  
-  
+    
   
   <node pkg="nostop_gazebo_sensor" type="nostop_gazebo_sensor_node" name="$(anon GazeboLocalizer_thief)" required="true" output="screen">
     <param name="robot_name" value="$(optenv ROS_ROBOT_NAME thief)" />
