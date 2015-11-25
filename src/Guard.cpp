@@ -1,9 +1,11 @@
 #include "ros/ros.h"
+
 #include "nostop_agent/GuardBenefitData.h"
 #include "nostop_agent/GuardNeighboursData.h"
 #include "nostop_agent/PlayerIDData.h"
 #include "nostop_agent/PlayerConfigurationData.h"
-#include "nostop_agent/AreaData.h"
+
+#include "nostop_area/AreaData.h"
 
 #include "Real2D.h"
 
@@ -72,8 +74,8 @@ int main(int argc, char **argv)
       Robotics::GameTheory::AreaPtr l_area = nullptr;
       
       ros::NodeHandle l_nodeArea;
-      ros::ServiceClient l_clientArea = l_nodeArea.serviceClient<nostop_agent::AreaData>("AreaInitializer");
-      nostop_agent::AreaData l_srvArea;
+      ros::ServiceClient l_clientArea = l_nodeArea.serviceClient<nostop_area::AreaData>("AreaInitializer");
+      nostop_area::AreaData l_srvArea;
       if (l_clientArea.call(l_srvArea))
       {
 	      ROS_INFO("Area description received");

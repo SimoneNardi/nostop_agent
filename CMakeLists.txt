@@ -14,7 +14,7 @@ else()
     message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
-find_package(catkin REQUIRED COMPONENTS roscpp std_msgs geometry_msgs nav_msgs message_generation base_math nostop_learning)
+find_package(catkin REQUIRED COMPONENTS roscpp std_msgs geometry_msgs nav_msgs message_generation base_math nostop_learning nostop_area)
 
 ################################################
 ## Declare ROS messages, services and actions ##
@@ -26,7 +26,6 @@ find_package(catkin REQUIRED COMPONENTS roscpp std_msgs geometry_msgs nav_msgs m
    GuardSensorCtrl.msg
    GuardState.msg
    ThiefState.msg
-   Shape.msg
    Id_robot.msg
  )
 
@@ -34,7 +33,6 @@ find_package(catkin REQUIRED COMPONENTS roscpp std_msgs geometry_msgs nav_msgs m
  add_service_files(
    FILES
    PlayerIDData.srv
-   AreaData.srv
    GuardBenefitData.srv
    GuardNeighboursData.srv
    PlayerConfigurationData.srv
@@ -62,7 +60,7 @@ find_package(catkin REQUIRED COMPONENTS roscpp std_msgs geometry_msgs nav_msgs m
 catkin_package(
   INCLUDE_DIRS include include/${PROJECT_NAME}/
   LIBRARIES ${PROJECT_NAME}
-  DEPENDS base_math nostop_learning
+  DEPENDS base_math nostop_learning nostop_area
 )
 
 ###########
@@ -138,16 +136,16 @@ set(agent_SOURCES
 )
 
 add_executable(Guard ${guard_SOURCES})
-target_link_libraries(Guard ${catkin_LIBRARIES} nostop_learning base_math lemon)
+target_link_libraries(Guard ${catkin_LIBRARIES} nostop_learning base_math lemon nostop_area)
 add_dependencies(Guard ${PROJECT_NAME}_gencpp)
 
 add_executable(Thief ${thief_SOURCES})
-target_link_libraries(Thief ${catkin_LIBRARIES} nostop_learning base_math lemon)
+target_link_libraries(Thief ${catkin_LIBRARIES} nostop_learning base_math lemon nostop_area)
 add_dependencies(Thief ${PROJECT_NAME}_gencpp)
 
 add_library(${PROJECT_NAME} SHARED ${agent_SOURCES})
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} nostop_learning base_math lemon)
-add_dependencies(${PROJECT_NAME} nostop_agent_gencpp nostop_learning base_math lemon)
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} nostop_learning base_math lemon nostop_area)
+add_dependencies(${PROJECT_NAME} nostop_agent_gencpp nostop_learning base_math lemon nostop_area)
 
 #############
 ## Install ##

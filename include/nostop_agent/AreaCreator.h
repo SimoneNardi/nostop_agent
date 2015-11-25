@@ -9,7 +9,7 @@
 
 #include "area.h"
 
-#include <nostop_agent/Shape.h>
+#include <nostop_area/Shape.h>
 
 #include <vector>
 
@@ -25,7 +25,7 @@ namespace Robotics
 		public:
 			AreaCreator();
 			
-			AreaCreator(nostop_agent::Shape external_, std::vector<nostop_agent::Shape> internal_);
+			AreaCreator(nostop_area::Shape external_, std::vector<nostop_area::Shape> internal_);
 
 		public:      
 			AreaPtr getArea() const;
