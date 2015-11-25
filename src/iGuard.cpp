@@ -82,8 +82,10 @@ using namespace std;
 	{
 		AreaPtr l_area = m_learningInit->getSpace();
 		std::shared_ptr<DiscretizedArea> l_space = l_area->discretize();
-	
+		
 		Lock lock(m_mutex);
+		m_square_side = (l_space->getXStep() + l_space->getYStep()) /2;
+		
 		std::set< std::shared_ptr<Agent> > l_agents; 
 		l_agents.insert(m_LGuard);
 				

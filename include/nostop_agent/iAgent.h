@@ -54,14 +54,14 @@ namespace Robotics
 			double m_error_lin_cumulative;
 			double m_error_ang_cumulative;
 			
+			double m_square_side;
+			
 // 			tf::TransformBroadcaster m_broadcaster;
 		public:
 			int m_motor_control_direction;
 		public:
 		  		
-			void computeConfigurationToTarget();
-		  
-		  	void updateTargetConfiguration(geometry_msgs::Point const& newTarget_);
+			void updateTargetConfiguration(geometry_msgs::Point const& newTarget_);
 			
 			void setCurrentConfiguration( Configuration & config_ );
 			
@@ -91,7 +91,7 @@ namespace Robotics
 			void MoveToNextPosition_LearningAgent();
 			
 		public:
-			iAgent() : m_localizer(nullptr), m_LAgent(nullptr), m_motor_control_direction(-3), m_error_lin_cumulative(0), m_error_ang_cumulative(0) {};
+			iAgent() : m_localizer(nullptr), m_LAgent(nullptr), m_motor_control_direction(-3), m_error_lin_cumulative(0), m_error_ang_cumulative(0), m_square_side(1) {};
 			
 			~iAgent() {};
 		

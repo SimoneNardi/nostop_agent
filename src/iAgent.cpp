@@ -179,7 +179,7 @@ using namespace std;
 	////////////////////////////////////////////////////
 	void iAgent::computeConfigurationToPoint(const geometry_msgs::Pose & pose_, Real2D const& point_)
 	{
-	  double l_arrived_tolerance = m_motor_control_direction  != -1 ? 0.1 : 0.5;
+	  double l_arrived_tolerance = m_motor_control_direction  != -1 ? .1*m_square_side : .5*m_square_side;
 	  if( this->isArrived(l_arrived_tolerance) )
 	  {
 	      m_error_ang_cumulative = 0;
@@ -202,7 +202,7 @@ using namespace std;
 	  double error_lin = ErrorLinear(pose_, point_);
 	  double error_ang = ErrorAngle(pose_, point_);
 	  	  	  
-	  if(fabs(error_lin) < 0.5 && fabs(error_ang) > .1)
+	  if(fabs(error_lin) < .5*m_square_side && fabs(error_ang) > .1)
 	    l_twist.linear.x = 0;
 	  else
 	    l_twist.linear.x = kp1*error_lin + ki1 * m_error_lin_cumulative - kp1 * sin(error_ang);
@@ -406,115 +406,7 @@ using namespace std;
 	  Lock lock(m_mutex);
 	  m_targetConfiguration.setPosition(newTarget_);
 	}
-	
-	////////////////////////////////////////////////////
-	void iAgent::computeConfigurationToTarget()
-	{
-	  Lock lock(m_mutex);
-	  Real2D l_current = Conversions::Point2Real2D( m_currentConfiguration.getPosition() );
-	  Real2D l_target = Conversions::Point2Real2D( m_targetConfiguration.getPosition() );
-	  
-	  Real2D l_delta = l_target-l_current;
-	  
-	  if( l_delta.mod() < 0.3 )
-	  {
-	    if (m_motor_control_direction  != -1)
-	      ROS_INFO("Stop Moving!\nTarget %.2f, %.2f reached!\n", l_target[0], l_target[1]);
-	    this->stop();
-	    m_motor_control_direction  = -1;
-	    return;
-	  }
-	  
-// 	  double l_phi = Math::polarPhi2D(l_delta);
-// 	  
-// 	  auto l_quat_orient = m_currentConfiguration.getOrientation();
-// 	  
-// 	  double roll  = atan2(2*l_quat_orient.y*l_quat_orient.w - 2*l_quat_orient.x*l_quat_orient.z, 1 - 2*l_quat_orient.y*l_quat_orient.y - 2*l_quat_orient.z*l_quat_orient.z);
-// 	  double pitch = atan2(2*l_quat_orient.x*l_quat_orient.w - 2*l_quat_orient.y*l_quat_orient.z, 1 - 2*l_quat_orient.x*l_quat_orient.x - 2*l_quat_orient.z*l_quat_orient.z);
-// 	  double yaw   = asin(2*l_quat_orient.x*l_quat_orient.y + 2*l_quat_orient.z*l_quat_orient.w);
-// 	  
-// 	  double rho = l_delta.mod();
-// 	  double phi = atan(l_delta[1]/l_delta[0]) + Math::Pi;
-// 	  double alpha = phi - yaw;
-// 	  
-// 	  double k1 = 1., k2 = 1.;
-// 	  double lambda2 = .5;
-// 	  
-// 	  double w = k1 * cos(alpha);
-// 	  double omega = k1 * sin(alpha) / alpha * cos( alpha*alpha + alpha*phi * lambda2 ) + k2 * alpha;
-	  	  
-	  geometry_msgs::Twist l_twist;
-	  
-	  double kp1 = -.5;
-	  double kp2 = 1.;
-	  
-	  geometry_msgs::Pose l_current_pose = m_currentConfiguration.getPose();
-	  double error_lin = ErrorLinear(l_current_pose, l_target);
-	  double error_ang = ErrorAngle(l_current_pose, l_target);
-	  
-	  l_twist.linear.x = kp1*error_lin; 
-	  l_twist.linear.y = 0;
-	  l_twist.linear.z = 0;
-	  
-	  l_twist.angular.x = 0;
-	  l_twist.angular.y = 0;
-	  l_twist.angular.z = kp2*sin(error_ang);
-	  
-	  // Saturazione sul twist comandato
-	  if(fabs(l_twist.linear.x) > MAX_TWIST_LINEAR)
-	      l_twist.linear.x = MAX_TWIST_LINEAR * (l_twist.linear.x>0?1.:-1.);
-	      
-	  if(fabs(l_twist.angular.z) > MAX_TWIST_ANGULAR)
-	      l_twist.angular.z = MAX_TWIST_ANGULAR* (l_twist.angular.z>0?1.:-1.);
-	  
-	  if(m_motor_control_direction != -2)
-	    ROS_INFO("Go to %.2f, %.2f\n", l_target[0], l_target[1]);
-	  m_motor_control_direction=-2;
-	  
-	  m_currentConfiguration.setTwist(l_twist);
-	  return;
-	  
-// 	  double l_tolerance = 0.1;//100.*Math::TOLERANCE;
-// 	  if ( fabs(l_phi-yaw) < l_tolerance || fabs(l_phi-yaw-Math::Pi) < l_tolerance)
-// 	    // movimento lineare:
-// 	  {
-// 	    if(fabs(l_phi-yaw) > l_tolerance)
-// 	    {
-// 	      if (m_motor_control_direction != 0)
-// 		ROS_INFO("Go Backward!\nGo to %.2f, %.2f\n", l_target[0], l_target[1]);
-// 	      this->goBackward();
-// 	      m_motor_control_direction  = 0;
-// 	    }
-// 	    else
-// 	    {
-// 	      if (m_motor_control_direction  != 1)
-// 		ROS_INFO("Go Forward!\nGo to %.2f, %.2f\n", l_target[0], l_target[1]);
-// 	      this->goForward();
-// 	      m_motor_control_direction  = 1;
-// 	    }
-// 	  
-// 	  }
-// 	  else
-// 	    // allineamento degli heading:
-// 	  {
-// 	    if (l_phi-yaw>0)
-// 	    {
-// 	      if (m_motor_control_direction  != 2)
-// 		ROS_INFO("Rotate left!\nGo to %.2f, %.2f\n", l_target[0], l_target[1]);
-// 	      this->rotateLeft();
-// 	      m_motor_control_direction  = 2;
-// 	    }
-// 	    else
-// 	    {
-// 	      if (m_motor_control_direction  != 3)
-// 		ROS_INFO("Rotate right!\nGo to %.2f, %.2f\n", l_target[0], l_target[1]);
-// 	      this->rotateRight();
-// 	      m_motor_control_direction  = 3;
-// 	    }
-// 	  }
-	  return;
-	}
-	
+
 	////////////////////////////////////////////////////
 	int iAgent::getID()
 	{
