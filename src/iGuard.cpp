@@ -85,6 +85,7 @@ using namespace std;
 		
 		Lock lock(m_mutex);
 		m_square_side = (l_space->getXStep() + l_space->getYStep()) /2;
+		ROS_INFO("Square side is %lf", m_square_side);
 		
 		std::set< std::shared_ptr<Agent> > l_agents; 
 		l_agents.insert(m_LGuard);

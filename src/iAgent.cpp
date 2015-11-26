@@ -172,7 +172,7 @@ using namespace std;
 // 	  m_broadcaster.sendTransform( tf::StampedTransform( l_transform, ros::Time::now(), "world", m_name.c_str() ) );
 	}
 	
-	const double MAX_TWIST_LINEAR = 0.7;
+	const double MAX_TWIST_LINEAR = 0.3;
 	const double MAX_TWIST_ANGULAR = 2;
 	const double CONE_FREE_FOV = .1;
 	
@@ -243,6 +243,15 @@ using namespace std;
 	}
 	
 	////////////////////////////////////////////////////
+	double minimum(double first, double second)
+	{
+	  if (first< second)
+	    return first;
+	  else
+	    return second;
+	}
+	
+	////////////////////////////////////////////////////
 	void iAgent::checkCollisonAvoidance(geometry_msgs::Twist & twist_, double tolerance)
 	{
 	  Lock lock(m_mutex);
@@ -255,22 +264,33 @@ using namespace std;
 	  size_t l_gsp_laser_beam_count = m_scan.ranges.size();
 	  int l_tolerance_index = floor( (tolerance / m_scan.angle_increment) + .5);
 	  
-	  double l_range = m_scan.range_max;
+	  double l_range_angular = m_scan.range_max;
+	  double l_range_linear = m_scan.range_max;
 	  int sign = 0;
 	  for(int i = -l_tolerance_index; i <= l_tolerance_index; ++i)
 	  {
 	    int l_index = (l_gsp_laser_beam_count+i) % l_gsp_laser_beam_count;
 	    
-	    if ( m_scan.ranges[ l_index ] < l_range)
+	    if ( m_scan.ranges[ l_index ] < minimum(m_square_side,m_scan.range_max) && m_scan.ranges[ l_index ] < l_range_linear)
 	    {
-	      l_range = m_scan.ranges[ l_index ];
+	      l_range_linear = m_scan.ranges[ l_index ];
+	    }
+	    
+	    if( m_scan.ranges[ l_index ] < minimum(m_square_side/2.,m_scan.range_max) && m_scan.ranges[ l_index ] < l_range_angular)
+	    {
+	      l_range_angular = m_scan.ranges[ l_index ];
 	      sign = i;
 	    }
 	  }
 	  
-	  double l_correction = ( (sign>0?1:-1) * (m_scan.range_max - l_range) ) * MAX_TWIST_ANGULAR * k;
-	  twist_.angular.z += l_correction;
-	  //ROS_INFO("Correction %.3f!\n", m_scan.range_max - l_range );
+	  double l_correction_angular = ( (sign>=0?1:-1) * (m_scan.range_max - l_range_angular) ) * MAX_TWIST_ANGULAR * k;
+	  twist_.angular.z += l_correction_angular;
+	  
+	  double l_correction_linear = (Math::sign(twist_.linear.x)>0?-1:1) * fabs(twist_.linear.x) * (m_scan.range_max - l_range_linear) / m_scan.range_max;
+	  twist_.linear.x += l_correction_linear;
+	  
+	  //ROS_INFO("Correction Linear%.3f!\n", l_correction_linear );
+	  //ROS_INFO("Correction Angular %.3f!\n", l_correction_angular );
 	}
 	
 	////////////////////////////////////////////////////
