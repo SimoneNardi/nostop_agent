@@ -31,7 +31,7 @@ AreaCreator::AreaCreator(nostop_area::Shape external_, std::vector<nostop_area::
 	// Collect point from rviz or read configuration file if not available
 	
 	std::vector<Real2D> l_points;
-	for(size_t i=0; i < external_.vertex.size(); i+=2)
+	for(size_t i=0; i < external_.vertex.size()/2; i++)
 	{
 	  l_points.push_back( Real2D (external_.vertex[2*i+0],external_.vertex[2*i+1]) );
 	}
@@ -40,7 +40,7 @@ AreaCreator::AreaCreator(nostop_area::Shape external_, std::vector<nostop_area::
 	for(size_t j=0; j < internal_.size(); ++j)
 	{
 	  std::vector<Real2D> l_obs;
-	  for(size_t i=0; i < internal_[j].vertex.size(); i+=2)
+	  for(size_t i=0; i < internal_[j].vertex.size()/2; i++)
 	  {
 	      l_obs.push_back( Real2D (external_.vertex[2*i+0],external_.vertex[2*i+1]) );
 	  }
@@ -52,6 +52,6 @@ AreaCreator::AreaCreator(nostop_area::Shape external_, std::vector<nostop_area::
 /////////////////////////////////////////////////
 AreaPtr AreaCreator::getArea() const
 {
-	AreaPtr l_area = std::make_shared<StructuredArea>(m_external);
+	AreaPtr l_area = std::make_shared<StructuredArea>(m_external, m_internal);
 	return l_area;
 }
