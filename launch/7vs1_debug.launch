@@ -13,6 +13,7 @@
   <node pkg="nostop_agent" type="Guard" name="$(anon Guard2)" required="true" output="screen">
     <param name="robot_name" value="$(optenv ROS_ROBOT_NAME green_red)" />
     <param name="learning_name" value="$(optenv ROS_LEARNING_ALG DISL)" />
+    <param name="period" value="$(optenv ROS_AGENT_PERIOD 1)" />
   </node>
   
   <!--> Third Guard <!-->
@@ -23,6 +24,7 @@
   <node pkg="nostop_agent" type="Guard" name="$(anon Guard3)" required="true" output="screen">
     <param name="robot_name" value="$(optenv ROS_ROBOT_NAME yellow_blue)" />
     <param name="learning_name" value="$(optenv ROS_LEARNING_ALG DISL)" />
+    <param name="period" value="$(optenv ROS_AGENT_PERIOD 1)" />
   </node>
   
   <!--> 4 Guard <!-->
@@ -33,6 +35,7 @@
   <node pkg="nostop_agent" type="Guard" name="$(anon Guard4)" required="true" output="screen">
     <param name="robot_name" value="$(optenv ROS_ROBOT_NAME pippo)" />
     <param name="learning_name" value="$(optenv ROS_LEARNING_ALG DISL)" />
+    <param name="period" value="$(optenv ROS_AGENT_PERIOD 1)" />
   </node>
   
   <!--> 5 Guard <!-->
@@ -43,6 +46,7 @@
   <node pkg="nostop_agent" type="Guard" name="$(anon Guard5)" required="true" output="screen">
     <param name="robot_name" value="$(optenv ROS_ROBOT_NAME pluto)" />
     <param name="learning_name" value="$(optenv ROS_LEARNING_ALG DISL)" />
+    <param name="period" value="$(optenv ROS_AGENT_PERIOD 1)" />
   </node>
   
   <!--> 6 Guard <!-->
@@ -53,6 +57,7 @@
   <node pkg="nostop_agent" type="Guard" name="$(anon Guard6)" required="true" output="screen">
     <param name="robot_name" value="$(optenv ROS_ROBOT_NAME minni)" />
     <param name="learning_name" value="$(optenv ROS_LEARNING_ALG DISL)" />
+    <param name="period" value="$(optenv ROS_AGENT_PERIOD 1)" />
   </node>
   
   <!--> 7 Guard <!-->
@@ -63,6 +68,7 @@
   <node pkg="nostop_agent" type="Guard" name="$(anon Guard7)" required="true" output="screen">
     <param name="robot_name" value="$(optenv ROS_ROBOT_NAME topolino)" />
     <param name="learning_name" value="$(optenv ROS_LEARNING_ALG DISL)" />
+    <param name="period" value="$(optenv ROS_AGENT_PERIOD 1)" />
   </node>
   
   

@@ -9,6 +9,7 @@
   <node pkg="nostop_agent" type="Guard" name="$(anon Guard_red_yellow)" required="true" output="screen">
     <param name="robot_name" value="$(optenv ROS_ROBOT_NAME red_yellow)" />
     <param name="learning_name" value="$(optenv ROS_LEARNING_ALG DISL)" />
+    <param name="period" value="$(optenv ROS_AGENT_PERIOD 1)" />
   </node>
   
 </launch>

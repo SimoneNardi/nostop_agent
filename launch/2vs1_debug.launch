@@ -13,6 +13,7 @@
   <node pkg="nostop_agent" type="Guard" name="$(anon Guard_green_yellow)" required="true" output="screen">
     <param name="robot_name" value="$(optenv ROS_ROBOT_NAME green_yellow)" />
     <param name="learning_name" value="$(optenv ROS_LEARNING_ALG DISL)" />
+    <param name="period" value="$(optenv ROS_AGENT_PERIOD 1)" />
   </node>
   
   <node pkg="nostop_gazebo_sensor" type="nostop_gazebo_sensor_node" name="$(anon GazeboLocalizer_thief)" required="true" output="screen">

@@ -22,6 +22,8 @@ using namespace Robotics::GameTheory;
 /////////////////////////////////////////////
 GuardProcess::GuardProcess(std::string name_)
 : AgentProcess()
+, m_period (1)
+, m_memory(2)
 {
   m_agent = std::make_shared<iGuard>();
   m_agent->setName(name_);
@@ -86,7 +88,7 @@ bool GuardProcess::isReady()
       CameraPosition l_cameraPos( l_learning->getSpace()->getDistance() / 10. );
       AgentPosition l_agentPos (l_point, l_cameraPos);
       
-     std::shared_ptr<Guard> l_LGuard = std::make_shared<Guard>(1, l_id, l_agentPos, 1, 2);
+     std::shared_ptr<Guard> l_LGuard = std::make_shared<Guard>(1, l_id, l_agentPos, m_period, m_memory);
       
       l_guard->setGuardPtr(l_LGuard);
       return true;
@@ -116,6 +118,12 @@ void GuardProcess::createLearningAlgorithm()
   std::shared_ptr<iGuard> l_guard = std::static_pointer_cast<iGuard>(m_agent);
   if(l_guard)
   	l_guard->createLearningAlgorithm();
+}
+
+//////////////////////////////////////////////////
+void GuardProcess::setPeriod(int period_)
+{
+  m_period = period_;
 }
 
 //////////////////////////////////////////////////

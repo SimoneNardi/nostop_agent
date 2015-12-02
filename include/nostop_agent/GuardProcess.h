@@ -18,6 +18,9 @@ namespace Robotics
 		
 		class GuardProcess : public AgentProcess
 	  	{
+		  int m_period;
+		  int m_memory;
+		  
 		public:
 			void setCamera(nostop_agent::GuardSensorCtrl & camera_);
 		  
@@ -34,6 +37,8 @@ namespace Robotics
 			void setCamera(double max_dist);
 
 			void setRobotAlgorithm(std::string alg_);
+			
+			void setPeriod(int period_);
 			
 			void spin();
 			

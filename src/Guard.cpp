@@ -30,14 +30,14 @@ int main(int argc, char **argv)
       ros::NodeHandle l_node("~");
       if (l_node.getParam("robot_name", l_name))
       {
-	ROS_INFO("Nome ricevuto: %s", l_name.c_str());
+	ROS_INFO("Robot name received: %s", l_name.c_str());
       }
       else
       {
 	std::cout << "Enter the name of the robot: ";
 	//std::cin >> l_name;
 	l_name="red_blue";
-	ROS_ERROR("Nome non ricevuto: %s", l_name.c_str());
+	ROS_ERROR("Robot name not received: %s", l_name.c_str());
       }
 	
       Robotics::GameTheory::GuardProcess l_guard(l_name);
@@ -61,12 +61,28 @@ int main(int argc, char **argv)
       if (l_node.getParam("learning_name", l_str))
       {
 	l_guard.setRobotAlgorithm(l_str);
-	ROS_INFO("Learning ricevuto: %s", l_str.c_str());
+	ROS_INFO("Learning received: %s", l_str.c_str());
       }
       else
       {
-	l_guard.setRobotAlgorithm("DISL");
-	ROS_ERROR("Learning non ricevuto: %s", l_str.c_str());
+	l_str = "DISL";
+	l_guard.setRobotAlgorithm(l_str);
+	ROS_ERROR("Learning not received: %s", l_str.c_str());
+      }
+            
+      ////////////////////////////////////////
+      // Identify Robot Period:
+      int l_period = 4;
+      if (l_node.getParam("period", l_str))
+      {
+	l_period = atoi(l_str.c_str());
+	l_guard.setPeriod(l_period);
+	ROS_INFO("Period received: %d", l_period);
+      }
+      else
+      {
+	l_guard.setPeriod(l_period);
+	ROS_ERROR("Period not received: %d", l_period);
       }
 
       ///////////////////////////////////////////////
