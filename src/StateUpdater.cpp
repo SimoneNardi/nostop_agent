@@ -48,7 +48,7 @@ void StateUpdater::run()
       ++standby_count;
     }
     
-    if (standby_count == 20)
+    if (standby_count > 20)
     {
       if ( m_agent->isArrived(0.4) )
       {

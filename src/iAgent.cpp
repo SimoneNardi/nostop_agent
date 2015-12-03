@@ -104,6 +104,15 @@ using namespace std;
 	  this->notifyStatus();
 	}
 	
+	
+	double diff_azi(double first, double second)
+	{
+	  double delta = first - second;
+	  while (delta < -Math::Pi) delta += Math::Pi; 
+	  while (delta > Math::TwoPi) delta -= Math::TwoPi;
+	  return delta;
+	}
+	
 	////////////////////////////////////////////////////
 	double ErrorAngle(geometry_msgs::Pose const& cur, Real2D ref)
 	{
@@ -112,12 +121,13 @@ using namespace std;
 // 	    double lroll, lpitch, lyaw;
 // 	    m.getRPY(lroll, lpitch, lyaw);
 
-	    double phi   = atan2(2*cur.orientation.y*cur.orientation.x + 2*cur.orientation.w*cur.orientation.z, 1 - 2*cur.orientation.y*cur.orientation.y - 2*cur.orientation.z*cur.orientation.z);
+	    double phi   = atan2(2*cur.orientation.y*cur.orientation.x + 2*cur.orientation.w*cur.orientation.z, 
+				 1 - 2*cur.orientation.y*cur.orientation.y - 2*cur.orientation.z*cur.orientation.z);
 	    
-	    double Ex = ref[0] - cur.position.x;   //errore lungo x
-	    double Ey = ref[1] - cur.position.y;   //errore lungo y  
-	    double ref_theta = atan2(Ey, Ex);   //stima dell'angolo desiderato
-	    double Et = ref_theta-phi;   //errore su theta
+	    double Ex = ref[0] - cur.position.x;   	//errore lungo x
+	    double Ey = ref[1] - cur.position.y;   	//errore lungo y  
+	    double ref_theta = atan2(Ey, Ex);   	//stima dell'angolo desiderato
+	    double Et = diff_azi(ref_theta, phi);   	//errore su theta
 	    return Et;
 	}
 
@@ -175,12 +185,14 @@ using namespace std;
 	const double MAX_TWIST_LINEAR = 0.3;
 	const double MAX_TWIST_ANGULAR = 2;
 	const double CONE_FREE_FOV = .1;
+	const int MAX_TRIP_COUNTER = 500;
 	
 	////////////////////////////////////////////////////
 	void iAgent::computeConfigurationToPoint(const geometry_msgs::Pose & pose_, Real2D const& point_)
 	{
+	  m_counter++;
 	  double l_arrived_tolerance = m_motor_control_direction  != -1 ? .1*m_square_side : .5*m_square_side;
-	  if( this->isArrived(l_arrived_tolerance) )
+	  if( this->isArrived(l_arrived_tolerance) ||  m_counter > MAX_TRIP_COUNTER)
 	  {
 	      m_error_ang_cumulative = 0;
 	      m_error_lin_cumulative = 0;
@@ -189,6 +201,7 @@ using namespace std;
 	      
 	      this->stop();
 	      m_motor_control_direction  = -1;
+	      m_counter = 0;
 	      return;
 	  }
 	  

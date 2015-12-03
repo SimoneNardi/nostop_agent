@@ -55,6 +55,7 @@ namespace Robotics
 			double m_error_ang_cumulative;
 			
 			double m_square_side;
+			int m_counter;
 			
 // 			tf::TransformBroadcaster m_broadcaster;
 		public:
@@ -91,7 +92,14 @@ namespace Robotics
 			void MoveToNextPosition_LearningAgent();
 			
 		public:
-			iAgent() : m_localizer(nullptr), m_LAgent(nullptr), m_motor_control_direction(-3), m_error_lin_cumulative(0), m_error_ang_cumulative(0), m_square_side(1) {};
+			iAgent() 
+			: m_localizer(nullptr)
+			, m_LAgent(nullptr)
+			, m_motor_control_direction(-3)
+			, m_error_lin_cumulative(0)
+			, m_error_ang_cumulative(0)
+			, m_square_side(1)
+			, m_counter(0) {};
 			
 			~iAgent() {};
 		
