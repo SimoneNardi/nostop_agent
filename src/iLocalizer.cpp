@@ -1,6 +1,6 @@
 #include "iLocalizer.h"
 
-#include <nostop_agent/Id_robot.h>
+#include <nostop_agent/AddRobot.h>
 
 using namespace Robotics;
 using namespace Robotics::GameTheory;
@@ -127,12 +127,21 @@ using namespace std;
 	{
 	  std::string l_agentname = "/";
 	  l_agentname += name_;
-	  l_agentname += "/localizer/kinect/pose";
+	  l_agentname += "/localizer/camera/pose";
 	  m_sub_name = l_agentname;	  
 	  
 	  // Add robot to sensor localizer
-	  ros::Publisher l_pub = m_node.advertise<geometry_msgs::Pose>("/localizer/kinect/add_robot", 1);
-	  nostop_agent::Id_robot l_msg;
-	  l_msg.name = name_;
-	  l_pub.publish(l_msg);
+	  ros::ServiceClient l_add_robot_client = m_node.serviceClient<nostop_agent::AddRobot>("/localizer/add_robot");
+	  
+	  nostop_agent::AddRobot l_msg;
+	  l_msg.request.name = name_.c_str();
+	  
+	  if (l_add_robot_client.call(l_msg))
+	  {
+	    ROS_INFO("Add Robot %s to camera localizer", name_.c_str());
+	  }
+	  else
+	  {
+	    ROS_ERROR("%s: Failed to call service /localizer/add_robot!", name_.c_str());
+	  }
 	}

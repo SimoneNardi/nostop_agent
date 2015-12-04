@@ -69,7 +69,7 @@ namespace Robotics
 		
 		/// Localization sensor for robot using the kinect.
 		class KinectLocalizer: public iLocalizer
-	  	{
+	  	{		  
 		public:
 			KinectLocalizer(std::string name_);
 			

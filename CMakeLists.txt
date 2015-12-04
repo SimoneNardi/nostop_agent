@@ -26,12 +26,12 @@ find_package(catkin REQUIRED COMPONENTS roscpp std_msgs geometry_msgs nav_msgs m
    GuardSensorCtrl.msg
    GuardState.msg
    ThiefState.msg
-   Id_robot.msg
  )
 
 ## Generate services in the 'srv' folder
  add_service_files(
    FILES
+   AddRobot.srv
    PlayerIDData.srv
    GuardBenefitData.srv
    GuardNeighboursData.srv
