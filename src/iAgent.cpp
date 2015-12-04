@@ -547,7 +547,7 @@ using namespace std;
 	bool iAgent::isReal()
 	{
 	  KinectLocalizerPtr l_localizer = std::static_pointer_cast<KinectLocalizer>(m_localizer);
-	  return l_localizer == nullptr;
+	  return l_localizer != nullptr;
 	}
 	
 	////////////////////////////////////////////////////
