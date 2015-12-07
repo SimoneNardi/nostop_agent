@@ -63,6 +63,8 @@ namespace Robotics
 			bool isInitialized();
 			
 			bool isUpdated();
+			
+			virtual bool isReal() = 0;
 		};
 		
 		typedef std::shared_ptr<iLocalizer> iLocalizerPtr;
@@ -74,6 +76,8 @@ namespace Robotics
 			KinectLocalizer(std::string name_);
 			
 			~KinectLocalizer() {};
+			
+			bool isReal() {return true;}
 		};
 		
 		typedef std::shared_ptr<KinectLocalizer> KinectLocalizerPtr;
@@ -85,6 +89,8 @@ namespace Robotics
 			SimulatorLocalizer(std::string name_);
 			
 			~SimulatorLocalizer() {};
+			
+			bool isReal() {return false;}
 		};
 		
 		typedef std::shared_ptr<SimulatorLocalizer> SimulatorLocalizerPtr;

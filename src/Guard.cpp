@@ -45,7 +45,7 @@ int main(int argc, char **argv)
       ////////////////////////////////////////
       // Identify sensor localizer:
       std::string l_str;
-      if (!l_node.getParam("localizer", l_str))
+      if (l_node.getParam("localizer", l_str))
       {
 	l_guard.setKinectLocalizer();
 	ROS_INFO("Kinect Localizer.");

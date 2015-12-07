@@ -103,8 +103,8 @@ using namespace std;
 	  m_LAgent->setStatus(Agent::ACTIVE);
 	  this->notifyStatus();
 	}
-	
-	
+		
+	////////////////////////////////////////////////////
 	double diff_azi(double first, double second)
 	{
 	  double delta = first - second;
@@ -127,7 +127,8 @@ using namespace std;
 	    double Ex = ref[0] - cur.position.x;   	//errore lungo x
 	    double Ey = ref[1] - cur.position.y;   	//errore lungo y  
 	    double ref_theta = atan2(Ey, Ex);   	//stima dell'angolo desiderato
-	    double Et = diff_azi(ref_theta, phi);   	//errore su theta
+	    double Et = ref_theta-phi;   	//errore su theta
+	    //ROS_INFO("Angolo Phi: %f\nAngolo ref: %f\n %f, %f\n", phi, ref_theta, Et, ref_theta-phi);
 	    return Et;
 	}
 
@@ -546,8 +547,7 @@ using namespace std;
 	////////////////////////////////////////////////////
 	bool iAgent::isReal()
 	{
-	  KinectLocalizerPtr l_localizer = std::static_pointer_cast<KinectLocalizer>(m_localizer);
-	  return l_localizer != nullptr;
+	  return m_localizer->isReal();
 	}
 	
 	////////////////////////////////////////////////////
