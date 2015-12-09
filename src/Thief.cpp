@@ -12,7 +12,7 @@ int main(int argc, char **argv)
 	std::string l_name = "thief";
 	
 	// get the ID from Simulator:
-	ros::NodeHandle l_nodeID;
+	ros::NodeHandle l_nodeID("~");
 	ros::ServiceClient l_clientID = l_nodeID.serviceClient<nostop_agent::PlayerIDData>("/simulator/thief/id");
 	nostop_agent::PlayerIDData l_srvID;
 	l_srvID.request.name = l_name;
