@@ -77,6 +77,10 @@ bool GuardProcess::isReady()
 
   if (l_learning_is_ready && l_position_is_ready)
   {
+      ros::Duration l_duration(1);
+      
+      l_duration.sleep();
+    
       int l_id = l_learning->getID();
       
       // init della posizione del robot.
