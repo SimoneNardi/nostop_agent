@@ -1,3 +1,4 @@
+<?xml version="1.0" ?>
 <launch>
   
   <!--> First Guard <!-->
@@ -10,6 +11,8 @@
     <param name="learning_name" value="$(optenv ROS_LEARNING_ALG DISL)" />
     <param name="period" value="$(optenv ROS_AGENT_PERIOD 1)" />
   </node>
+
+<!--   <node name="tf1" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 /map /$(optenv ROS_ROBOT_NAME red_blue)/odom 100"/> -->
   
   <!--> Thief  <!-->
   <node pkg="nostop_gazebo_sensor" type="nostop_gazebo_sensor_node" name="$(anon GazeboLocalizer_thief)" required="true" output="screen">
@@ -19,5 +22,7 @@
   <node pkg="nostop_agent" type="Thief" name="$(anon thief)" required="true" output="screen">
   <param name="robot_name" value="$(optenv ROS_ROBOT_NAME thief)" />
   </node>
-    
+
+<!--   <node name="tf2" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 /map /$(optenv ROS_ROBOT_NAME thief)/odom 100"/> -->
+  
 </launch>
