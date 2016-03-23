@@ -1,3 +1,4 @@
+<?xml version="1.0" ?>
 <launch>
   
   <node pkg="nostop_agent" type="Guard" name="$(anon Guard)" required="true" output="screen">
