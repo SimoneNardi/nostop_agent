@@ -2,7 +2,7 @@
 
 #include "nostop_agent/GuardBenefitData.h"
 #include "nostop_agent/GuardNeighboursData.h"
-#include "nostop_agent/PlayerIDData.h"
+//#include "nostop_agent/PlayerIDData.h"
 #include "nostop_agent/PlayerConfigurationData.h"
 
 #include "nostop_area/AreaData.h"
@@ -28,9 +28,12 @@ int main(int argc, char **argv)
       // Identify robot name:
       std::string l_name;
       ros::NodeHandle l_node("~");
-      if (l_node.getParam("robot_name", l_name))
+      
+      std::string temp_name;
+      if (l_node.searchParam("robot_name", temp_name))
       {
-	ROS_INFO("Robot name received: %s", l_name.c_str());
+	  l_node.getParam(temp_name,l_name);
+	  ROS_INFO("Robot name received: %s", l_name.c_str());
       }
       else
       {
@@ -45,8 +48,9 @@ int main(int argc, char **argv)
       ////////////////////////////////////////
       // Identify sensor localizer:
       std::string l_str;
-      if (l_node.getParam("localizer", l_str))
+      if (l_node.searchParam("localizer", temp_name))
       {
+        l_node.getParam(temp_name,l_str);
 	l_guard.setKinectLocalizer();
 	ROS_INFO("Kinect Localizer.");
       }
@@ -55,13 +59,13 @@ int main(int argc, char **argv)
 	l_guard.setSimulatorLocalizer();
 	ROS_INFO("Simulator Localizer.");
       }
-
             
       ////////////////////////////////////////
       // Identify Robot Algorithm:
-      if (l_node.getParam("learning_name", l_str))
+      if (l_node.searchParam("learning_name", temp_name))
       {
-	l_guard.setRobotAlgorithm(l_str);
+	l_node.getParam(temp_name,l_str);
+      	l_guard.setRobotAlgorithm(l_str);
 	ROS_INFO("Learning received: %s", l_str.c_str());
       }
       else
@@ -74,8 +78,9 @@ int main(int argc, char **argv)
       ////////////////////////////////////////
       // Identify Robot Period:
       int l_period = 4;
-      if (l_node.getParam("period", l_str))
+      if (l_node.searchParam("period", temp_name))
       {
+	l_node.getParam(temp_name,l_str);
 	l_period = atoi(l_str.c_str());
 	l_guard.setPeriod(l_period);
 	ROS_INFO("Period received: %d", l_period);

@@ -25,6 +25,16 @@ namespace Robotics
 		  
 		  mutable Mutex m_mutex;
 		  
+		  enum RobotType
+		  {
+		    REAL = 0,
+		    REAL_MAG = 1,
+		    SIMULATED = 2,
+		    IROBOT_REAL = 3,
+		    IROBOT_REAL_MAG = 4,
+		    IROBOT_SIMULATED = 5
+		  } m_type;
+		  
 		protected:
 			virtual void run();
 		public:
@@ -35,6 +45,8 @@ namespace Robotics
 			bool isInitialized() const;
 			
 			int getID() const;
+			
+			void setType(int const& type_);
 			
 			void setName(std::string const& name_);
 			
