@@ -1,12 +1,17 @@
 <?xml version="1.0" ?>
 <launch>
 
-  <node pkg="nostop_gazebo_sensor" type="nostop_gazebo_sensor_node" name="$(anon GazeboLocalizer_thief)" required="true" output="screen">
-    <param name="robot_name" value="$(optenv ROS_ROBOT_NAME thief)" />
-  </node>
+  <arg name="robot_name" default="$(optenv ROS_ROBOT_NAME Thief)" />
   
-  <node pkg="nostop_agent" type="Thief" name="$(anon thief)" required="true" output="screen">
-  <param name="robot_name" value="$(optenv ROS_ROBOT_NAME thief)" />
-  </node>
+  <!--> Thief  <!-->
+  <group ns="$(arg robot_name)">
+    <param name="tf_prefix" value="$(arg robot_name)"/>
+    <param name="robot_name" value="$(arg robot_name)" />
+    
+    <node pkg="nostop_gazebo_sensor" type="nostop_gazebo_sensor_node" name="GazeboLocalizer" required="true" output="screen"/>
+    
+    <node pkg="nostop_agent" type="Thief" name="Agent" required="true" output="screen"/>
+    
+  </group>
   
 </launch>

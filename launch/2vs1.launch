@@ -1,35 +1,20 @@
 <?xml version="1.0" ?>
 <launch>
   
-  <!--> First Guard <!-->
-  <node pkg="nostop_gazebo_sensor" type="nostop_gazebo_sensor_node" name="$(anon GazeboLocalizer_red_blue)" required="true" output="screen">
-    <param name="robot_name" value="$(optenv ROS_ROBOT_NAME red_blue)" />
-  </node>
+  <include file="$(find nostop_agent)/launch/Guard.launch">
+        <arg name="robot_name" value="red_blue"/>
+	<arg name="learning_name" value="DISL"/>
+        <arg name="period" value="1"/>
+  </include>
   
-  <node pkg="nostop_agent" type="Guard" name="$(anon Guard_red_blue)" required="true" output="screen">
-    <param name="robot_name" value="$(optenv ROS_ROBOT_NAME red_blue)" />
-    <param name="learning_name" value="$(optenv ROS_LEARNING_ALG DISL)" />
-    <param name="period" value="$(optenv ROS_AGENT_PERIOD 1)" />
-  </node>
-  
-  <!--> Second Guard <!-->
-    <node pkg="nostop_gazebo_sensor" type="nostop_gazebo_sensor_node" name="$(anon GazeboLocalizer_green_yellow)" required="true" output="screen">
-    <param name="robot_name" value="$(optenv ROS_ROBOT_NAME green_yellow)" />
-  </node>
-    
-  <node pkg="nostop_agent" type="Guard" name="$(anon Guard_green_yellow)" required="true" output="screen">
-    <param name="robot_name" value="$(optenv ROS_ROBOT_NAME green_yellow)" />
-    <param name="learning_name" value="$(optenv ROS_LEARNING_ALG DISL)" />
-    <param name="period" value="$(optenv ROS_AGENT_PERIOD 1)" />
-  </node>
-  
-  <!--> Thief <!-->
-  <node pkg="nostop_gazebo_sensor" type="nostop_gazebo_sensor_node" name="$(anon GazeboLocalizer_thief)" required="true" output="screen">
-    <param name="robot_name" value="$(optenv ROS_ROBOT_NAME thief)" />
-  </node>
-  
-  <node pkg="nostop_agent" type="Thief" name="$(anon thief)" required="true" output="screen">
-    <param name="robot_name" value="$(optenv ROS_ROBOT_NAME thief)" />
-  </node>
+  <include file="$(find nostop_agent)/launch/Guard.launch">
+        <arg name="robot_name" value="yellow_green"/>
+	<arg name="learning_name" value="DISL"/>
+        <arg name="period" value="1"/>
+  </include>
+ 
+  <include file="$(find nostop_agent)/launch/Thief.launch">
+        <arg name="robot_name" value="thief"/>
+  </include>
   
 </launch>
