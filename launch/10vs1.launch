@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<launch>
+  
+  <include file="$(find nostop_agent)/launch/Guard.launch">
+      <arg name="robot_name" value="Topolino"/>
+      <arg name="learning_name" value="DISL"/>
+      <arg name="period" value="1"/>
+  </include>
+ 
+  <include file="$(find nostop_agent)/launch/Guard.launch">
+        <arg name="robot_name" value="Paperino"/>
+	<arg name="learning_name" value="DISL"/>
+        <arg name="period" value="1"/>
+  </include>
+  
+  <include file="$(find nostop_agent)/launch/Guard.launch">
+        <arg name="robot_name" value="Minni"/>
+	<arg name="learning_name" value="DISL"/>
+        <arg name="period" value="1"/>
+  </include>
+  
+  <include file="$(find nostop_agent)/launch/Guard.launch">
+        <arg name="robot_name" value="Paperina"/>
+	<arg name="learning_name" value="DISL"/>
+        <arg name="period" value="1"/>
+  </include>
+  
+  <include file="$(find nostop_agent)/launch/Guard.launch">
+        <arg name="robot_name" value="Qui"/>
+	<arg name="learning_name" value="DISL"/>
+        <arg name="period" value="1"/>
+  </include>
+  
+  <include file="$(find nostop_agent)/launch/Guard.launch">
+        <arg name="robot_name" value="Quo"/>
+	<arg name="learning_name" value="DISL"/>
+        <arg name="period" value="1"/>
+  </include>
+  
+  <include file="$(find nostop_agent)/launch/Guard.launch">
+        <arg name="robot_name" value="Qua"/>
+	<arg name="learning_name" value="DISL"/>
+        <arg name="period" value="1"/>
+  </include>
+  
+  <include file="$(find nostop_agent)/launch/Guard.launch">
+        <arg name="robot_name" value="Pluto"/>
+	<arg name="learning_name" value="DISL"/>
+        <arg name="period" value="1"/>
+  </include>
+  
+  <include file="$(find nostop_agent)/launch/Guard.launch">
+        <arg name="robot_name" value="Cip"/>
+	<arg name="learning_name" value="DISL"/>
+        <arg name="period" value="1"/>
+  </include>
+  
+  <include file="$(find nostop_agent)/launch/Guard.launch">
+        <arg name="robot_name" value="Ciop"/>
+	<arg name="learning_name" value="DISL"/>
+        <arg name="period" value="1"/>
+  </include>
+  
+  <include file="$(find nostop_agent)/launch/Thief.launch">
+        <arg name="robot_name" value="thief"/>
+  </include>
+  
+</launch>
