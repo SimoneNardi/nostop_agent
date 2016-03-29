@@ -26,6 +26,7 @@ GuardStatePublisher::GuardStatePublisher(std::shared_ptr<iAgent> agent_)
 	l_guardState << "/publisher/state/guard/";
 	l_guardState << m_guard->getID();
 	
+	std::cout << "*** Advertise GuardStatePublisher "<< l_guardState.str() <<std::endl;
 	m_statePub = m_node.advertise<nostop_agent::GuardState>(l_guardState.str().c_str(), 10);
       }
   }

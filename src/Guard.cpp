@@ -30,7 +30,7 @@ int main(int argc, char **argv)
       ros::NodeHandle l_node("~");
       
       std::string temp_name;
-      if (l_node.searchParam("robot_name", temp_name))
+      if ( l_node.searchParam("robot_name", temp_name) )
       {
 	  l_node.getParam(temp_name,l_name);
 	  ROS_INFO("Robot name received: %s", l_name.c_str());
@@ -122,12 +122,12 @@ int main(int argc, char **argv)
 	ros::spinOnce();
 	loop_rate.sleep();
       }
-	
       ROS_INFO("Guard Ready!");
+      
       l_guard.createLearningAlgorithm();
-	
-      ROS_INFO("Guard Started!");
+
       l_guard.start();
+      ROS_INFO("Guard Started!");
       
       /////////////////////////////////////////////////
       // WAIT FOR ROS MESSAGES

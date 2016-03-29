@@ -74,7 +74,10 @@ using namespace std;
 	////////////////////////////////////////////////////
 	void iLocalizer::subscribeTopic()
 	{
+	  std::cout << "Subscribe iLocalizer "<< m_sub_name <<std::endl;
 	  m_sub = m_node.subscribe<geometry_msgs::Pose>(m_sub_name.c_str(), 1, &iLocalizer::updatePose, this);
+	  
+	  std::cout << "*** Advertise iLocalizer "<< m_pub_name <<std::endl;
 	  m_pub = m_node.advertise<geometry_msgs::Pose>(m_pub_name.c_str(), 1);
 	 }
 	
@@ -95,13 +98,10 @@ using namespace std;
 	iLocalizer::iLocalizer(std::string name_) 
 	: m_initialized(false)
 	, m_updated(false) 
+	, m_node("~")
 	{
-	  std::string l_agentname = "/";
-	  l_agentname = "/";
-	  l_agentname += name_;
-	  l_agentname += "/localizer/pose";
-	  m_pub_name = l_agentname; 
-	};
+	  m_pub_name = "/"+name_+"/localizer/pose";
+	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////////

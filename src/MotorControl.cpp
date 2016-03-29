@@ -14,16 +14,15 @@ using namespace Robotics::GameTheory;
 MotorControl::MotorControl(std::shared_ptr<iAgent> agent_)
   : ThreadBase()
   , m_agent(agent_)
-  , m_node()
+  , m_node("~")
 {
   if(m_agent)
   {
-    std::stringstream l_agentname;
-    l_agentname << "/";
-    l_agentname << m_agent->getName();
-    l_agentname << "/cmd_vel";
+      std::string l_name = m_agent->getName();
+      l_name +="/cmd_vel";
     
-    m_controlPub = m_node.advertise<geometry_msgs::Twist>(l_agentname.str().c_str(), 10);
+      std::cout << "*** Advertise Motor Control " << l_name << std::endl;
+      m_controlPub = m_node.advertise<geometry_msgs::Twist>(l_name.c_str(), 10);
   }
 }
 

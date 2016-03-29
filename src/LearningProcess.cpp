@@ -22,6 +22,7 @@ LearningProcess::LearningProcess(std::shared_ptr<LearningWorld> learning_, std::
   , m_guardNeighbours(nullptr)
   , m_notified(false)
   , m_name(name_)
+  , m_node("~")
 {
 	m_monitorReceiver = std::make_shared<MonitorReceiver>();
 	m_guardNeighbours = std::make_shared<GuardNeighbours>();
@@ -35,12 +36,15 @@ LearningProcess::~LearningProcess()
 void LearningProcess::init()
 {
   Lock1 lock(m_mutex);
+  
+  std::cout << "Subscribe Learning Process /simulator/agent_call" <<std::endl;
   m_subAgentCall = m_node.subscribe<std_msgs::Bool>("/simulator/agent_call", 1, &LearningProcess::AgentCall_CallBack, this);
   
-  std::string l_name = "/";
-  l_name += m_name;
-  l_name += "/update";
-  m_pubForward = m_node.advertise<std_msgs::Bool>(l_name.c_str(), 1);
+  std::string l_learning_name = "/"+m_name;
+  l_learning_name += "/update";
+  
+  std::cout << "*** Advertise Learning Process "<< l_learning_name <<std::endl;
+  m_pubForward = m_node.advertise<std_msgs::Bool>(l_learning_name.c_str(), 1);
 }
 
 /////////////////////////////////////////////

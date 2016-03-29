@@ -13,8 +13,11 @@ using namespace Robotics::GameTheory;
 MonitorReceiver::MonitorReceiver() 
 : m_data(nullptr)
 , m_isUpdated(false)
+, m_node("~")
 {
 	m_data = std::make_shared<WorldMap>();
+	
+	std::cout << "Subscribe Monitor Receiver /simulator/monitor" <<std::endl;
 	m_sub = m_node.subscribe<nav_msgs::OccupancyGrid>("/simulator/monitor", 1, &MonitorReceiver::UpdateMonitorCallBack, this);
 }
 

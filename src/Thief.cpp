@@ -9,11 +9,25 @@ int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "Thief"); 
 	
-	std::string l_name = "thief";
+	std::string l_name;
+	ros::NodeHandle l_node("~");
+	
+	std::string temp_name;
+	if ( l_node.searchParam("robot_name", temp_name) )
+	{
+	    l_node.getParam(temp_name,l_name);
+	    ROS_INFO("Robot name received: %s", l_name.c_str());
+	}
+	else
+	{
+	    std::cout << "Enter the name of the robot: ";
+	    //std::cin >> l_name;
+	    l_name="thief";
+	    ROS_ERROR("Robot name not received: %s", l_name.c_str());
+	}
 	
 	// get the ID from Simulator:
-	ros::NodeHandle l_nodeID("~");
-	ros::ServiceClient l_clientID = l_nodeID.serviceClient<nostop_agent::PlayerIDData>("/simulator/thief/id");
+	ros::ServiceClient l_clientID = l_node.serviceClient<nostop_agent::PlayerIDData>("/simulator/thief/id");
 	nostop_agent::PlayerIDData l_srvID;
 	l_srvID.request.name = l_name;
 	l_srvID.request.type = 2;
@@ -25,7 +39,6 @@ int main(int argc, char **argv)
 	{
 		ROS_ERROR("Failed to call service Thief ID");
 		//return 1;
-		
 		l_srvID.response.id = 1;
 	}
 	

@@ -99,7 +99,8 @@ namespace Robotics
 			, m_error_lin_cumulative(0)
 			, m_error_ang_cumulative(0)
 			, m_square_side(1)
-			, m_counter(0) {};
+			, m_counter(0)
+			, m_node("~") {};
 			
 			~iAgent() {};
 		

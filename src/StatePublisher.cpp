@@ -17,16 +17,15 @@ using namespace Robotics::GameTheory;
 StatePublisher::StatePublisher(std::shared_ptr<iAgent> agent_) 
 : ThreadBase()
 , m_agent(agent_)
-, m_node()
+, m_node("~")
 {
   if(m_agent)
   {
-    std::stringstream l_agentPose;
-    l_agentPose << "/";
-    l_agentPose << m_agent->getName();
-    l_agentPose << "/pose";
-        
-    m_posePub = m_node.advertise<geometry_msgs::Pose>(l_agentPose.str().c_str(), 10);
+      std::string l_name = "/"+m_agent->getName();
+      l_name +="/pose";
+    
+      std::cout << "*** Advertise StatePublisher " << l_name <<std::endl;
+      m_posePub = m_node.advertise<geometry_msgs::Pose>(l_name, 10);
   }
 }
 

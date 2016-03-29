@@ -13,9 +13,12 @@ using namespace Robotics::GameTheory;
 GuardNeighbours::GuardNeighbours() 
 : m_data(nullptr)
 , m_isUpdated(false)
+, m_node("~")
 {
-	m_data = std::make_shared<WorldMap>();
-	m_sub = m_node.subscribe<nav_msgs::OccupancyGrid>("/simulator/neighbours", 1, &GuardNeighbours::UpdateNeighboursCallBack, this);
+  m_data = std::make_shared<WorldMap>();
+  
+  std::cout << "Subscribe GuardNeighbours /simulator/neighbours"<<std::endl;
+  m_sub = m_node.subscribe<nav_msgs::OccupancyGrid>("/simulator/neighbours", 1, &GuardNeighbours::UpdateNeighboursCallBack, this);
 }
 
 /////////////////////////////////////////////
