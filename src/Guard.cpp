@@ -77,7 +77,7 @@ int main(int argc, char **argv)
          
       ////////////////////////////////////////
       // Identify Robot Period:
-      int l_period = 4;
+      int l_period = 1;
       if (l_node.searchParam("period", temp_name))
       {
 	l_node.getParam(temp_name,l_str);
