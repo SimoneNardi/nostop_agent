@@ -16,5 +16,4 @@ std::vector<int8_t> WorldMap::getMap() const
 void WorldMap::update(std::vector<int8_t> const& data_) 
 {
   m_data = data_;
-  
 }
