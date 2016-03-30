@@ -5,6 +5,8 @@
 
 #include <nav_msgs/OccupancyGrid.h>
 
+#include "GlobalPreProcessor.h"
+
 using namespace std;
 using namespace Robotics;
 using namespace Robotics::GameTheory;
@@ -17,7 +19,9 @@ GuardNeighbours::GuardNeighbours()
 {
   m_data = std::make_shared<WorldMap>();
   
+#ifdef _DEBUG_PRINT
   std::cout << "Subscribe GuardNeighbours /simulator/neighbours"<<std::endl;
+#endif
   m_sub = m_node.subscribe<nav_msgs::OccupancyGrid>("/simulator/neighbours", 1, &GuardNeighbours::UpdateNeighboursCallBack, this);
 }
 

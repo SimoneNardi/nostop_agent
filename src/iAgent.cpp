@@ -18,6 +18,8 @@
 // #include <tf/tf.h>
 #include <boost/pointer_cast.hpp>
 
+#include "GlobalPreProcessor.h"
+
 using namespace Robotics;
 using namespace Robotics::GameTheory;
 using namespace std;
@@ -373,27 +375,37 @@ using namespace std;
 	    
 	    std::string l_cmd_vel = l_name;
 	    l_cmd_vel += "/cmd_vel";
+#ifdef _DEBUG_PRINT
 	    std::cout << "*** Advertise iAgent "<< l_cmd_vel <<std::endl;
+#endif
 	    m_pubMotorControl = m_node.advertise<geometry_msgs::Twist>(l_cmd_vel.c_str(), 1);
 	    
 	    std::string l_learning_name = l_name;
 	    l_learning_name += "/update";
+#ifdef _DEBUG_PRINT	    
 	    std::cout << "Subscribe iAgent "<< l_learning_name <<std::endl;
+#endif
 	    m_subForward = m_node.subscribe<std_msgs::Bool::ConstPtr>(l_learning_name.c_str(), 1, &iAgent::updateTargetConfiguration_callback, this);
 	    
 	    std::string l_point_name = l_name;
 	    l_point_name += "/update/point";
+#ifdef _DEBUG_PRINT	    
 	    std::cout << "Subscribe iAgent "<< l_point_name <<std::endl;
+#endif
 	    m_subTargetPoint = m_node.subscribe<geometry_msgs::Point::ConstPtr>(l_point_name.c_str(), 1, &iAgent::updateTargetPoint_callback, this);
 	    
 	    std::string l_localizer_name = l_name;
 	    l_localizer_name += "/localizer/pose";
+#ifdef _DEBUG_PRINT 
 	    std::cout << "Subscribe iAgent "<< l_localizer_name <<std::endl;
+#endif
 	    m_subLocalizer = m_node.subscribe<geometry_msgs::Pose::ConstPtr>(l_localizer_name.c_str(), 1, &iAgent::computeConfigurationToTarget_callback, this);
 	    
 	    std::string l_laser_scan_name = l_name;
 	    l_laser_scan_name += "/laser_scan";
+#ifdef _DEBUG_PRINT
 	    std::cout << "Subscribe iAgent "<< l_laser_scan_name <<std::endl;
+#endif
 	    m_subLaserScan = m_node.subscribe<sensor_msgs::LaserScan::ConstPtr>(l_laser_scan_name.c_str(), 1, &iAgent::updateLaserScan_callback, this);
 	}
 	

@@ -2,6 +2,8 @@
 
 #include <nostop_agent/AddRobot.h>
 
+#include "GlobalPreProcessor.h"
+
 using namespace Robotics;
 using namespace Robotics::GameTheory;
 using namespace std;
@@ -74,10 +76,14 @@ using namespace std;
 	////////////////////////////////////////////////////
 	void iLocalizer::subscribeTopic()
 	{
+#ifdef _DEBUG_PRINT
 	  std::cout << "Subscribe iLocalizer "<< m_sub_name <<std::endl;
+#endif
 	  m_sub = m_node.subscribe<geometry_msgs::Pose>(m_sub_name.c_str(), 1, &iLocalizer::updatePose, this);
 	  
+#ifdef _DEBUG_PRINT
 	  std::cout << "*** Advertise iLocalizer "<< m_pub_name <<std::endl;
+#endif
 	  m_pub = m_node.advertise<geometry_msgs::Pose>(m_pub_name.c_str(), 1);
 	 }
 	

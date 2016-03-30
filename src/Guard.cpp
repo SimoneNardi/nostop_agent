@@ -37,10 +37,10 @@ int main(int argc, char **argv)
       }
       else
       {
-	std::cout << "Enter the name of the robot: ";
-	//std::cin >> l_name;
-	l_name="red_blue";
-	ROS_ERROR("Robot name not received: %s", l_name.c_str());
+	  std::cout << "Enter the name of the robot: ";
+	  //std::cin >> l_name;
+	  l_name="red_blue";
+	  ROS_ERROR("Robot name not received: %s", l_name.c_str());
       }
 	
       Robotics::GameTheory::GuardProcess l_guard(l_name);

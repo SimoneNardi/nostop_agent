@@ -5,6 +5,8 @@
 
 #include <nav_msgs/OccupancyGrid.h>
 
+#include "GlobalPreProcessor.h"
+
 using namespace std;
 using namespace Robotics;
 using namespace Robotics::GameTheory;
@@ -17,7 +19,9 @@ MonitorReceiver::MonitorReceiver()
 {
 	m_data = std::make_shared<WorldMap>();
 	
+#ifdef _DEBUG_PRINT
 	std::cout << "Subscribe Monitor Receiver /simulator/monitor" <<std::endl;
+#endif
 	m_sub = m_node.subscribe<nav_msgs::OccupancyGrid>("/simulator/monitor", 1, &MonitorReceiver::UpdateMonitorCallBack, this);
 }
 

@@ -9,6 +9,8 @@
 
 #include <nav_msgs/Odometry.h>
 
+#include "GlobalPreProcessor.h"
+
 using namespace std;
 using namespace Robotics;
 using namespace Robotics::GameTheory;
@@ -24,7 +26,9 @@ StatePublisher::StatePublisher(std::shared_ptr<iAgent> agent_)
       std::string l_name = "/"+m_agent->getName();
       l_name +="/pose";
     
+#ifdef _DEBUG_PRINT
       std::cout << "*** Advertise StatePublisher " << l_name <<std::endl;
+#endif
       m_posePub = m_node.advertise<geometry_msgs::Pose>(l_name, 10);
   }
 }

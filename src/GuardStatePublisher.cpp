@@ -9,6 +9,8 @@
 
 #include <nav_msgs/Odometry.h>
 
+#include "GlobalPreProcessor.h"
+
 using namespace std;
 using namespace Robotics;
 using namespace Robotics::GameTheory;
@@ -26,7 +28,9 @@ GuardStatePublisher::GuardStatePublisher(std::shared_ptr<iAgent> agent_)
 	l_guardState << "/publisher/state/guard/";
 	l_guardState << m_guard->getID();
 	
+#ifdef _DEBUG_PRINT
 	std::cout << "*** Advertise GuardStatePublisher "<< l_guardState.str() <<std::endl;
+#endif
 	m_statePub = m_node.advertise<nostop_agent::GuardState>(l_guardState.str().c_str(), 10);
       }
   }

@@ -8,6 +8,8 @@
 
 #include <nav_msgs/Odometry.h>
 
+#include "GlobalPreProcessor.h"
+
 using namespace std;
 using namespace Robotics;
 using namespace Robotics::GameTheory;
@@ -25,6 +27,9 @@ ThiefStatePublisher::ThiefStatePublisher(std::shared_ptr<iAgent> agent_)
 	l_thiefName << "/publisher/state/thief/";
 	l_thiefName << m_thief->getID();
 		
+#ifdef _DEBUG_PRINT
+	std::cout << "*** Advertise ThiefStatePublisher " << l_thiefName <<std::endl;
+#endif
 	m_statePub = m_node.advertise<nostop_agent::ThiefState>(l_thiefName.str().c_str(), 10);
       }
   }
