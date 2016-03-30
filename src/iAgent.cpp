@@ -194,7 +194,7 @@ using namespace std;
 	void iAgent::computeConfigurationToPoint(const geometry_msgs::Pose & pose_, Real2D const& point_)
 	{
 	  m_counter++;
-	  double l_arrived_tolerance = m_motor_control_direction  != -1 ? .1*m_square_side : .5*m_square_side;
+	  double l_arrived_tolerance = m_motor_control_direction  != -1 ? .3*m_square_side : .5*m_square_side;
 	  if( this->isArrived(l_arrived_tolerance) ||  m_counter > MAX_TRIP_COUNTER)
 	  {
 	      m_error_ang_cumulative = 0;
