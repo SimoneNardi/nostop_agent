@@ -72,10 +72,14 @@ namespace Robotics
 		/// Localization sensor for robot using the kinect.
 		class KinectLocalizer: public iLocalizer
 	  	{		  
+		  	ros::Subscriber m_kinect_sub;
+			ros::Publisher m_kinect_pub;
 		public:
 			KinectLocalizer(std::string name_);
 			
 			~KinectLocalizer() {};
+			
+			void updateOdometry(const nav_msgs::Odometry::ConstPtr& odometry_);
 			
 			bool isReal() {return true;}
 		};

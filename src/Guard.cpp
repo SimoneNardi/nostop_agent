@@ -48,16 +48,26 @@ int main(int argc, char **argv)
       ////////////////////////////////////////
       // Identify sensor localizer:
       std::string l_str;
-      if (l_node.searchParam("localizer", temp_name))
+
+      if (l_node.searchParam("simulate", temp_name))
       {
-        l_node.getParam(temp_name,l_str);
-	l_guard.setKinectLocalizer();
-	ROS_INFO("Kinect Localizer.");
+	l_node.getParam(temp_name,l_str);
+	
+	bool l_simulate = atoi(l_str.c_str());
+	if(l_simulate)
+	{
+	  l_guard.setSimulatorLocalizer();
+	  ROS_INFO("Simulator Localizer.");
+	}
+	else
+	{
+	  l_guard.setKinectLocalizer();
+	  ROS_INFO("Kinect Localizer.");
+	}
       }
       else
       {
-	l_guard.setSimulatorLocalizer();
-	ROS_INFO("Simulator Localizer.");
+	ROS_ERROR("Localizer not received: %s", l_name.c_str());
       }
             
       ////////////////////////////////////////

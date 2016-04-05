@@ -3,17 +3,22 @@
   <arg name="robot_name" default="$(optenv ROS_ROBOT_NAME Guard)"/>
   <arg name="learning_name" default="$(optenv ROS_LEARNING_ALG DISL)"/>
   <arg name="period" default="$(optenv ROS_ROBOT_PERIOD 1)"/>
-    
+  <arg name="simulate" default="$(optenv ROS_ROBOT_SIMULATE 1)"/>  
+  
   <!--> Guard <!-->
   <group ns="$(arg robot_name)">
     <param name="tf_prefix" value="$(arg robot_name)"/>
     <param name="robot_name" value="$(arg robot_name)"/>
     
-    <node pkg="nostop_gazebo_sensor" type="nostop_gazebo_sensor_node" name="GazeboLocalizer" required="true" output="screen"/>
-    
+    <group if="$(arg simulate)">
+    <!-- stuff that will only be evaluated if simulate is true -->
+      <node pkg="nostop_gazebo_sensor" type="nostop_gazebo_sensor_node" name="GazeboLocalizer" required="true" output="screen"/>
+    </group>
+
     <node pkg="nostop_agent" type="Guard" name="Agent" required="true" output="screen">
       <param name="learning_name" value="$(arg learning_name)"/>
       <param name="period" value="$(arg period)"/>
+      <param name="simulate" value="$(arg simulate)"/>
     </node>
   </group>
 

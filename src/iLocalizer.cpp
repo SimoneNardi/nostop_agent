@@ -128,13 +128,19 @@ using namespace std;
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	////////////////////////////////////////////////////
+	void KinectLocalizer::updateOdometry(const nav_msgs::Odometry::ConstPtr& odometry_)
+	{
+	  m_kinect_pub.publish<geometry_msgs::Pose>(odometry_->pose.pose);
+	}
+	
+	////////////////////////////////////////////////////
 	KinectLocalizer::KinectLocalizer(std::string name_) 
 	: iLocalizer(name_)
 	{
 	  std::string l_agentname = "/";
 	  l_agentname += name_;
 	  l_agentname += "/localizer/camera/pose";
-	  m_sub_name = l_agentname;	  
+	  m_sub_name = l_agentname;
 	  
 	  // Add robot to sensor localizer
 	  ros::ServiceClient l_add_robot_client = m_node.serviceClient<nostop_agent::AddRobot>("/localizer/add_robot");
@@ -150,4 +156,10 @@ using namespace std;
 	  {
 	    ROS_ERROR("%s: Failed to call service /localizer/add_robot!", name_.c_str());
 	  }
+	  
+	  l_agentname = "/";
+	  l_agentname += name_;
+	  l_agentname += "/localizer/odometry/final";
+	  m_kinect_sub = m_node.subscribe<nav_msgs::Odometry>(l_agentname.c_str(), 1, &KinectLocalizer::updateOdometry, this);
+	  m_kinect_pub = m_node.advertise<geometry_msgs::Pose>(m_sub_name.c_str(), 1);
 	}
