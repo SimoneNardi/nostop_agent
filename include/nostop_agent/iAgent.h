@@ -107,10 +107,10 @@ namespace Robotics
 			/// Create the link between this agent and the agent of the learning
 			void setAgentPtr(std::shared_ptr<Agent> agent_);						
 			/// Create a kinect localizer
-			void setKinectLocalizer();
+			bool setKinectLocalizer();
 			
 			/// Create a simulator localizer
-			void setSimulatorLocalizer();
+			bool setSimulatorLocalizer();
 			
 			Configuration getCurrentConfiguration() {return m_currentConfiguration;}
 			Configuration getTargetConfiguration() {return m_targetConfiguration;}

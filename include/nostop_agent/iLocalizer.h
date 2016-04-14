@@ -80,6 +80,7 @@ namespace Robotics
 			~KinectLocalizer() {};
 			
 			void updateOdometry(const nav_msgs::Odometry::ConstPtr& odometry_);
+			void updatePoseWithCovariance(const geometry_msgs::PoseWithCovariance::ConstPtr& msg_);
 			
 			bool isReal() {return true;}
 		};

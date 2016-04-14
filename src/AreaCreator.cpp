@@ -24,6 +24,7 @@ AreaCreator::AreaCreator()
 	m_external = l_points;
 }
 
+/////////////////////////////////////////////////
 AreaCreator::AreaCreator(nostop_area::Shape external_, std::vector<nostop_area::Shape> internal_) 
 	: m_external()
 	, m_internal()

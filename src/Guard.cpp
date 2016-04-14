@@ -40,29 +40,31 @@ int main(int argc, char **argv)
 	  std::cout << "Enter the name of the robot: ";
 	  //std::cin >> l_name;
 	  l_name="red_blue";
-	  ROS_ERROR("Robot name not received: %s", l_name.c_str());
+	  ROS_ERROR("Robot name NOT received: %s", l_name.c_str());
       }
 	
       Robotics::GameTheory::GuardProcess l_guard(l_name);
        
       ////////////////////////////////////////
       // Identify sensor localizer:
-      std::string l_str;
-
       if (l_node.searchParam("simulate", temp_name))
       {
-	l_node.getParam(temp_name,l_str);
-	
-	bool l_simulate = atoi(l_str.c_str());
-	if(l_simulate)
+	int l_simulate;
+	l_node.getParam(temp_name,l_simulate);
+	if(l_simulate == 1)
 	{
 	  l_guard.setSimulatorLocalizer();
-	  ROS_INFO("Simulator Localizer.");
+	  ROS_INFO("Simulator Localizer");
 	}
 	else
 	{
-	  l_guard.setKinectLocalizer();
-	  ROS_INFO("Kinect Localizer.");
+	  if( l_guard.setKinectLocalizer() )
+	  {
+	    l_guard.setSimulatorLocalizer();
+	    ROS_INFO("Simulator Localizer");
+	  }
+	  else
+	    ROS_INFO("Kinect Localizer");
 	}
       }
       else
@@ -72,6 +74,7 @@ int main(int argc, char **argv)
             
       ////////////////////////////////////////
       // Identify Robot Algorithm:
+      std::string l_str;
       if (l_node.searchParam("learning_name", temp_name))
       {
 	l_node.getParam(temp_name,l_str);

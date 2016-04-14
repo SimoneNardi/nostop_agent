@@ -133,6 +133,11 @@ using namespace std;
 	  m_kinect_pub.publish<geometry_msgs::Pose>(odometry_->pose.pose);
 	}
 	
+	void KinectLocalizer::updatePoseWithCovariance(const geometry_msgs::PoseWithCovariance::ConstPtr& msg_)
+	{
+	  m_kinect_pub.publish<geometry_msgs::Pose>(msg_->pose);
+	}
+	
 	////////////////////////////////////////////////////
 	KinectLocalizer::KinectLocalizer(std::string name_) 
 	: iLocalizer(name_)
@@ -160,6 +165,6 @@ using namespace std;
 	  l_agentname = "/";
 	  l_agentname += name_;
 	  l_agentname += "/localizer/odometry/final";
-	  m_kinect_sub = m_node.subscribe<nav_msgs::Odometry>(l_agentname.c_str(), 1, &KinectLocalizer::updateOdometry, this);
+	  m_kinect_sub = m_node.subscribe<geometry_msgs::PoseWithCovariance>(l_agentname.c_str(), 1, &KinectLocalizer::updatePoseWithCovariance, this);
 	  m_kinect_pub = m_node.advertise<geometry_msgs::Pose>(m_sub_name.c_str(), 1);
 	}

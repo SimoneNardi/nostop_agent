@@ -36,19 +36,31 @@ using namespace std;
 	}
 	
 	////////////////////////////////////////////////////
-	void iAgent::setKinectLocalizer()
+	bool iAgent::setKinectLocalizer()
+	try
 	{ 
 	  Lock lock(m_mutex);
 	  m_localizer = std::make_shared<KinectLocalizer>(m_name);
 	  m_localizer->subscribeTopic();
+	  return true;
+	}
+	catch(...)
+	{
+	  return false;
 	}
 	
 	////////////////////////////////////////////////////
-	void iAgent::setSimulatorLocalizer()
-	{
+	bool iAgent::setSimulatorLocalizer()
+	try
+	{ 
 	  Lock lock(m_mutex);
 	  m_localizer = std::make_shared<SimulatorLocalizer>(m_name);
 	  m_localizer->subscribeTopic();
+	  return true;
+	}
+	catch(...)
+	{
+	  return false;
 	}
 	
 	////////////////////////////////////////////////////

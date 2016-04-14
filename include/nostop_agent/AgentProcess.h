@@ -41,8 +41,8 @@ namespace Robotics
 			
 			virtual bool isReady() = 0;
 			
-			void setKinectLocalizer();
-			void setSimulatorLocalizer();
+			bool setKinectLocalizer();
+			bool setSimulatorLocalizer();
 		};
 	}
 }

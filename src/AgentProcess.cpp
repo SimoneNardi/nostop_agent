@@ -33,13 +33,13 @@ void AgentProcess::start()
 }
 
 /////////////////////////////////////////////
-void AgentProcess::setKinectLocalizer()
+bool AgentProcess::setKinectLocalizer()
 {
-  m_agent->setKinectLocalizer();
+   return m_agent->setKinectLocalizer();
 }
 
 /////////////////////////////////////////////
-void AgentProcess::setSimulatorLocalizer()
+bool AgentProcess::setSimulatorLocalizer()
 {
-  m_agent->setSimulatorLocalizer();
+  return m_agent->setSimulatorLocalizer();
 }
